@@ -331,7 +331,7 @@
             <tr><th>Attribute</th><th>Value</th></tr>
             <tr><td><strong>Document Title</strong></td><td>Development Effort Estimation</td></tr>
             <tr><td><strong>Version</strong></td><td>1.0</td></tr>
-            <tr><td><strong>Date</strong></td><td>February 23, 2026</td></tr>
+            <tr><td><strong>Date</strong></td><td>February 26, 2026</td></tr>
             <tr><td><strong>Prepared By</strong></td><td>Senior Software Architect</td></tr>
             <tr><td><strong>Status</strong></td><td>Draft for Client Review</td></tr>
         </table>
@@ -347,9 +347,9 @@
         
         <table class="summary-table">
             <tr><th>Summary Metric</th><th>Value</th></tr>
-            <tr><td><strong>Total Estimated Effort (with Copilot)</strong></td><td class="number"><strong>621 Person-Days</strong></td></tr>
-            <tr><td>Contingency Buffer (15%)</td><td class="number">93 Person-Days</td></tr>
-            <tr class="total-row"><td>Grand Total with Buffer</td><td class="number">714 Person-Days</td></tr>
+            <tr><td><strong>Total Estimated Effort (with Copilot)</strong></td><td class="number"><strong>612 Person-Days</strong></td></tr>
+            <tr><td>Contingency Buffer (15%)</td><td class="number">92 Person-Days</td></tr>
+            <tr class="total-row"><td>Grand Total with Buffer</td><td class="number">704 Person-Days</td></tr>
             <tr><td>Recommended Team Size</td><td class="number">6-8 Engineers</td></tr>
             <tr><td>Estimated Duration</td><td class="number">14-16 Weeks</td></tr>
             <tr><td>Productivity Gain (vs Traditional)</td><td class="number savings">~35%</td></tr>
@@ -739,7 +739,6 @@
             <tr><td>IPP Rail Adapter</td><td>Instant Payment Platform integration</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
             <tr><td>IPI Rail Adapter</td><td>Interbank Payment Interface integration</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
             <tr><td>FTS-NG Rail Adapter</td><td>Funds Transfer System NG integration (batch/SFTP)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
-            <tr><td>SWIFT Rail Adapter</td><td>SWIFT MX message format, international payments</td><td class="number">10</td><td class="number">10%</td><td class="number">9</td><td class="complexity-high">High</td></tr>
             <tr><td>Health Checker</td><td>Health monitor, availability check, performance stats, degradation alerts</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
             <tr><td>Fallback Manager</td><td>Fallback strategy, retry coordinator, circuit breaker, recovery</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
             <tr><td>Load Balancer</td><td>Round robin, weighted distribution, capacity management</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
@@ -752,7 +751,7 @@
             <tr><td>Unit Tests</td><td>Routing algorithm, scoring logic, adapter logic</td><td class="number">8</td><td class="number">35%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
             <tr><td>Integration Tests</td><td>End-to-end routing, rail execution</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
             <tr><td>Rail Simulation Tests</td><td>Mock rail responses, failure scenarios</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
-            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>113</strong></td><td class="number"><strong>~24%</strong></td><td class="number"><strong>89.5</strong></td><td></td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>103</strong></td><td class="number"><strong>~22%</strong></td><td class="number"><strong>80.5</strong></td><td></td></tr>
         </table>
 
         <h3>3.9 Payment Orchestration Domain - Cross-Cutting Concerns</h3>
@@ -785,9 +784,9 @@
             <tr><td>Limit Control Engine</td><td class="number">65</td><td class="number">52</td><td class="number savings">20%</td><td class="complexity-high">High</td></tr>
             <tr><td>Queue Management</td><td class="number">59</td><td class="number">43</td><td class="number savings">27%</td><td class="complexity-high">High</td></tr>
             <tr><td>Status &amp; Lifecycle Management</td><td class="number">54</td><td class="number">40</td><td class="number savings">26%</td><td class="complexity-high">High</td></tr>
-            <tr><td>Embedded Routing Engine</td><td class="number">113</td><td class="number">89.5</td><td class="number savings">21%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Embedded Routing Engine</td><td class="number">103</td><td class="number">80.5</td><td class="number savings">22%</td><td class="complexity-high">High</td></tr>
             <tr><td>Cross-Cutting Concerns</td><td class="number">58</td><td class="number">44.5</td><td class="number savings">23%</td><td class="complexity-medium">Medium-High</td></tr>
-            <tr class="total-row"><td><strong>Total Payment Orchestration Domain</strong></td><td class="number"><strong>562</strong></td><td class="number"><strong>418.5</strong></td><td class="number"><strong>26%</strong></td><td></td></tr>
+            <tr class="total-row"><td><strong>Total Payment Orchestration Domain</strong></td><td class="number"><strong>552</strong></td><td class="number"><strong>409.5</strong></td><td class="number"><strong>26%</strong></td><td></td></tr>
         </table>
     </section>
 
@@ -800,21 +799,21 @@
         <table class="summary-table">
             <tr><th>Domain</th><th>Base PD</th><th>With Copilot</th><th>Savings</th><th>% of Total</th></tr>
             <tr><td>Configuration Domain</td><td class="number">398</td><td class="number">280</td><td class="number savings">30%</td><td class="number">40%</td></tr>
-            <tr><td>Payment Orchestration Domain</td><td class="number">562</td><td class="number">418.5</td><td class="number savings">26%</td><td class="number">60%</td></tr>
-            <tr class="total-row"><td><strong>Subtotal</strong></td><td class="number"><strong>960</strong></td><td class="number"><strong>698.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
+            <tr><td>Payment Orchestration Domain</td><td class="number">552</td><td class="number">409.5</td><td class="number savings">26%</td><td class="number">60%</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td class="number"><strong>950</strong></td><td class="number"><strong>689.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
         </table>
 
         <h3>4.2 Effort Distribution by Work Type (Copilot-Optimized)</h3>
         <table>
             <tr><th>Work Type</th><th>Configuration Domain</th><th>Payment Orchestration</th><th>Total PD</th><th>Copilot Gain</th><th>%</th></tr>
-            <tr><td>Backend Development</td><td class="number">189</td><td class="number">292</td><td class="number">481</td><td class="number savings">27%</td><td class="number">69%</td></tr>
+            <tr><td>Backend Development</td><td class="number">189</td><td class="number">283</td><td class="number">472</td><td class="number savings">27%</td><td class="number">69%</td></tr>
             <tr><td>Database</td><td class="number">23</td><td class="number">8</td><td class="number">31</td><td class="number savings">30%</td><td class="number">4%</td></tr>
             <tr><td>APIs</td><td class="number">22</td><td class="number">10</td><td class="number">32</td><td class="number savings">29%</td><td class="number">5%</td></tr>
             <tr><td>Integration</td><td class="number">31</td><td class="number">44</td><td class="number">75</td><td class="number savings">27%</td><td class="number">11%</td></tr>
             <tr><td>Testing</td><td class="number">37</td><td class="number">49</td><td class="number">86</td><td class="number savings">31%</td><td class="number">12%</td></tr>
             <tr><td>Documentation</td><td class="number">10</td><td class="number">8</td><td class="number">18</td><td class="number savings">33%</td><td class="number">3%</td></tr>
             <tr><td>DevOps/Infra</td><td class="number">-</td><td class="number">15</td><td class="number">15</td><td class="number savings">25%</td><td class="number">2%</td></tr>
-            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>280</strong></td><td class="number"><strong>418.5</strong></td><td class="number"><strong>698.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>280</strong></td><td class="number"><strong>409.5</strong></td><td class="number"><strong>689.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
         </table>
 
         <h3>4.3 Complexity Distribution (Copilot-Optimized)</h3>
@@ -822,8 +821,8 @@
             <tr><th>Complexity</th><th>Modules</th><th>Base PD</th><th>With Copilot</th><th>Savings</th></tr>
             <tr><td class="complexity-low">Low</td><td class="number">2</td><td class="number">46</td><td class="number">28</td><td class="number savings">39%</td></tr>
             <tr><td class="complexity-medium">Medium</td><td class="number">4</td><td class="number">239</td><td class="number">162</td><td class="number savings">32%</td></tr>
-            <tr><td class="complexity-high">High</td><td class="number">8</td><td class="number">675</td><td class="number">508.5</td><td class="number savings">25%</td></tr>
-            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>14</strong></td><td class="number"><strong>960</strong></td><td class="number"><strong>698.5</strong></td><td class="number"><strong>27%</strong></td></tr>
+            <tr><td class="complexity-high">High</td><td class="number">8</td><td class="number">665</td><td class="number">499.5</td><td class="number savings">25%</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>14</strong></td><td class="number"><strong>950</strong></td><td class="number"><strong>689.5</strong></td><td class="number"><strong>27%</strong></td></tr>
         </table>
         
         <div class="note">
@@ -845,7 +844,6 @@
             <tr class="risk-medium"><td>R4</td><td>Workflow engine complexity underestimated</td><td>Medium</td><td class="complexity-medium">Medium</td><td>Iterative development, scope management</td></tr>
             <tr class="risk-medium"><td>R5</td><td>Cross-domain integration complexity</td><td>Medium</td><td class="complexity-high">High</td><td>Early integration testing, well-defined contracts</td></tr>
             <tr class="risk-medium"><td>R6</td><td>Performance requirements (7,500 TPS) challenging</td><td>Medium</td><td class="complexity-high">High</td><td>Performance-first design, continuous benchmarking</td></tr>
-            <tr class="risk-medium"><td>R7</td><td>SWIFT integration complexity</td><td>Medium</td><td class="complexity-medium">Medium</td><td>Expert consultation, extended timeline buffer</td></tr>
             <tr class="risk-low"><td>R8</td><td>Copilot-generated code quality variance</td><td>Low</td><td class="complexity-low">Low</td><td>Mandatory code reviews, test coverage thresholds</td></tr>
         </table>
 
@@ -856,11 +854,11 @@
         <h3>5.2 Contingency Calculation (Copilot-Optimized)</h3>
         <table>
             <tr><th>Category</th><th>Base PD</th><th>With Copilot</th><th>Risk Factor</th><th>Contingency PD</th></tr>
-            <tr><td>High Complexity Modules</td><td class="number">675</td><td class="number">508.5</td><td class="number">18%</td><td class="number">91.5</td></tr>
+            <tr><td>High Complexity Modules</td><td class="number">665</td><td class="number">499.5</td><td class="number">18%</td><td class="number">89.9</td></tr>
             <tr><td>Medium Complexity Modules</td><td class="number">239</td><td class="number">162</td><td class="number">12%</td><td class="number">19.5</td></tr>
             <tr><td>Low Complexity Modules</td><td class="number">46</td><td class="number">28</td><td class="number">8%</td><td class="number">2</td></tr>
-            <tr><td><strong>Total Contingency</strong></td><td></td><td class="number"><strong>698.5</strong></td><td></td><td class="number"><strong>113</strong></td></tr>
-            <tr class="total-row"><td><strong>Applied Contingency (15%)</strong></td><td></td><td></td><td></td><td class="number"><strong>105</strong></td></tr>
+            <tr><td><strong>Total Contingency</strong></td><td></td><td class="number"><strong>689.5</strong></td><td></td><td class="number"><strong>111.4</strong></td></tr>
+            <tr class="total-row"><td><strong>Applied Contingency (15%)</strong></td><td></td><td></td><td></td><td class="number"><strong>103</strong></td></tr>
         </table>
 
         <h3>5.3 Buffer Justification</h3>
@@ -872,7 +870,7 @@
             <li>However, maintaining buffer for:
                 <ul style="margin: 0.5rem 0 0.5rem 2rem;">
                     <li>Real-time performance requirements (7,500+ TPS)</li>
-                    <li>Multiple external system integrations (4 payment rails)</li>
+                    <li>Multiple external system integrations (3 payment rails)</li>
                     <li>First-time implementation of unified orchestration pattern</li>
                 </ul>
             </li>
@@ -893,7 +891,6 @@
             <tr class="risk-low"><td>Kubernetes namespace &amp; RBAC</td><td>Week 1</td><td>Platform</td><td class="complexity-low">Low</td></tr>
             <tr class="risk-medium"><td>IPP Rail sandbox access</td><td>Week 8</td><td>External - IPP Provider</td><td class="complexity-medium">Medium</td></tr>
             <tr class="risk-medium"><td>IPI Rail sandbox access</td><td>Week 8</td><td>External - IPI Provider</td><td class="complexity-medium">Medium</td></tr>
-            <tr class="risk-high"><td>SWIFT test environment</td><td>Week 10</td><td>External - SWIFT</td><td class="complexity-high">High</td></tr>
             <tr class="risk-medium"><td>Core Banking integration specs</td><td>Week 4</td><td>Core Banking Team</td><td class="complexity-medium">Medium</td></tr>
         </table>
 
@@ -940,7 +937,7 @@ Payment Orchestration Domain
             <tr><td><strong>Phase 1: Foundation</strong></td><td>3 weeks</td><td>1-3</td><td>Service scaffolding, database schemas, TransactionContext, Time &amp; Calendar module, Reference Data module</td></tr>
             <tr><td><strong>Phase 2: Business Logic</strong></td><td>3 weeks</td><td>4-6</td><td>Business Rules engine, Workflow engine, Validation Pipeline, Gateway Core</td></tr>
             <tr><td><strong>Phase 3: Core Processing</strong></td><td>4 weeks</td><td>7-10</td><td>Limit Control Engine, Queue Management, Status &amp; Lifecycle, Financial Configuration</td></tr>
-            <tr><td><strong>Phase 4: Routing &amp; Execution</strong></td><td>4 weeks</td><td>11-14</td><td>Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, SWIFT)</td></tr>
+            <tr><td><strong>Phase 4: Routing &amp; Execution</strong></td><td>4 weeks</td><td>11-14</td><td>Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG)</td></tr>
             <tr><td><strong>Phase 5: Production Readiness</strong></td><td>2 weeks</td><td>15-16</td><td>Performance optimization, security hardening, monitoring, documentation</td></tr>
         </table>
         
@@ -1035,10 +1032,10 @@ Orchestration├──────────────███████�
         <table class="comparison-table">
             <tr><th>Metric</th><th>Traditional</th><th>With GitHub Copilot</th></tr>
             <tr><td><strong>Configuration Domain</strong></td><td class="number traditional">398 Person-Days</td><td class="number copilot">280 Person-Days</td></tr>
-            <tr><td><strong>Payment Orchestration Domain</strong></td><td class="number traditional">562 Person-Days</td><td class="number copilot">418.5 Person-Days</td></tr>
-            <tr><td><strong>Base Effort Total</strong></td><td class="number traditional">960 Person-Days</td><td class="number copilot">698.5 Person-Days</td></tr>
-            <tr><td><strong>Contingency</strong></td><td class="number traditional">192 PD (20%)</td><td class="number copilot">105 PD (15%)</td></tr>
-            <tr class="total-row"><td><strong>Grand Total</strong></td><td class="number"><strong>1,152 Person-Days</strong></td><td class="number"><strong>803.5 Person-Days</strong></td></tr>
+            <tr><td><strong>Payment Orchestration Domain</strong></td><td class="number traditional">552 Person-Days</td><td class="number copilot">409.5 Person-Days</td></tr>
+            <tr><td><strong>Base Effort Total</strong></td><td class="number traditional">950 Person-Days</td><td class="number copilot">689.5 Person-Days</td></tr>
+            <tr><td><strong>Contingency</strong></td><td class="number traditional">190 PD (20%)</td><td class="number copilot">103 PD (15%)</td></tr>
+            <tr class="total-row"><td><strong>Grand Total</strong></td><td class="number"><strong>1,140 Person-Days</strong></td><td class="number"><strong>792.5 Person-Days</strong></td></tr>
             <tr><td><strong>Recommended Duration</strong></td><td class="number traditional"><strong>18 Weeks</strong></td><td class="number copilot"><strong>16 Weeks</strong></td></tr>
             <tr><td><strong>Recommended Team Size</strong></td><td class="number traditional"><strong>12 Engineers</strong></td><td class="number copilot"><strong>8 Engineers</strong></td></tr>
             <tr><td><strong>Parallel Tracks</strong></td><td class="number">2</td><td class="number">2</td></tr>
@@ -1061,7 +1058,7 @@ Orchestration├──────────────███████�
             <tr><td>Technical Complexity Assessment</td><td class="number">82%</td></tr>
             <tr><td>Copilot Productivity Estimates</td><td class="number">80%</td></tr>
             <tr><td>Integration Points</td><td class="number">78%</td></tr>
-            <tr><td>External Dependencies</td><td class="number">70%</td></tr>
+            <tr><td>External Dependencies</td><td class="number">75%</td></tr>
             <tr class="highlight-row"><td><strong>Overall Estimate Confidence</strong></td><td class="number"><strong>80%</strong></td></tr>
         </table>
     </section>
