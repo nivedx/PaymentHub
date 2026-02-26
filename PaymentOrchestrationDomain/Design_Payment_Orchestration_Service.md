@@ -7,7 +7,7 @@
 
 | Version | Date | Author | Description |
 |---------|------|--------|-------------|
-| 2.0 | February 23, 2026 | Payment Hub Team | Consolidated Unified Service Design |
+| 2.0 | February 26, 2026 | Payment Hub Team | Consolidated Unified Service Design |
 
 ---
 
@@ -23,6 +23,9 @@
    - 3.5 [Queue Management](#35-queue-management)
    - 3.6 [Status & Lifecycle Management](#36-status--lifecycle-management)
    - 3.7 [Embedded Routing Engine](#37-embedded-routing-engine)
+   - 3.8 [FTS-NG Rail Adapter](#38-fts-ng-rail-adapter)
+   - 3.9 [IPI Rail Adapter](#39-ipi-rail-adapter)
+   - 3.10 [WPS Rail Adapter](#310-wps-rail-adapter)
 4. [Domain Model](#4-domain-model)
 5. [Data Architecture](#5-data-architecture)
 6. [API Design](#6-api-design)
@@ -150,7 +153,7 @@ The **Payment Orchestration Service** is the unified core service of the Payment
 │  │  ┌─────────────────────────────────────────────────────────────────────────────┐  ││
 │  │  │ EMBEDDED ROUTING ENGINE                                                      │  ││
 │  │  │ [Rule Engine] → [Smart Router] → [Decision Maker] → [Rail Executor]         │  ││
-│  │  │  ↓ Rules Cache   ↓ Multi-Criteria   ↓ Primary+Fallback  ↓ IPP/IPI/FTS/SWIFT │  ││
+│  │  │  ↓ Rules Cache   ↓ Multi-Criteria   ↓ Primary+Fallback  ↓ IPP/IPI/FTS/SWIFT/WPS │  ││
 │  │  └─────────────────────────────────────────────────────────────────────────────┘  ││
 │  └────────────────────────────────────────────────────────────────────────────────────┘│
 │                                                                                         │
@@ -167,7 +170,7 @@ The **Payment Orchestration Service** is the unified core service of the Payment
                     ▼                      ▼                      ▼
           ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
           │ Configuration    │   │ Risk & Compliance│   │  Payment Rails   │
-          │ Domain           │   │ Domain           │   │  IPP/IPI/FTS/SWIFT│
+          │ Domain           │   │ Domain           │   │  IPP/IPI/FTS/SWIFT/WPS│
           └──────────────────┘   └──────────────────┘   └──────────────────┘
 ```
 
@@ -779,6 +782,7 @@ The **Embedded Routing Engine** determines the optimal payment rail and executes
 │  │ • IPI Adapter       │  │ • Performance Stats │  │ • Circuit Breaker   │ │
 │  │ • FTS-NG Adapter    │  │ • Degradation Alert │  │ • Recovery Handler  │ │
 │  │ • SWIFT Adapter     │  │ • Health Cache      │  │ • Escalation Logic  │ │
+│  │ • WPS Adapter       │  │                     │  │                     │ │
 │  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
 │                                                                             │
 │  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
@@ -802,6 +806,7 @@ The **Embedded Routing Engine** determines the optimal payment rail and executes
 | **SWIFT** | SWIFT Network | International | 1-5 days | Cross-border | Varies |
 | **RTGS** | Real-Time Gross Settlement | Real-time | Seconds | High-value | 17:00 |
 | **ACH** | Automated Clearing House | Batch | 1-2 days | Payroll, Government | 15:00 |
+| **WPS** | Wages Protection System | Batch/Payroll | Same day | Payroll, Salary | 14:00 |
 
 #### 3.7.3 Multi-Criteria Scoring Algorithm
 
@@ -880,6 +885,385 @@ TransactionContext (Ready for Routing)
 | **Total Routing (p99)** | **< 5ms** |
 | Execution (rail-dependent) | Rail SLA |
 | Fallback Latency | < 50ms |
+
+---
+
+### 3.8 FTS-NG Rail Adapter
+
+The **FTS-NG Rail Adapter** integrates with the Funds Transfer System Next-Gen for batch payment processing with same-day and next-day settlement cycles.
+
+#### 3.8.1 Component Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        FTS-NG RAIL ADAPTER MODULE                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │   Batch Generator   │  │   File Handler      │  │   Ack Processor     │ │
+│  │                     │  │                     │  │                     │ │
+│  │ • pain.001 Builder  │  │ • SFTP Uploader     │  │ • pain.002 Parser   │ │
+│  │ • CSV Formatter     │  │ • MQ Publisher      │  │ • Status Mapper     │ │
+│  │ • Batch Assembler   │  │ • File Signer       │  │ • Error Extractor   │ │
+│  │ • Record Validator  │  │ • File Encryptor    │  │ • Requeue Handler   │ │
+│  │ • Sequence Manager  │  │ • Transfer Monitor  │  │ • Audit Logger      │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │  Settlement Tracker │  │  Cycle Manager      │  │  Return Handler     │ │
+│  │                     │  │                     │  │                     │ │
+│  │ • Confirmation Poll │  │ • Cycle Scheduler   │  │ • Return Parser     │ │
+│  │ • Settlement Match  │  │ • Cut-off Monitor   │  │ • Reason Code Map   │ │
+│  │ • Position Update   │  │ • Next-Day Router   │  │ • Credit Reversal   │ │
+│  │ • Reconciliation    │  │ • Cycle Status      │  │ • Notification Emit │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Protocol**: SFTP for batch file delivery; MQ for acknowledgment reception
+**Message Formats**: ISO 20022 pain.001 (Credit Transfer Initiation), proprietary CSV
+**Settlement Type**: Batch — same-day (pre-18:30) and next-day (post-18:30)
+
+#### 3.8.2 Settlement Cycle Management
+
+| Cycle | Submission Window | Settlement |
+|-------|------------------|------------|
+| Morning | 06:00 – 09:00 | 09:00 same day |
+| Midday | 09:01 – 12:00 | 12:00 same day |
+| Afternoon | 12:01 – 15:00 | 15:00 same day |
+| Evening | 15:01 – 18:30 | 18:00 same day |
+| Next-Day | After 18:30 | 09:00 next business day |
+
+#### 3.8.3 FTS-NG Message Flow
+
+```
+TransactionContext (Batch Ready)
+         │
+         ▼
+┌─────────────────────────┐
+│    CYCLE MANAGER         │
+│ • Determine active cycle │
+│ • Check cut-off (18:30)  │
+│ • Assign settlement date │
+└──────────┬──────────────┘
+           │ CycleAssignment
+           ▼
+┌─────────────────────────┐
+│    BATCH GENERATOR       │
+│ • Build pain.001 XML     │
+│ • Append CSV records     │
+│ • Validate batch totals  │
+└──────────┬──────────────┘
+           │ BatchFile
+           ▼
+┌─────────────────────────┐
+│    FILE HANDLER          │
+│ • Sign file (PGP/X.509)  │
+│ • Encrypt payload        │
+│ • Upload via SFTP        │
+└──────────┬──────────────┘
+           │ UploadConfirm
+           ▼
+┌─────────────────────────┐
+│    ACK PROCESSOR         │
+│ • Await pain.002 ACK     │
+│ • Parse acceptance status│
+│ • Trigger error handling │
+└──────────┬──────────────┘
+           │ AckResult
+           ▼
+┌─────────────────────────┐
+│   SETTLEMENT TRACKER     │
+│ • Poll settlement status │
+│ • Match confirmation     │
+│ • Update TransactionCtx  │
+│ • Trigger reconciliation │
+└─────────────────────────┘
+```
+
+#### 3.8.4 Error Handling & Return Codes
+
+| FTS Return Code | Description | Action |
+|----------------|-------------|--------|
+| `RJCT-AC01` | Account number invalid | Reject, notify sender |
+| `RJCT-AC04` | Account closed | Reject, notify sender |
+| `RJCT-AM05` | Duplicate payment | Reject, idempotency check |
+| `RJCT-FF01` | Invalid file format | Re-generate batch, re-submit |
+| `RJCT-TM01` | Cut-off time exceeded | Route to next-day cycle |
+| `PDNG-NARR` | Settlement pending | Poll for settlement update |
+
+#### 3.8.5 Functional Requirements
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| FR-FTS-001 | Generate ISO 20022 pain.001 Credit Transfer Initiation files | High |
+| FR-FTS-002 | Support proprietary CSV format as alternate batch format | Medium |
+| FR-FTS-003 | Sign and encrypt batch files before SFTP upload | High |
+| FR-FTS-004 | Parse ISO 20022 pain.002 acknowledgment responses | High |
+| FR-FTS-005 | Manage settlement cycles (09:00, 12:00, 15:00, 18:00) | High |
+| FR-FTS-006 | Route post-18:30 submissions to next-day cycle automatically | High |
+| FR-FTS-007 | Reconcile settled transactions against submitted batch | High |
+| FR-FTS-008 | Handle return payments with reason code mapping | High |
+| FR-FTS-009 | Emit settlement confirmation events to Status Manager | High |
+| FR-FTS-010 | Maintain audit trail for all batch submissions and responses | High |
+
+#### 3.8.6 Performance Targets
+
+| Metric | Target |
+|--------|--------|
+| Batch file generation (1,000 records) | < 2s |
+| SFTP file upload latency | < 5s |
+| Acknowledgment (pain.002) processing | < 1s |
+| Settlement confirmation (p99) | < 30 min from cycle cut-off |
+| Reconciliation processing | < 5 min |
+| Throughput | 50,000 records/batch |
+
+---
+
+### 3.9 IPI Rail Adapter
+
+The **IPI Rail Adapter** integrates with the Interbank Payment Interface for near real-time domestic interbank transfers using ISO 20022 messaging over a Message Queue.
+
+#### 3.9.1 Component Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         IPI RAIL ADAPTER MODULE                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │   Message Builder   │  │   MQ Transport      │  │   Status Tracker    │ │
+│  │                     │  │                     │  │                     │ │
+│  │ • pacs.008 Builder  │  │ • MQ Publisher      │  │ • pacs.002 Listener │ │
+│  │ • Header Generator  │  │ • MQ Consumer       │  │ • Status Mapper     │ │
+│  │ • BIC Validator     │  │ • Message Correlator│  │ • Timeout Monitor   │ │
+│  │ • Amount Formatter  │  │ • Retry Publisher   │  │ • SLA Checker       │ │
+│  │ • Schema Validator  │  │ • Delivery Confirm  │  │ • Alert Emitter     │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │  Directory Service  │  │  Recall Manager     │  │  Liquidity Monitor  │ │
+│  │                     │  │                     │  │                     │ │
+│  │ • Participant Lookup│  │ • camt.056 Builder  │  │ • Position Check    │ │
+│  │ • BIC Resolution    │  │ • Recall Status     │  │ • Limit Validation  │ │
+│  │ • Directory Cache   │  │ • Return Processor  │  │ • Alert Threshold   │ │
+│  │ • Hours Validator   │  │ • Audit Logger      │  │ • Report Generator  │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Protocol**: ISO 20022 messaging over MQ (Message Queue)
+**Message Formats**: pacs.008 (FI to FI Customer Credit Transfer), pacs.002 (Payment Status Report), pacs.028 (Payment Status Inquiry), camt.056 (Payment Cancellation Request)
+**Settlement Type**: Near real-time, within minutes
+**Operating Hours**: Extended hours (05:00 – 23:59), not 24/7
+
+#### 3.9.2 IPI Message Flow
+
+```
+TransactionContext (Routing Decision: IPI)
+         │
+         ▼
+┌─────────────────────────┐
+│   DIRECTORY SERVICE      │
+│ • Lookup creditor BIC    │
+│ • Validate participant   │
+│ • Check operating hours  │
+└──────────┬──────────────┘
+           │ ParticipantInfo
+           ▼
+┌─────────────────────────┐
+│   MESSAGE BUILDER        │
+│ • Construct pacs.008     │
+│ • Populate header fields │
+│ • Validate schema (XSD)  │
+└──────────┬──────────────┘
+           │ pacs.008 Message
+           ▼
+┌─────────────────────────┐
+│   MQ TRANSPORT           │
+│ • Publish to IPI queue   │
+│ • Record message ID      │
+│ • Start response timer   │
+└──────────┬──────────────┘
+           │ MessageId
+           ▼
+┌─────────────────────────┐
+│   STATUS TRACKER         │
+│ • Await pacs.002 response│
+│ • Correlate by MsgId     │
+│ • Handle ACCP/RJCT/PDNG  │
+│ • Trigger pacs.028 if TO │
+└──────────┬──────────────┘
+           │ SettlementResult
+           ▼
+   TransactionContext (Updated)
+```
+
+#### 3.9.3 Participant Management & Directory Services
+
+| Feature | Description |
+|---------|-------------|
+| Participant directory | Cache of IPI-registered bank BICs refreshed every 15 minutes |
+| BIC validation | Real-time lookup against directory before message submission |
+| Operating hours | Per-participant schedule enforced; requests outside hours are queued |
+| Calendar management | Holiday calendar integration for next-business-day routing |
+
+#### 3.9.4 Functional Requirements
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| FR-IPI-001 | Build and submit ISO 20022 pacs.008 messages via MQ | High |
+| FR-IPI-002 | Parse ISO 20022 pacs.002 Payment Status Report responses | High |
+| FR-IPI-003 | Validate creditor BIC against participant directory | High |
+| FR-IPI-004 | Enforce IPI operating hours (05:00 – 23:59) per calendar | High |
+| FR-IPI-005 | Initiate pacs.028 Payment Status Inquiry on timeout | High |
+| FR-IPI-006 | Support camt.056 payment recall/cancellation request | Medium |
+| FR-IPI-007 | Process return payments with pacs.004 | High |
+| FR-IPI-008 | Maintain participant directory cache with 15-minute TTL | High |
+| FR-IPI-009 | Integrate liquidity position check before submission | Medium |
+| FR-IPI-010 | Emit near real-time status events to Status Manager | High |
+
+#### 3.9.5 Performance Targets
+
+| Metric | Target |
+|--------|--------|
+| Message submission latency (p99) | < 200ms |
+| pacs.002 status response time | < 60s |
+| End-to-end settlement (p99) | < 5 min |
+| Participant directory lookup | < 10ms (cache hit) |
+| Throughput | 500 TPS |
+
+---
+
+### 3.10 WPS Rail Adapter
+
+The **WPS Rail Adapter** integrates with the Wages Protection System for regulated payroll and salary disbursement, providing employer registration validation, SIF file management, and Ministry of Labour compliance reporting.
+
+#### 3.10.1 Component Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         WPS RAIL ADAPTER MODULE                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │   SIF Generator     │  │   SFTP Handler      │  │   Status Tracker    │ │
+│  │                     │  │                     │  │                     │ │
+│  │ • SIF File Builder  │  │ • Secure Upload     │  │ • Disbursement Poll │ │
+│  │ • Record Formatter  │  │ • File Validator    │  │ • Status Mapper     │ │
+│  │ • Header Assembler  │  │ • Ack Listener      │  │ • SLA Monitor       │ │
+│  │ • Checksum Writer   │  │ • Retry Handler     │  │ • Alert Emitter     │ │
+│  │ • Batch Signer      │  │ • Transfer Log      │  │ • Audit Logger      │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │  Validation Engine  │  │  Compliance Reporter│  │  Rejection Handler  │ │
+│  │                     │  │                     │  │                     │ │
+│  │ • Employer Validate │  │ • MoL Report Build  │  │ • Rejection Parser  │ │
+│  │ • Employee Validate │  │ • Audit Trail Gen   │  │ • Reason Code Map   │ │
+│  │ • Salary Rules Check│  │ • Regulatory Submit │  │ • Correction Flow   │ │
+│  │ • Bank Dist Validate│  │ • Report Archive    │  │ • Notification Emit │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Protocol**: SFTP for SIF file delivery; REST API for disbursement status queries
+**File Format**: SIF (Salary Information File) — WPS standard format
+**Settlement Type**: Batch — same-day for submissions before 14:00, next business day otherwise
+**Cut-off Time**: 14:00 for same-day processing
+
+#### 3.10.2 WPS Message Flow
+
+```
+TransactionContext (Payroll Batch Ready)
+         │
+         ▼
+┌─────────────────────────┐
+│   VALIDATION ENGINE      │
+│ • Verify employer reg    │
+│ • Validate employees     │
+│ • Check salary rules     │
+│ • Validate bank accounts │
+└──────────┬──────────────┘
+           │ ValidationResult
+           ▼
+┌─────────────────────────┐
+│    SIF GENERATOR         │
+│ • Build SIF header       │
+│ • Append employee records│
+│ • Calculate checksums    │
+│ • Sign batch file        │
+└──────────┬──────────────┘
+           │ SIF File
+           ▼
+┌─────────────────────────┐
+│    SFTP HANDLER          │
+│ • Check cut-off (14:00)  │
+│ • Upload SIF via SFTP    │
+│ • Await upload ACK       │
+│ • Log transfer details   │
+└──────────┬──────────────┘
+           │ UploadConfirm
+           ▼
+┌─────────────────────────┐
+│   STATUS TRACKER         │
+│ • Poll REST API status   │
+│ • Match disbursement ACK │
+│ • Handle partial success │
+│ • Update TransactionCtx  │
+└──────────┬──────────────┘
+           │ DisbursementResult
+           ▼
+┌─────────────────────────┐
+│  COMPLIANCE REPORTER     │
+│ • Generate MoL report    │
+│ • Archive audit trail    │
+│ • Submit regulatory data │
+└─────────────────────────┘
+```
+
+#### 3.10.3 Employer & Employee Validation Flows
+
+| Validation Step | Rules Applied |
+|----------------|---------------|
+| Employer registration | Verify active WPS employer ID; check MoL status |
+| Employee record | Validate Emirates ID / passport; check employment status |
+| Salary amount | Minimum wage compliance; currency must be AED |
+| Bank distribution | Each employee bank account must be WPS-registered |
+| Payroll period | No duplicate payroll for same employer-period combination |
+
+#### 3.10.4 Regulatory Reporting Integration
+
+| Report | Frequency | Destination |
+|--------|-----------|-------------|
+| Salary Disbursement Confirmation | Per payroll run | Ministry of Labour portal |
+| Non-Compliance Report | On SLA breach | MoL automated API |
+| Employer Audit Trail | Monthly | Internal compliance store |
+
+#### 3.10.5 Functional Requirements
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| FR-WPS-001 | Generate SIF (Salary Information File) from payroll records | High |
+| FR-WPS-002 | Validate employer registration with WPS registry | High |
+| FR-WPS-003 | Validate employee records (Emirates ID, bank account) | High |
+| FR-WPS-004 | Enforce 14:00 cut-off for same-day disbursement | High |
+| FR-WPS-005 | Upload signed SIF file via SFTP to WPS clearing system | High |
+| FR-WPS-006 | Poll REST status API for disbursement confirmation | High |
+| FR-WPS-007 | Handle partial rejections with per-employee error codes | High |
+| FR-WPS-008 | Generate Ministry of Labour compliance report per payroll run | High |
+| FR-WPS-009 | Support multi-bank salary distribution in a single SIF file | Medium |
+| FR-WPS-010 | Maintain immutable compliance audit trail for all WPS transactions | High |
+
+#### 3.10.6 Performance Targets
+
+| Metric | Target |
+|--------|--------|
+| SIF file generation (500 employees) | < 3s |
+| SFTP file upload latency | < 5s |
+| Disbursement confirmation (p99) | < 4 hours from submission |
+| Compliance report generation | < 30s |
+| Throughput | 10,000 employee records/batch |
 
 ---
 
@@ -979,7 +1363,7 @@ TransactionContext (Ready for Routing)
 enum ChannelType { API, GRAPHQL, MESSAGE_QUEUE, FILE, WEBHOOK }
 
 // Payment Types
-enum PaymentType { P2P, B2B, PAYROLL, BILL_PAY, INTERNATIONAL, INSTANT }
+enum PaymentType { P2P, B2B, PAYROLL, BILL_PAY, INTERNATIONAL, INSTANT, WAGES }
 
 // Transaction Status
 enum TransactionStatus {
@@ -1520,6 +1904,7 @@ enum TransactionStatus {
 | **IPI Rail** | ISO20022/MQ | Outbound | Interbank transfer execution |
 | **FTS-NG Rail** | SFTP/MQ | Outbound | Batch payment execution |
 | **SWIFT Rail** | SWIFT MX | Outbound | Cross-border payment execution |
+| **WPS Rail** | SFTP/REST | Outbound | Wages protection salary disbursement |
 | **Notification Service** | Kafka | Outbound | User notifications |
 | **Audit Service** | Kafka | Outbound | Compliance audit logging |
 | **Monitoring (Prometheus)** | HTTP | Inbound | Metrics scraping |
@@ -1699,7 +2084,7 @@ All modules within the Payment Orchestration Service communicate via:
 - [ ] Event publishing
 
 ### Phase 4: Production Readiness (Weeks 13-16)
-- [ ] Additional rail adapters (FTS-NG, SWIFT)
+- [ ] Additional rail adapters (FTS-NG, SWIFT, WPS)
 - [ ] Batch processing
 - [ ] Performance optimization
 - [ ] Monitoring & alerting
@@ -1728,7 +2113,11 @@ All modules within the Payment Orchestration Service communicate via:
 | **DLQ** | Dead Letter Queue for failed transactions |
 | **SLA** | Service Level Agreement for processing time |
 | **Circuit Breaker** | Pattern to prevent cascading failures |
+| **FTS-NG** | Funds Transfer System Next Generation - batch payment processing rail |
+| **IPI** | Interbank Payment Interface - near real-time domestic interbank transfers |
+| **WPS** | Wages Protection System - specialized payroll/salary disbursement rail |
+| **SIF** | Salary Information File - standard file format for WPS |
 
 ---
 
-*Document Version: 2.0 | Last Updated: February 23, 2026*
+*Document Version: 2.0 | Last Updated: February 26, 2026*

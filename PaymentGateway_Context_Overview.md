@@ -244,9 +244,9 @@ The routing logic is now embedded within the Payment Orchestration Domain, elimi
 **Purpose**: Execute payment on selected rail
 - Execute transaction on primary rail
 - Automatic fallback execution if primary fails
-- Adapter pattern for different rail protocols (IPP, IPI, FTS-NG, SWIFT)
+- Adapter pattern for different rail protocols (IPP, IPI, FTS-NG, SWIFT, WPS)
 - Reports execution result back to Status Manager
-- **Adapters**: IPPAdapter, IPIAdapter, FTSAdapter, SWIFTAdapter
+- **Adapters**: IPPAdapter, IPIAdapter, FTSAdapter, SWIFTAdapter, WPSAdapter
 
 ---
 
@@ -673,7 +673,7 @@ Entry Channels (API/MQ/File)
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
   ↓
-Payment Rails (IPP/IPI/FTS-NG/SWIFT)
+Payment Rails (IPP/IPI/FTS-NG/SWIFT/WPS)
 ```
 
 **Key Optimization**: Steps ①-⑦ execute within a single service boundary using shared TransactionContext, eliminating 3 network hops and enabling atomic database transactions.
@@ -777,7 +777,7 @@ Payment execution and supporting services:
 | **Audit & Logging** | Compliance logging | Event Stream | Payment Gateway |
 | **Monitoring** | Metrics & alerts | Prometheus/Grafana | Status Manager |
 
-> **Note**: Payment rail execution is now handled by the embedded Rail Executor within the Payment Orchestration Domain, using adapter pattern for different rail protocols (IPPAdapter, IPIAdapter, FTSAdapter, SWIFTAdapter).
+> **Note**: Payment rail execution is now handled by the embedded Rail Executor within the Payment Orchestration Domain, using adapter pattern for different rail protocols (IPPAdapter, IPIAdapter, FTSAdapter, SWIFTAdapter, WPSAdapter).
 
 ### 9.3 Configuration Management Service Integration
 All configuration lookups are served by the unified Configuration Management Service (Port 8002):

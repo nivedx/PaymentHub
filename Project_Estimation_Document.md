@@ -411,6 +411,7 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | IPI Rail Adapter | Interbank Payment Interface integration | 8 | 20% | 6 | High |
 | FTS-NG Rail Adapter | Funds Transfer System NG integration (batch/SFTP) | 8 | 20% | 6 | High |
 | SWIFT Rail Adapter | SWIFT MX message format, international payments | 10 | 10% | 9 | High |
+| WPS Rail Adapter | Wages Protection System integration (SIF/SFTP/compliance) | 8 | 20% | 6 | High |
 | Health Checker | Health monitor, availability check, performance stats, degradation alerts | 5 | 35% | 3 | Medium |
 | Fallback Manager | Fallback strategy, retry coordinator, circuit breaker, recovery | 6 | 15% | 5 | High |
 | Load Balancer | Round robin, weighted distribution, capacity management | 4 | 30% | 3 | Medium |
@@ -423,7 +424,7 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Unit Tests | Routing algorithm, scoring logic, adapter logic | 8 | 35% | 5 | High |
 | Integration Tests | End-to-end routing, rail execution | 6 | 15% | 5 | High |
 | Rail Simulation Tests | Mock rail responses, failure scenarios | 5 | 20% | 4 | High |
-| **Subtotal** | | **113** | **~24%** | **89.5** | |
+| **Subtotal** | | **121** | **~21%** | **95.5** | |
 
 ### 3.9 Payment Orchestration Domain - Cross-Cutting Concerns
 
@@ -592,7 +593,7 @@ Payment Orchestration Domain
 | **Phase 1: Foundation** | 3 weeks | 1-3 | Service scaffolding, database schemas, TransactionContext, Time & Calendar module, Reference Data module |
 | **Phase 2: Business Logic** | 3 weeks | 4-6 | Business Rules engine, Workflow engine, Validation Pipeline, Gateway Core |
 | **Phase 3: Core Processing** | 4 weeks | 7-10 | Limit Control Engine, Queue Management, Status & Lifecycle, Financial Configuration |
-| **Phase 4: Routing & Execution** | 4 weeks | 11-14 | Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, SWIFT) |
+| **Phase 4: Routing & Execution** | 4 weeks | 11-14 | Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, SWIFT, WPS) |
 | **Phase 5: Production Readiness** | 2 weeks | 15-16 | Performance optimization, security hardening, monitoring, documentation |
 
 **Total Duration: 16 weeks** (reduced from 18 weeks)

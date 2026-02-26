@@ -166,6 +166,7 @@ flowchart TB
         SWIFT["🌐 SWIFT<br/>Cross-Border<br/>1-5 Days"]
         RTGS["🏛️ RTGS<br/>High-Value<br/>Real-time"]
         ACH["📋 ACH<br/>Batch<br/>1-2 Days"]
+        WPS["🏦 WPS<br/>Wages Protection<br/>Same-Day"]
     end
     
     %% ========================================
@@ -200,6 +201,7 @@ flowchart TB
     RailExec --> SWIFT
     RailExec --> RTGS
     RailExec --> ACH
+    RailExec --> WPS
     
     %% Platform Services Integration (Section 8.6)
     PayGW -.->|"Log All"| Audit
@@ -239,5 +241,5 @@ flowchart TB
     class RuleEngine,Router,Decision,RailExec routingStyle
     class AML,Fraud,Sanction riskStyle
     class Notify,Audit,Monitor,Cache platformStyle
-    class IPP,IPI,FTS,SWIFT,RTGS,ACH railStyle
+    class IPP,IPI,FTS,SWIFT,RTGS,ACH,WPS railStyle
     class TxCtx contextStyle
