@@ -1,0 +1,243 @@
+flowchart TB
+    %% ========================================
+    %% PAYMENT GATEWAY CONTEXT DIAGRAM
+    %% Aligned with PaymentGateway_Context_Overview.md
+    %% ADR-005a: Unified Payment Orchestration Service
+    %% ========================================
+    
+    %% ENTRY CHANNELS (Section 1)
+    subgraph Entry["🌐 ENTRY CHANNELS"]
+        direction LR
+        APIGW["🚪 API Gateway<br/>REST/GraphQL<br/>Synchronous"]
+        MQGW["📨 Message Queue Gateway<br/>Kafka/RabbitMQ<br/>Async/Event-Driven"]
+        FTPGW["📁 File Gateway<br/>SFTP/Batch<br/>Bulk Processing"]
+    end
+    
+    %% ========================================
+    %% PAYMENT ORCHESTRATION DOMAIN (Section 2)
+    %% Port 8001 - Unified Service per ADR-005a
+    %% ========================================
+    subgraph OrchestrationDomain["⚡ PAYMENT ORCHESTRATION DOMAIN (Port 8001)"]
+        direction TB
+        
+        %% Section 2.7 - TransactionContext (Central State)
+        subgraph SharedContext["📦 TransactionContext (Section 2.7)"]
+            TxCtx["TransactionContext<br/>• Write-Through Cache<br/>• Persistent Storage<br/>• Zero-Serialization Sharing<br/>• Disaster Recovery"]
+        end
+        
+        %% Section 2.1 - Payment Gateway Core
+        subgraph Gateway["① Payment Gateway Core (2.1)"]
+            direction TB
+            PayGW["🔄 Payment Gateway Service<br/>• Request Reception<br/>• Protocol Translation<br/>• Transaction Initialization<br/>• Request Enrichment"]
+        end
+        
+        %% Section 2.2 - Validation Pipeline (4 Stages)
+        subgraph Validation["② Validation Pipeline (2.2)"]
+            direction TB
+            Val1["1️⃣ Schema Validation<br/>• Data Format<br/>• Required Fields<br/>• Structure Compliance"]
+            Val2["2️⃣ Business Rules<br/>• Payment Type Rules<br/>• Channel Rules<br/>• Amount Thresholds"]
+            Val3["3️⃣ Reference Data<br/>• Holiday Calendar<br/>• Cut-off Times<br/>• Participant Lookup"]
+            Val4["4️⃣ Duplicate Detection<br/>• Idempotency Key<br/>• Time Window Check"]
+        end
+        
+        %% Section 2.3 - Limit Control Engine (3 Steps)
+        subgraph LimitControl["③ Limit Control Engine (2.3)"]
+            direction TB
+            Lim1["🔍 Step 1: Limit Lookup<br/>• User/Account/Channel Limits<br/>• Cache-First Retrieval"]
+            Lim2["⚖️ Step 2: Limit Calculation<br/>• Usage Calculation<br/>• Fee Calculation"]
+            Lim3["🚦 Step 3: Limit Decision<br/>• Allow/Block/Warn/Escalate"]
+        end
+        
+        %% Section 2.4 - Queue Management (3 Phases)
+        subgraph QueueMgmt["④ Queue Management (2.4)"]
+            direction TB
+            Q1["📋 Phase 1: Priority Assignment<br/>• SLA-Based Priority"]
+            Q2["📥 Phase 2: Queue Placement<br/>• Priority/Standard/Batch Queues"]
+            Q3["⏱️ Phase 3: Scheduling<br/>• Time-Based Processing"]
+        end
+        
+        %% Section 2.5 - Status & Lifecycle Management
+        subgraph StatusLifecycle["⑤ Status & Lifecycle (2.5)"]
+            direction TB
+            S1["📍 Status Manager<br/>• State Machine<br/>• Atomic Transitions"]
+            S2["🔔 Event Publisher<br/>• Domain Events<br/>• Outbox Pattern"]
+            S3["🔄 Retry Handler<br/>• Exponential Backoff<br/>• Circuit Breaker"]
+        end
+        
+        %% Section 2.6 - Embedded Routing Engine
+        subgraph EmbeddedRouting["⑥ Embedded Routing Engine (2.6)"]
+            direction TB
+            RuleEngine["📋 Rule Engine<br/>• Rule Evaluation<br/>• Score Calculation"]
+            Router["🧭 Smart Router<br/>• Multi-Criteria Optimization<br/>• Load Balancing"]
+            Decision["✅ Decision Maker<br/>• Rail Selection<br/>• Fallback Handling"]
+            
+            RuleEngine --> Router --> Decision
+        end
+        
+        %% Section 2.6 - Rail Execution
+        subgraph Execution["⑦ Rail Execution"]
+            direction LR
+            RailExec["🚀 Rail Executor<br/>• Adapter Pattern<br/>• Response Handling"]
+        end
+        
+        %% Internal Flow (Zero Network Hops)
+        PayGW -->|"Initialize"| TxCtx
+        TxCtx -.->|"Shared Context"| Val1
+        Val1 --> Val2 --> Val3 --> Val4
+        Val4 -->|"Update Results"| TxCtx
+        TxCtx -.->|"Shared Context"| Lim1
+        Lim1 --> Lim2 --> Lim3
+        Lim3 -->|"Update Decision"| TxCtx
+        TxCtx -.->|"Shared Context"| Q1
+        Q1 --> Q2 --> Q3
+        Q3 --> S1
+        S1 -->|"INLINE<br/>(No Network Hop)"| RuleEngine
+        Decision -->|"Route Decision"| TxCtx
+        TxCtx -.->|"Shared Context"| RailExec
+    end
+    
+    %% ========================================
+    %% CONFIGURATION DOMAIN (Section 3)
+    %% Port 8002 - Configuration Management Service
+    %% ========================================
+    subgraph Config["⚙️ CONFIGURATION DOMAIN (Port 8002)"]
+        direction TB
+        
+        %% Section 3.1 - Time & Calendar Module
+        subgraph TimeConfig["3.1 Time & Calendar Module"]
+            Holiday["📅 Holiday Calendar"]
+            Cutoff["⏰ Cut-off Management"]
+            BizDay["📆 Business Day Calculator"]
+        end
+        
+        %% Section 3.2 - Reference Data Module
+        subgraph ReferenceData["3.2 Reference Data Module"]
+            Participant["🏦 Participant Directory"]
+            Currency["💱 Currency/Country"]
+            BankVal["🔍 Banking Validation"]
+        end
+        
+        %% Section 3.3 - Rules & Workflow Module
+        subgraph RuleConfig["3.3 Rules & Workflow Module"]
+            Rules["📋 Rules Repository"]
+            Workflow["🔄 Workflow Engine"]
+            Escalation["⬆️ Escalation Management"]
+            SLA["⏱️ SLA Management"]
+        end
+        
+        %% Section 3.4 - Financial Configuration Module
+        subgraph FinancialConfig["3.4 Financial Configuration"]
+            Pricing["💲 Charge & Pricing Engine"]
+            Limits["🎯 Limit Management"]
+            Vostro["🏦 Vostro Accounts"]
+            GL["📊 GL Integration"]
+        end
+    end
+    
+    %% ========================================
+    %% RISK & COMPLIANCE DOMAIN (Section 5)
+    %% ========================================
+    subgraph Risk["🛡️ RISK & COMPLIANCE DOMAIN"]
+        direction LR
+        AML["🕵️ AML Screening<br/>Pattern Analysis"]
+        Fraud["🚨 Fraud Detection<br/>ML-Based Scoring"]
+        Sanction["🚫 Sanctions Check<br/>OFAC/UN/EU Lists"]
+    end
+    
+    %% ========================================
+    %% PLATFORM SERVICES DOMAIN (Section 6)
+    %% ========================================
+    subgraph Platform["🔧 PLATFORM SERVICES DOMAIN"]
+        direction LR
+        Notify["📧 Notification Service<br/>Email/SMS/Push/Webhook"]
+        Audit["📝 Audit & Logging<br/>Immutable Trail"]
+        Monitor["📊 Monitoring & Metrics<br/>Prometheus/Grafana"]
+        Cache["⚡ Cache Service<br/>Redis Cluster"]
+    end
+    
+    %% ========================================
+    %% PAYMENT RAILS (Section 7)
+    %% ========================================
+    subgraph Rails["💳 PAYMENT PROCESSING RAILS"]
+        direction LR
+        IPP["💸 IPP<br/>Instant<br/>24/7"]
+        IPI["⚡ IPI<br/>Near Real-time<br/>Minutes"]
+        FTS["📦 FTS-NG<br/>Batch<br/>Same-Day"]
+        SWIFT["🌐 SWIFT<br/>Cross-Border<br/>1-5 Days"]
+        RTGS["🏛️ RTGS<br/>High-Value<br/>Real-time"]
+        ACH["📋 ACH<br/>Batch<br/>1-2 Days"]
+    end
+    
+    %% ========================================
+    %% FLOW CONNECTIONS
+    %% ========================================
+    
+    %% Entry to Orchestration Domain
+    APIGW --> PayGW
+    MQGW --> PayGW
+    FTPGW --> PayGW
+    
+    %% Configuration Integration (Section 9.3)
+    Val3 -.->|"Check"| Holiday
+    Val3 -.->|"Check"| Cutoff
+    Val3 -.->|"Lookup"| Participant
+    Val2 -.->|"Apply"| Rules
+    Lim1 -.->|"Fetch"| Limits
+    Lim2 -.->|"Calculate"| Pricing
+    Q1 -.->|"Reference"| Workflow
+    S1 -.->|"Lookup"| Currency
+    RuleEngine -.->|"Load Rules"| Rules
+    
+    %% Risk & Compliance Triggers (Section 8.3)
+    Val4 -.->|"Trigger"| Fraud
+    Lim3 -.->|"Trigger"| AML
+    S1 -.->|"Trigger"| Sanction
+    
+    %% Execution to Rails
+    RailExec --> IPP
+    RailExec --> IPI
+    RailExec --> FTS
+    RailExec --> SWIFT
+    RailExec --> RTGS
+    RailExec --> ACH
+    
+    %% Platform Services Integration (Section 8.6)
+    PayGW -.->|"Log All"| Audit
+    S2 -.->|"Notify"| Notify
+    S1 -.->|"Metrics"| Monitor
+    Val1 -.->|"Schema Cache"| Cache
+    Lim1 -.->|"Limit Cache"| Cache
+    RuleEngine -.->|"Rule Cache"| Cache
+    
+    %% Retry Flow (Section 8.5)
+    Rails -.->|"Failure"| S3
+    S3 -.->|"Re-queue"| Q2
+    
+    %% ========================================
+    %% STYLING
+    %% ========================================
+    
+    %% Highlight unified orchestration domain
+    style OrchestrationDomain fill:#fff3e0,stroke:#ff9800,stroke-width:4px
+    style SharedContext fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style EmbeddedRouting fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style StatusLifecycle fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    
+    %% Component Styling
+    classDef entryStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef coreStyle fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    classDef configStyle fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    classDef routingStyle fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    classDef riskStyle fill:#ffebee,stroke:#e53935,stroke-width:2px
+    classDef platformStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef railStyle fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef contextStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    
+    class APIGW,MQGW,FTPGW entryStyle
+    class PayGW,Val1,Val2,Val3,Val4,Lim1,Lim2,Lim3,Q1,Q2,Q3,S1,S2,S3 coreStyle
+    class Holiday,Cutoff,BizDay,Participant,Currency,BankVal,Pricing,Limits,Vostro,GL,Rules,Workflow,Escalation,SLA configStyle
+    class RuleEngine,Router,Decision,RailExec routingStyle
+    class AML,Fraud,Sanction riskStyle
+    class Notify,Audit,Monitor,Cache platformStyle
+    class IPP,IPI,FTS,SWIFT,RTGS,ACH railStyle
+    class TxCtx contextStyle

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Hub - Project Estimation Document</title>
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-color: #38a169;
+            --warning-color: #d69e2e;
+            --danger-color: #e53e3e;
+            --bg-light: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #fff;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 4px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+            padding: 10px 15px;
+            background: linear-gradient(90deg, var(--bg-light) 0%, transparent 100%);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+        
+        h4 {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .document-control {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        
+        th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        
+        tr:hover {
+            background: #edf2f7;
+        }
+        
+        .summary-table th {
+            background: var(--secondary-color);
+        }
+        
+        .highlight-row {
+            background: #ebf8ff !important;
+            font-weight: 600;
+        }
+        
+        .total-row {
+            background: var(--primary-color) !important;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .total-row td {
+            border-color: var(--primary-color);
+        }
+        
+        .number {
+            text-align: right;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        .executive-summary {
+            background: linear-gradient(135deg, #ebf8ff 0%, #f0fff4 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .executive-summary table {
+            max-width: 600px;
+        }
+        
+        .executive-summary th {
+            background: var(--accent-color);
+        }
+        
+        .metric-card {
+            display: inline-block;
+            background: white;
+            padding: 15px 25px;
+            margin: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+        
+        .complexity-high {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .complexity-medium {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+        
+        .complexity-low {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .savings {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .risk-high {
+            background: #fff5f5 !important;
+        }
+        
+        .risk-medium {
+            background: #fffff0 !important;
+        }
+        
+        .risk-low {
+            background: #f0fff4 !important;
+        }
+        
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, var(--secondary-color) 0%, transparent 100%);
+            margin: 3rem 0;
+        }
+        
+        .note {
+            background: #fffff0;
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 1rem 0;
+            font-style: italic;
+        }
+        
+        .gantt-chart {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 0.85rem;
+        }
+        
+        .dependency-tree {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre;
+        }
+        
+        .copilot-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .comparison-table {
+            margin: 1.5rem 0;
+        }
+        
+        .comparison-table .traditional {
+            background: #fff5f5;
+        }
+        
+        .comparison-table .copilot {
+            background: #f0fff4;
+        }
+        
+        .approval-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        
+        .approval-table td {
+            height: 60px;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .toc {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                font-size: 11pt;
+            }
+            
+            h2 {
+                page-break-after: avoid;
+            }
+            
+            table {
+                page-break-inside: avoid;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Payment Hub - Project Estimation Document</h1>
+        <p class="subtitle">Configuration Domain &amp; Payment Orchestration Domain</p>
+    </header>
+
+    <section class="document-control">
+        <h3>Document Control</h3>
+        <table style="max-width: 500px;">
+            <tr><th>Attribute</th><th>Value</th></tr>
+            <tr><td><strong>Document Title</strong></td><td>Development Effort Estimation</td></tr>
+            <tr><td><strong>Version</strong></td><td>1.0</td></tr>
+            <tr><td><strong>Date</strong></td><td>February 23, 2026</td></tr>
+            <tr><td><strong>Prepared By</strong></td><td>Senior Software Architect</td></tr>
+            <tr><td><strong>Status</strong></td><td>Draft for Client Review</td></tr>
+        </table>
+    </section>
+
+    <section class="executive-summary">
+        <h2 style="margin-top: 0; background: none; border: none; padding: 0;">Executive Summary <span class="copilot-badge">GitHub Copilot Optimized</span></h2>
+        <p>This document provides a comprehensive effort estimation for the development of two core domains of the Payment Hub system:</p>
+        <ol style="margin: 1rem 0 1rem 2rem;">
+            <li><strong>Configuration Management Service</strong> (Configuration Domain)</li>
+            <li><strong>Payment Orchestration Service</strong> (Payment Orchestration Domain)</li>
+        </ol>
+        
+        <table class="summary-table">
+            <tr><th>Summary Metric</th><th>Value</th></tr>
+            <tr><td><strong>Total Estimated Effort (with Copilot)</strong></td><td class="number"><strong>621 Person-Days</strong></td></tr>
+            <tr><td>Contingency Buffer (15%)</td><td class="number">93 Person-Days</td></tr>
+            <tr class="total-row"><td>Grand Total with Buffer</td><td class="number">714 Person-Days</td></tr>
+            <tr><td>Recommended Team Size</td><td class="number">6-8 Engineers</td></tr>
+            <tr><td>Estimated Duration</td><td class="number">14-16 Weeks</td></tr>
+            <tr><td>Productivity Gain (vs Traditional)</td><td class="number savings">~35%</td></tr>
+            <tr><td>Development Approach</td><td>GitHub Copilot Agent-Assisted</td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="methodology">
+        <h2>1. Estimation Methodology</h2>
+        
+        <h3>1.1 Approach</h3>
+        <p>This estimation employs a <strong>hybrid methodology</strong> combining:</p>
+        <table>
+            <tr><th>Method</th><th>Application</th><th>Weight</th></tr>
+            <tr><td><strong>Expert Judgment</strong></td><td>Base estimates from similar payment systems</td><td class="number">50%</td></tr>
+            <tr><td><strong>Analogous Estimation</strong></td><td>Comparison with prior payment gateway implementations</td><td class="number">30%</td></tr>
+            <tr><td><strong>Bottom-Up Decomposition</strong></td><td>WBS-based task breakdown per module</td><td class="number">20%</td></tr>
+        </table>
+
+        <h3>1.2 AI-Assisted Development (GitHub Copilot Agent)</h3>
+        <p>This estimation incorporates productivity gains from <strong>GitHub Copilot Agent</strong> assisted development:</p>
+        <table>
+            <tr><th>Task Category</th><th>Copilot Impact</th><th>Productivity Gain</th></tr>
+            <tr><td>Boilerplate/CRUD Code</td><td>High</td><td class="number savings">40-50%</td></tr>
+            <tr><td>Unit Test Generation</td><td>High</td><td class="number savings">35-45%</td></tr>
+            <tr><td>API Development</td><td>Medium-High</td><td class="number savings">30-40%</td></tr>
+            <tr><td>Documentation</td><td>High</td><td class="number savings">35-45%</td></tr>
+            <tr><td>Standard Patterns</td><td>High</td><td class="number savings">40-50%</td></tr>
+            <tr><td>Database Schema/Queries</td><td>Medium</td><td class="number">25-35%</td></tr>
+            <tr><td>Complex Business Logic</td><td>Low-Medium</td><td class="number">15-20%</td></tr>
+            <tr><td>Integration Code</td><td>Low-Medium</td><td class="number">15-25%</td></tr>
+            <tr><td>DevOps/Infrastructure</td><td>Medium</td><td class="number">20-30%</td></tr>
+            <tr><td>Debugging/Troubleshooting</td><td>Low</td><td class="number">10-15%</td></tr>
+        </table>
+        
+        <div class="note">
+            <strong>Note:</strong> Estimates below reflect Copilot-assisted productivity. Complex algorithmic work, architecture decisions, and integration debugging retain conservative estimates.
+        </div>
+
+        <h3>1.3 Estimation Assumptions</h3>
+        <table>
+            <tr><th>Category</th><th>Assumption</th></tr>
+            <tr><td><strong>Team Composition</strong></td><td>Senior (30%) / Mid-Level (50%) / Junior (20%) engineers</td></tr>
+            <tr><td><strong>Working Hours</strong></td><td>8 productive hours per person-day</td></tr>
+            <tr><td><strong>Technology Stack</strong></td><td>.NET Core/ASP.NET, SQL Server, Redis, Kafka, Kubernetes</td></tr>
+            <tr><td><strong>Infrastructure</strong></td><td>Cloud-native, infrastructure pre-provisioned</td></tr>
+            <tr><td><strong>Documentation</strong></td><td>Standard technical documentation included</td></tr>
+            <tr><td><strong>Code Quality</strong></td><td>Unit tests (>80% coverage), code reviews mandatory</td></tr>
+            <tr><td><strong>AI Tooling</strong></td><td>GitHub Copilot Agent enabled for all developers</td></tr>
+            <tr><td><strong>Copilot Workspace</strong></td><td>Agents configured with project context and coding standards</td></tr>
+        </table>
+
+        <h3>1.4 Complexity Assessment Criteria</h3>
+        <table>
+            <tr><th>Complexity</th><th>Criteria</th><th>Copilot Benefit</th></tr>
+            <tr><td class="complexity-low">Low</td><td>Standard CRUD, simple validation, single integration</td><td class="number savings">High (40-50%)</td></tr>
+            <tr><td class="complexity-medium">Medium</td><td>Business logic, multiple integrations, state management</td><td class="number">Medium (25-35%)</td></tr>
+            <tr><td class="complexity-high">High</td><td>Complex algorithms, real-time processing, multi-system orchestration</td><td class="number">Low (15-20%)</td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="config-domain">
+        <h2>2. Configuration Domain - Module Breakdown</h2>
+
+        <h3>2.1 Service Overview</h3>
+        <table style="max-width: 400px;">
+            <tr><th>Attribute</th><th>Value</th></tr>
+            <tr><td>Service Name</td><td>Configuration Management Service</td></tr>
+            <tr><td>Port</td><td>8002</td></tr>
+            <tr><td>Database</td><td>Microsoft SQL Server</td></tr>
+            <tr><td>Cache</td><td>Redis</td></tr>
+            <tr><td>Message Broker</td><td>Kafka</td></tr>
+        </table>
+
+        <h3>2.2 Module 1: Time &amp; Calendar Management</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Domain Model Implementation</td><td>HolidayCalendar, Holiday, CutoffRule, CutoffSchedule entities</td><td class="number">4</td><td class="number">45%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Holiday Calendar Service</td><td>CRUD operations, multi-region calendar support</td><td class="number">6</td><td class="number">45%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Cut-off Time Configuration</td><td>Rail/currency/client-specific cut-off management</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Business Day Calculator</td><td>T+N calculations, settlement date computation</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Timezone Management</td><td>Global timezone handling, DST support</td><td class="number">3</td><td class="number">35%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Cut-off Validation Engine</td><td>Real-time cut-off checking with warnings</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Database</strong></td></tr>
+            <tr><td>Schema Design &amp; Implementation</td><td>Tables: holiday_calendars, holidays, cutoff_rules, cutoff_schedules</td><td class="number">3</td><td class="number">35%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Stored Procedures</td><td>Business day calculations, bulk operations</td><td class="number">2</td><td class="number">30%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td>Data Migration Scripts</td><td>Initial calendar and cut-off data seeding</td><td class="number">2</td><td class="number">40%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>APIs</strong></td></tr>
+            <tr><td>REST API Development</td><td>7 endpoints for calendar/cut-off operations</td><td class="number">4</td><td class="number">40%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>API Documentation</td><td>OpenAPI/Swagger documentation</td><td class="number">1</td><td class="number">50%</td><td class="number">0.5</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Redis Cache Integration</td><td>Calendar and cut-off caching with TTL</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Kafka Event Publishing</td><td>Holiday/cut-off change events</td><td class="number">2</td><td class="number">30%</td><td class="number">1.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>>80% coverage for business logic</td><td class="number">4</td><td class="number">40%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Integration Tests</td><td>API and database integration tests</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Documentation</strong></td></tr>
+            <tr><td>Technical Documentation</td><td>Module design and API documentation</td><td class="number">2</td><td class="number">45%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>54</strong></td><td class="number"><strong>~37%</strong></td><td class="number"><strong>33.5</strong></td><td></td></tr>
+        </table>
+
+        <h3>2.3 Module 2: Reference Data Management</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Domain Model Implementation</td><td>Participant, Classification, SettlementAccount, RailCapability</td><td class="number">5</td><td class="number">45%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Participant Directory Service</td><td>Bank registry, BIC/SWIFT codes, routing numbers</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Participant Classification</td><td>Tier levels, risk ratings, service levels</td><td class="number">4</td><td class="number">40%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Participant Status Monitor</td><td>Operational status, health tracking, availability</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Banking Validation Service</td><td>BIC validation, IBAN validation (MOD97), account format</td><td class="number">8</td><td class="number">25%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Settlement Account Management</td><td>Nostro/Vostro accounts, GL mappings</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Currency/Country Management</td><td>ISO codes, sanctioned country flagging</td><td class="number">3</td><td class="number">50%</td><td class="number">1.5</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Database</strong></td></tr>
+            <tr><td>Schema Design &amp; Implementation</td><td>Tables: participants, classifications, settlement_accounts, currencies, countries, bic_directory, iban_rules</td><td class="number">4</td><td class="number">35%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Indexes &amp; Optimization</td><td>Performance indexes for lookups</td><td class="number">2</td><td class="number">30%</td><td class="number">1.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Data Migration</td><td>BIC directory import, currency/country seeding</td><td class="number">3</td><td class="number">40%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>APIs</strong></td></tr>
+            <tr><td>REST API Development</td><td>12 endpoints for participant/validation operations</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>API Documentation</td><td>OpenAPI/Swagger documentation</td><td class="number">1</td><td class="number">50%</td><td class="number">0.5</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Redis Cache Integration</td><td>Participant and reference data caching</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>SWIFT Network Integration</td><td>BIC directory sync interface</td><td class="number">4</td><td class="number">15%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Core Banking Integration</td><td>Account validation interface</td><td class="number">4</td><td class="number">15%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Kafka Event Publishing</td><td>Participant status change events</td><td class="number">2</td><td class="number">30%</td><td class="number">1.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>>80% coverage including IBAN/BIC validation</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Integration Tests</td><td>API, database, external system mocks</td><td class="number">4</td><td class="number">25%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Documentation</strong></td></tr>
+            <tr><td>Technical Documentation</td><td>Module design and integration guides</td><td class="number">2</td><td class="number">45%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>77</strong></td><td class="number"><strong>~35%</strong></td><td class="number"><strong>52</strong></td><td></td></tr>
+        </table>
+
+        <h3>2.4 Module 3: Business Rules &amp; Workflows</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Domain Model Implementation</td><td>RuleDefinition, RuleCondition, RuleAction, WorkflowDefinition, WorkflowState</td><td class="number">6</td><td class="number">40%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Rules Repository</td><td>Rule storage with versioning and effective dating</td><td class="number">6</td><td class="number">40%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Rule Engine</td><td>Condition parsing, rule evaluation, priority handling</td><td class="number">12</td><td class="number">15%</td><td class="number">10</td><td class="complexity-high">High</td></tr>
+            <tr><td>Workflow Engine</td><td>State machine, transition rules, guard conditions</td><td class="number">14</td><td class="number">15%</td><td class="number">12</td><td class="complexity-high">High</td></tr>
+            <tr><td>Approval Management</td><td>Maker-checker pattern, multi-level approvals, delegation</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Escalation Management</td><td>Time-based escalation, auto-escalation, notifications</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>SLA Management</td><td>SLA definitions, breach detection, performance tracking</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Notification Templates</td><td>Email/SMS/Push/Webhook template engine</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Decision Audit</td><td>Rule execution logging, decision analytics</td><td class="number">4</td><td class="number">35%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Database</strong></td></tr>
+            <tr><td>Schema Design &amp; Implementation</td><td>Tables: rule_definitions, workflow_definitions, workflow_instances, etc.</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Stored Procedures</td><td>Rule evaluation optimization, workflow state queries</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>APIs</strong></td></tr>
+            <tr><td>REST API Development</td><td>15 endpoints for rules/workflows/escalations/SLAs</td><td class="number">6</td><td class="number">40%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>API Documentation</td><td>OpenAPI/Swagger documentation</td><td class="number">2</td><td class="number">50%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Redis Cache Integration</td><td>Rule and workflow caching</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Kafka Event Publishing</td><td>Workflow events, escalation triggers, SLA breaches</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Notification Service Integration</td><td>Multi-channel notification dispatch</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>>80% coverage for rule engine and workflow logic</td><td class="number">8</td><td class="number">35%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Integration Tests</td><td>Workflow state transitions, approval flows</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Documentation</strong></td></tr>
+            <tr><td>Technical Documentation</td><td>Rule DSL guide, workflow design patterns</td><td class="number">3</td><td class="number">40%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>110</strong></td><td class="number"><strong>~29%</strong></td><td class="number"><strong>79.5</strong></td><td></td></tr>
+        </table>
+
+        <h3>2.5 Module 4: Financial Configuration</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Domain Model Implementation</td><td>ChargeDefinition, ChargeSlab, VostroAccount, LimitDefinition, LimitUtilization, GLAccount</td><td class="number">6</td><td class="number">40%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Charge &amp; Pricing Engine</td><td>Flat/percentage/tiered pricing, customer-specific rates</td><td class="number">10</td><td class="number">15%</td><td class="number">8.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Fee Calculation Service</td><td>Multi-slab calculation, promotional rates</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Vostro Account Management</td><td>Account registry, multi-currency support</td><td class="number">6</td><td class="number">35%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Real-time Balance Tracking</td><td>Balance updates, held amount management</td><td class="number">8</td><td class="number">15%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>Limit Definition Management</td><td>Multi-dimensional limits (user/account/channel/product)</td><td class="number">6</td><td class="number">35%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Real-time Limit Checking</td><td>Concurrent checks, utilization tracking, hold management</td><td class="number">10</td><td class="number">15%</td><td class="number">8.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Limit Breach Handling</td><td>Breach actions, override workflows, escalation</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>GL Integration</td><td>GL code mapping, entry generation, reconciliation</td><td class="number">6</td><td class="number">30%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Database</strong></td></tr>
+            <tr><td>Schema Design &amp; Implementation</td><td>Tables: charge_definitions, vostro_accounts, limit_definitions, etc.</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Stored Procedures</td><td>Limit utilization updates, balance calculations</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>APIs</strong></td></tr>
+            <tr><td>REST API Development</td><td>14 endpoints for charges/limits/vostro/GL operations</td><td class="number">6</td><td class="number">40%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>API Documentation</td><td>OpenAPI/Swagger documentation</td><td class="number">2</td><td class="number">50%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Redis Cache Integration</td><td>Limit definitions, balance caching (30s TTL)</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td>Kafka Event Publishing</td><td>Limit breaches, balance alerts, charge events</td><td class="number">3</td><td class="number">30%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>GL System Integration</td><td>External GL posting interface</td><td class="number">5</td><td class="number">15%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>>80% coverage for pricing and limit calculations</td><td class="number">7</td><td class="number">35%</td><td class="number">4.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Integration Tests</td><td>End-to-end charge calculation, limit enforcement</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Concurrent Limit Tests</td><td>Race condition testing for limit updates</td><td class="number">3</td><td class="number">10%</td><td class="number">2.5</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Documentation</strong></td></tr>
+            <tr><td>Technical Documentation</td><td>Pricing model documentation, limit hierarchy guide</td><td class="number">3</td><td class="number">40%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>111</strong></td><td class="number"><strong>~31%</strong></td><td class="number"><strong>83</strong></td><td></td></tr>
+        </table>
+
+        <h3>2.6 Configuration Domain - Cross-Cutting Concerns</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Service Infrastructure</strong></td></tr>
+            <tr><td>Service Scaffolding</td><td>.NET Core project setup, NuGet dependency management</td><td class="number">3</td><td class="number">50%</td><td class="number">1.5</td><td class="complexity-low">Low</td></tr>
+            <tr><td>API Gateway Layer</td><td>REST/GraphQL/gRPC/WebSocket configuration</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Security Implementation</td><td>OAuth 2.0, RBAC, API key validation, TLS</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Audit Logging</td><td>Comprehensive audit trail for all changes</td><td class="number">4</td><td class="number">35%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>DevOps</strong></td></tr>
+            <tr><td>Docker Containerization</td><td>Dockerfile, multi-stage builds</td><td class="number">2</td><td class="number">40%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td>Kubernetes Deployment</td><td>Helm charts, ConfigMaps, Secrets</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>CI/CD Pipeline</td><td>Build, test, deploy automation</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Monitoring Setup</td><td>Prometheus metrics, Grafana dashboards</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Alerting Configuration</td><td>Alert rules, notification channels</td><td class="number">3</td><td class="number">35%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Performance</strong></td></tr>
+            <tr><td>Performance Optimization</td><td>Query optimization, caching strategies</td><td class="number">5</td><td class="number">15%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Load Testing</td><td>JMeter/Gatling test scripts and execution</td><td class="number">4</td><td class="number">25%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>46</strong></td><td class="number"><strong>~33%</strong></td><td class="number"><strong>32</strong></td><td></td></tr>
+        </table>
+
+        <h3>2.7 Configuration Domain Summary</h3>
+        <table class="summary-table">
+            <tr><th>Module</th><th>Base PD</th><th>With Copilot</th><th>Savings</th><th>Complexity</th></tr>
+            <tr><td>Time &amp; Calendar Management</td><td class="number">54</td><td class="number">33.5</td><td class="number savings">38%</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Reference Data Management</td><td class="number">77</td><td class="number">52</td><td class="number savings">32%</td><td class="complexity-medium">Medium-High</td></tr>
+            <tr><td>Business Rules &amp; Workflows</td><td class="number">110</td><td class="number">79.5</td><td class="number savings">28%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Financial Configuration</td><td class="number">111</td><td class="number">83</td><td class="number savings">25%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Cross-Cutting Concerns</td><td class="number">46</td><td class="number">32</td><td class="number savings">30%</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="total-row"><td><strong>Total Configuration Domain</strong></td><td class="number"><strong>398</strong></td><td class="number"><strong>280</strong></td><td class="number"><strong>30%</strong></td><td></td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="orchestration-domain">
+        <h2>3. Payment Orchestration Domain - Module Breakdown</h2>
+
+        <h3>3.1 Service Overview</h3>
+        <table style="max-width: 450px;">
+            <tr><th>Attribute</th><th>Value</th></tr>
+            <tr><td>Service Name</td><td>Payment Orchestration Service</td></tr>
+            <tr><td>Port</td><td>8001</td></tr>
+            <tr><td>Database</td><td>SQL Server</td></tr>
+            <tr><td>Cache</td><td>Redis</td></tr>
+            <tr><td>Message Broker</td><td>Kafka</td></tr>
+            <tr><td>Target Performance</td><td><strong>7,500+ TPS, &lt;150ms p99 latency</strong></td></tr>
+        </table>
+
+        <h3>3.2 Module 1: Payment Gateway Core</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Channel Receivers</td><td>REST Controller, GraphQL Resolver, MQ Listener, File Processor</td><td class="number">10</td><td class="number">35%</td><td class="number">6.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Protocol Translators</td><td>JSON, XML/ISO20022, CSV, CAMT/PAIN translation</td><td class="number">10</td><td class="number">30%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>Request Validators</td><td>Schema validation, format validation, rate limiting</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Transaction Initializer</td><td>UUID v7 generation, timestamp management, correlation IDs</td><td class="number">4</td><td class="number">45%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Request Enrichment</td><td>Customer lookup, channel metadata, compliance flags</td><td class="number">6</td><td class="number">35%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Idempotency Manager</td><td>Key generation, duplicate check, response caching</td><td class="number">5</td><td class="number">25%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Orchestration Engine</td><td>Flow coordination, stage dispatch, error handling, circuit breaker</td><td class="number">10</td><td class="number">15%</td><td class="number">8.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Batch Processing Engine</td><td>File parsing, chunk processing, progress tracking, error aggregation</td><td class="number">10</td><td class="number">25%</td><td class="number">7.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Response Builder</td><td>Sync/async/batch response formatting</td><td class="number">4</td><td class="number">45%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>APIs</strong></td></tr>
+            <tr><td>REST API Development</td><td>Payment submission, status, batch endpoints</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>GraphQL Schema &amp; Resolvers</td><td>Query, Mutation, Subscription types</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>API Documentation</td><td>OpenAPI/Swagger + GraphQL documentation</td><td class="number">2</td><td class="number">50%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>>80% coverage for all components</td><td class="number">7</td><td class="number">40%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Integration Tests</td><td>Multi-channel reception tests</td><td class="number">5</td><td class="number">25%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>88</strong></td><td class="number"><strong>~33%</strong></td><td class="number"><strong>59.5</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.3 Module 2: TransactionContext Management</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Context Factory</td><td>Context creation, ID generation, initial state, templates</td><td class="number">4</td><td class="number">45%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Context Registry</td><td>Active context tracking, lookup by TxnId, memory management</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Context Lifecycle Manager</td><td>State transitions, TTL management, cleanup, recovery</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>State Holder (Core Data)</td><td>Transaction ID, payment details, account info, timestamps</td><td class="number">4</td><td class="number">45%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Enrichment Container</td><td>Customer profile, channel metadata, risk indicators</td><td class="number">4</td><td class="number">45%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Stage Result Aggregator</td><td>Validation, limit, queue, routing, execution results</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Audit Buffer</td><td>Entry buffering, batch flush, compliance records</td><td class="number">5</td><td class="number">25%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Snapshot Manager</td><td>Point-in-time snapshots, delta tracking, restoration</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Concurrency Controller</td><td>Read/write locks, optimistic locking, deadlock prevention</td><td class="number">6</td><td class="number">10%</td><td class="number">5.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Write-Through Cache</td><td>Redis persistence with consistency guarantees</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Database</strong></td></tr>
+            <tr><td>Schema Design</td><td>Transactions, status_history, idempotency_records tables</td><td class="number">4</td><td class="number">35%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Indexes &amp; Optimization</td><td>Performance indexes for high-throughput queries</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>Context lifecycle, concurrency tests</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td>Integration Tests</td><td>Cache consistency, persistence tests</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>67</strong></td><td class="number"><strong>~29%</strong></td><td class="number"><strong>48</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.4 Module 3: Validation Pipeline</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Pipeline Orchestrator</td><td>Stage sequencing, fail-fast control, result aggregation</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Stage 1: Schema Validation</td><td>JSON/XML schema validation, required fields, data types</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Stage 2: Business Rules Validation</td><td>Payment type rules, channel rules, amount thresholds, time windows</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Stage 3: Reference Data Validation</td><td>Holiday calendar, cut-off times, participant check, BIC/IBAN</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Stage 4: Duplicate Detection</td><td>Transaction ID uniqueness, idempotency key, content-based matching</td><td class="number">6</td><td class="number">25%</td><td class="number">4.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Validation Result Aggregator</td><td>Error collection, warning flags, validation metadata</td><td class="number">3</td><td class="number">45%</td><td class="number">1.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Configuration Domain Integration</td><td>Rules repository, reference data, calendars</td><td class="number">5</td><td class="number">15%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Risk &amp; Compliance Integration</td><td>Fraud Detection service integration</td><td class="number">4</td><td class="number">15%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Cache Integration</td><td>Schema cache, validation cache</td><td class="number">3</td><td class="number">30%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>Per-stage validation logic tests</td><td class="number">6</td><td class="number">40%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Integration Tests</td><td>Full pipeline integration tests</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>58</strong></td><td class="number"><strong>~28%</strong></td><td class="number"><strong>42</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.5 Module 4: Limit Control Engine</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Engine Orchestrator</td><td>Step sequencing, decision coordination, hold management</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Step 1: Limit Lookup</td><td>User/account/channel/product/corporate hierarchy limits</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Step 2: Limit Calculation</td><td>Usage aggregation, available balance, utilization %, time-based reset</td><td class="number">8</td><td class="number">15%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>Step 3: Limit Decision</td><td>Allow/block/warn decisions, temporary holds, breach alerts</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Multi-Level Limit Hierarchy</td><td>User → Account → Customer → Channel → Product limits</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Usage Counter Management</td><td>Real-time counter updates with atomicity</td><td class="number">6</td><td class="number">10%</td><td class="number">5.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Hold Management</td><td>Reserve limit during processing, release on completion</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Configuration Domain Integration</td><td>Limit definitions, pricing engine</td><td class="number">4</td><td class="number">15%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>AML Screening Integration</td><td>Trigger AML checks for limit breaches</td><td class="number">3</td><td class="number">20%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Approval Workflow Integration</td><td>Route to approval for threshold breaches</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Cache Integration</td><td>Limit cache, usage counters</td><td class="number">3</td><td class="number">30%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>Limit calculation, decision logic</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td>Integration Tests</td><td>End-to-end limit enforcement</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td>Concurrent Tests</td><td>Race condition handling</td><td class="number">3</td><td class="number">10%</td><td class="number">2.5</td><td class="complexity-high">High</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>65</strong></td><td class="number"><strong>~22%</strong></td><td class="number"><strong>52</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.6 Module 5: Queue Management</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Priority Calculator</td><td>Urgency scorer, segment weigher, amount scorer, SLA calculator</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Queue Router</td><td>Queue selector, priority/standard/batch/DLQ placement</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Scheduling Engine</td><td>Immediate handler, deferred scheduler, future date manager, retry scheduler</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>Queue Consumer</td><td>Dequeue manager, batch poller, priority poller, consumer group</td><td class="number">6</td><td class="number">25%</td><td class="number">4.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Backpressure Controller</td><td>Rate limiter, load shedder, circuit breaker, throttle manager</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>SLA Monitor</td><td>SLA tracker, breach predictor, escalation engine, alert generator</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Dead Letter Queue Handler</td><td>Failed transaction handling, manual intervention workflow</td><td class="number">4</td><td class="number">35%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Kafka Queue Integration</td><td>Queue topics setup, partitioning strategy</td><td class="number">4</td><td class="number">25%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Configuration Domain Integration</td><td>Workflow configs, SLA definitions</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>Priority calculation, scheduling logic</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Integration Tests</td><td>Queue operations, backpressure tests</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td>Load Tests</td><td>High-volume queue throughput</td><td class="number">3</td><td class="number">10%</td><td class="number">2.5</td><td class="complexity-high">High</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>59</strong></td><td class="number"><strong>~29%</strong></td><td class="number"><strong>43</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.7 Module 6: Status &amp; Lifecycle Management</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Status Manager</td><td>Status CRUD, current state, state validation, inline routing</td><td class="number">5</td><td class="number">25%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>State Machine</td><td>State definitions, transition rules, guard conditions, action triggers</td><td class="number">8</td><td class="number">15%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>Event Publisher</td><td>Event generation, topic routing, webhook dispatch, delivery guarantee</td><td class="number">6</td><td class="number">25%</td><td class="number">4.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Retry Handler</td><td>Retry policy, backoff strategy, max attempts, circuit breaker, DLQ routing</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>SLA Monitor</td><td>SLA definitions, threshold check, breach alerting, escalation</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Notification Engine</td><td>Alert triggers, channel routing, template engine, rate limiting</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Kafka Event Publishing</td><td>Status change events, audit events</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Notification Service Integration</td><td>Multi-channel notifications</td><td class="number">3</td><td class="number">25%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Monitoring Integration</td><td>Metrics export, dashboard integration</td><td class="number">3</td><td class="number">35%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>State machine transitions, event publishing</td><td class="number">5</td><td class="number">40%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td>Integration Tests</td><td>End-to-end status flow tests</td><td class="number">4</td><td class="number">25%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>54</strong></td><td class="number"><strong>~26%</strong></td><td class="number"><strong>40</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.8 Module 7: Embedded Routing Engine</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Backend Development</strong></td></tr>
+            <tr><td>Rule Engine</td><td>Rule loader, rule evaluator, constraint checker, score aggregator</td><td class="number">8</td><td class="number">15%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>Smart Router</td><td>Score calculator, cost analyzer, speed evaluator, health integrator</td><td class="number">10</td><td class="number">10%</td><td class="number">9</td><td class="complexity-high">High</td></tr>
+            <tr><td>Decision Maker</td><td>Primary selector, fallback handler, cost-benefit calculation, decision auditor</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Rail Executor</td><td>Adapter factory, execution orchestration</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>IPP Rail Adapter</td><td>Instant Payment Platform integration</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>IPI Rail Adapter</td><td>Interbank Payment Interface integration</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS-NG Rail Adapter</td><td>Funds Transfer System NG integration (batch/SFTP)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>SWIFT Rail Adapter</td><td>SWIFT MX message format, international payments</td><td class="number">10</td><td class="number">10%</td><td class="number">9</td><td class="complexity-high">High</td></tr>
+            <tr><td>Health Checker</td><td>Health monitor, availability check, performance stats, degradation alerts</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Fallback Manager</td><td>Fallback strategy, retry coordinator, circuit breaker, recovery</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Load Balancer</td><td>Round robin, weighted distribution, capacity management</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Cost Optimizer</td><td>Fee calculator, FX cost analyzer, optimal path calculation</td><td class="number">5</td><td class="number">15%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Routing Cache</td><td>Rule cache, score cache, health cache, TTL management</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Integration</strong></td></tr>
+            <tr><td>Configuration Domain Integration</td><td>Participant directory, routing rules, charges</td><td class="number">4</td><td class="number">15%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Risk &amp; Compliance Integration</td><td>Sanctions check integration</td><td class="number">3</td><td class="number">20%</td><td class="number">2.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Testing</strong></td></tr>
+            <tr><td>Unit Tests</td><td>Routing algorithm, scoring logic, adapter logic</td><td class="number">8</td><td class="number">35%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Integration Tests</td><td>End-to-end routing, rail execution</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Rail Simulation Tests</td><td>Mock rail responses, failure scenarios</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>113</strong></td><td class="number"><strong>~24%</strong></td><td class="number"><strong>89.5</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.9 Payment Orchestration Domain - Cross-Cutting Concerns</h3>
+        <table>
+            <tr><th>Task</th><th>Description</th><th>Base PD</th><th>Copilot Gain</th><th>Final PD</th><th>Complexity</th></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Service Infrastructure</strong></td></tr>
+            <tr><td>Service Scaffolding</td><td>.NET Core project setup, module organization</td><td class="number">3</td><td class="number">50%</td><td class="number">1.5</td><td class="complexity-low">Low</td></tr>
+            <tr><td>Security Implementation</td><td>OAuth 2.0, mTLS, field-level encryption, PII masking</td><td class="number">10</td><td class="number">15%</td><td class="number">8.5</td><td class="complexity-high">High</td></tr>
+            <tr><td>Audit &amp; Compliance</td><td>Immutable audit log, tamper detection</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>DevOps</strong></td></tr>
+            <tr><td>Docker Containerization</td><td>Multi-stage builds, optimization</td><td class="number">2</td><td class="number">40%</td><td class="number">1</td><td class="complexity-low">Low</td></tr>
+            <tr><td>Kubernetes Deployment</td><td>Helm charts, HPA, PDB, resource quotas</td><td class="number">5</td><td class="number">25%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>CI/CD Pipeline</td><td>Build, test, deploy, rollback automation</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Monitoring Setup</td><td>Prometheus metrics, Grafana dashboards (4 dashboards)</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Alerting Configuration</td><td>Alert rules, PagerDuty/Slack integration</td><td class="number">3</td><td class="number">35%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>Log Aggregation</td><td>ELK/Loki setup, log correlation</td><td class="number">3</td><td class="number">30%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td colspan="6" style="background: var(--primary-color); color: white;"><strong>Performance</strong></td></tr>
+            <tr><td>Performance Optimization</td><td>Query optimization, caching, connection pooling</td><td class="number">8</td><td class="number">10%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>Load Testing</td><td>High-volume tests (7,500+ TPS target)</td><td class="number">5</td><td class="number">15%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>Chaos Engineering</td><td>Failure injection, recovery validation</td><td class="number">4</td><td class="number">10%</td><td class="number">3.5</td><td class="complexity-high">High</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>58</strong></td><td class="number"><strong>~24%</strong></td><td class="number"><strong>44.5</strong></td><td></td></tr>
+        </table>
+
+        <h3>3.10 Payment Orchestration Domain Summary</h3>
+        <table class="summary-table">
+            <tr><th>Module</th><th>Base PD</th><th>With Copilot</th><th>Savings</th><th>Complexity</th></tr>
+            <tr><td>Payment Gateway Core</td><td class="number">88</td><td class="number">59.5</td><td class="number savings">32%</td><td class="complexity-high">High</td></tr>
+            <tr><td>TransactionContext Management</td><td class="number">67</td><td class="number">48</td><td class="number savings">28%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Validation Pipeline</td><td class="number">58</td><td class="number">42</td><td class="number savings">28%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Limit Control Engine</td><td class="number">65</td><td class="number">52</td><td class="number savings">20%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Queue Management</td><td class="number">59</td><td class="number">43</td><td class="number savings">27%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Status &amp; Lifecycle Management</td><td class="number">54</td><td class="number">40</td><td class="number savings">26%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Embedded Routing Engine</td><td class="number">113</td><td class="number">89.5</td><td class="number savings">21%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Cross-Cutting Concerns</td><td class="number">58</td><td class="number">44.5</td><td class="number savings">23%</td><td class="complexity-medium">Medium-High</td></tr>
+            <tr class="total-row"><td><strong>Total Payment Orchestration Domain</strong></td><td class="number"><strong>562</strong></td><td class="number"><strong>418.5</strong></td><td class="number"><strong>26%</strong></td><td></td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="consolidated-summary">
+        <h2>4. Consolidated Estimation Summary</h2>
+
+        <h3>4.1 Domain Summary (With GitHub Copilot Optimization)</h3>
+        <table class="summary-table">
+            <tr><th>Domain</th><th>Base PD</th><th>With Copilot</th><th>Savings</th><th>% of Total</th></tr>
+            <tr><td>Configuration Domain</td><td class="number">398</td><td class="number">280</td><td class="number savings">30%</td><td class="number">40%</td></tr>
+            <tr><td>Payment Orchestration Domain</td><td class="number">562</td><td class="number">418.5</td><td class="number savings">26%</td><td class="number">60%</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td class="number"><strong>960</strong></td><td class="number"><strong>698.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
+        </table>
+
+        <h3>4.2 Effort Distribution by Work Type (Copilot-Optimized)</h3>
+        <table>
+            <tr><th>Work Type</th><th>Configuration Domain</th><th>Payment Orchestration</th><th>Total PD</th><th>Copilot Gain</th><th>%</th></tr>
+            <tr><td>Backend Development</td><td class="number">189</td><td class="number">292</td><td class="number">481</td><td class="number savings">27%</td><td class="number">69%</td></tr>
+            <tr><td>Database</td><td class="number">23</td><td class="number">8</td><td class="number">31</td><td class="number savings">30%</td><td class="number">4%</td></tr>
+            <tr><td>APIs</td><td class="number">22</td><td class="number">10</td><td class="number">32</td><td class="number savings">29%</td><td class="number">5%</td></tr>
+            <tr><td>Integration</td><td class="number">31</td><td class="number">44</td><td class="number">75</td><td class="number savings">27%</td><td class="number">11%</td></tr>
+            <tr><td>Testing</td><td class="number">37</td><td class="number">49</td><td class="number">86</td><td class="number savings">31%</td><td class="number">12%</td></tr>
+            <tr><td>Documentation</td><td class="number">10</td><td class="number">8</td><td class="number">18</td><td class="number savings">33%</td><td class="number">3%</td></tr>
+            <tr><td>DevOps/Infra</td><td class="number">-</td><td class="number">15</td><td class="number">15</td><td class="number savings">25%</td><td class="number">2%</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>280</strong></td><td class="number"><strong>418.5</strong></td><td class="number"><strong>698.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
+        </table>
+
+        <h3>4.3 Complexity Distribution (Copilot-Optimized)</h3>
+        <table>
+            <tr><th>Complexity</th><th>Modules</th><th>Base PD</th><th>With Copilot</th><th>Savings</th></tr>
+            <tr><td class="complexity-low">Low</td><td class="number">2</td><td class="number">46</td><td class="number">28</td><td class="number savings">39%</td></tr>
+            <tr><td class="complexity-medium">Medium</td><td class="number">4</td><td class="number">239</td><td class="number">162</td><td class="number savings">32%</td></tr>
+            <tr><td class="complexity-high">High</td><td class="number">8</td><td class="number">675</td><td class="number">508.5</td><td class="number savings">25%</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>14</strong></td><td class="number"><strong>960</strong></td><td class="number"><strong>698.5</strong></td><td class="number"><strong>27%</strong></td></tr>
+        </table>
+        
+        <div class="note">
+            <strong>Note:</strong> Copilot provides greater productivity gains for lower-complexity work (boilerplate, CRUD, documentation) while complex algorithms and integrations retain most of their original estimates.
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="risk-assessment">
+        <h2>5. Risk Assessment &amp; Contingency</h2>
+
+        <h3>5.1 Identified Risks</h3>
+        <table>
+            <tr><th>Risk ID</th><th>Risk Description</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr>
+            <tr class="risk-medium"><td>R1</td><td>Complex routing algorithm exceeds performance targets</td><td>Medium</td><td class="complexity-high">High</td><td>Early performance prototyping, load testing</td></tr>
+            <tr class="risk-medium"><td>R2</td><td>Rail integration delays due to external API changes</td><td>Medium</td><td class="complexity-high">High</td><td>Mock rail interfaces early, buffer for integration</td></tr>
+            <tr class="risk-medium"><td>R3</td><td>Concurrent limit checking race conditions</td><td>Medium</td><td class="complexity-medium">Medium</td><td>Atomic operations design, thorough concurrent testing</td></tr>
+            <tr class="risk-medium"><td>R4</td><td>Workflow engine complexity underestimated</td><td>Medium</td><td class="complexity-medium">Medium</td><td>Iterative development, scope management</td></tr>
+            <tr class="risk-medium"><td>R5</td><td>Cross-domain integration complexity</td><td>Medium</td><td class="complexity-high">High</td><td>Early integration testing, well-defined contracts</td></tr>
+            <tr class="risk-medium"><td>R6</td><td>Performance requirements (7,500 TPS) challenging</td><td>Medium</td><td class="complexity-high">High</td><td>Performance-first design, continuous benchmarking</td></tr>
+            <tr class="risk-medium"><td>R7</td><td>SWIFT integration complexity</td><td>Medium</td><td class="complexity-medium">Medium</td><td>Expert consultation, extended timeline buffer</td></tr>
+            <tr class="risk-low"><td>R8</td><td>Copilot-generated code quality variance</td><td>Low</td><td class="complexity-low">Low</td><td>Mandatory code reviews, test coverage thresholds</td></tr>
+        </table>
+
+        <div class="note">
+            <strong>Note:</strong> With GitHub Copilot agent-assisted development, some risks are reduced (R4 reduced from High to Medium probability) due to faster prototyping and iteration capabilities.
+        </div>
+
+        <h3>5.2 Contingency Calculation (Copilot-Optimized)</h3>
+        <table>
+            <tr><th>Category</th><th>Base PD</th><th>With Copilot</th><th>Risk Factor</th><th>Contingency PD</th></tr>
+            <tr><td>High Complexity Modules</td><td class="number">675</td><td class="number">508.5</td><td class="number">18%</td><td class="number">91.5</td></tr>
+            <tr><td>Medium Complexity Modules</td><td class="number">239</td><td class="number">162</td><td class="number">12%</td><td class="number">19.5</td></tr>
+            <tr><td>Low Complexity Modules</td><td class="number">46</td><td class="number">28</td><td class="number">8%</td><td class="number">2</td></tr>
+            <tr><td><strong>Total Contingency</strong></td><td></td><td class="number"><strong>698.5</strong></td><td></td><td class="number"><strong>113</strong></td></tr>
+            <tr class="total-row"><td><strong>Applied Contingency (15%)</strong></td><td></td><td></td><td></td><td class="number"><strong>105</strong></td></tr>
+        </table>
+
+        <h3>5.3 Buffer Justification</h3>
+        <p>A <strong>15% contingency buffer</strong> (reduced from 20%) is applied based on:</p>
+        <ul style="margin: 1rem 0 1rem 2rem;">
+            <li>GitHub Copilot accelerates prototyping and iteration, reducing discovery risk</li>
+            <li>Faster feedback loops through AI-assisted development</li>
+            <li>Reduced boilerplate errors through code generation</li>
+            <li>However, maintaining buffer for:
+                <ul style="margin: 0.5rem 0 0.5rem 2rem;">
+                    <li>Real-time performance requirements (7,500+ TPS)</li>
+                    <li>Multiple external system integrations (4 payment rails)</li>
+                    <li>First-time implementation of unified orchestration pattern</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="dependencies">
+        <h2>6. Dependencies</h2>
+
+        <h3>6.1 Technical Dependencies</h3>
+        <table>
+            <tr><th>Dependency</th><th>Required By</th><th>Owner</th><th>Risk Level</th></tr>
+            <tr class="risk-low"><td>SQL Server cluster provisioning</td><td>Week 1</td><td>Infrastructure</td><td class="complexity-low">Low</td></tr>
+            <tr class="risk-low"><td>Redis cluster setup</td><td>Week 1</td><td>Infrastructure</td><td class="complexity-low">Low</td></tr>
+            <tr class="risk-low"><td>Kafka cluster setup</td><td>Week 1</td><td>Infrastructure</td><td class="complexity-low">Low</td></tr>
+            <tr class="risk-low"><td>Kubernetes namespace &amp; RBAC</td><td>Week 1</td><td>Platform</td><td class="complexity-low">Low</td></tr>
+            <tr class="risk-medium"><td>IPP Rail sandbox access</td><td>Week 8</td><td>External - IPP Provider</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="risk-medium"><td>IPI Rail sandbox access</td><td>Week 8</td><td>External - IPI Provider</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="risk-high"><td>SWIFT test environment</td><td>Week 10</td><td>External - SWIFT</td><td class="complexity-high">High</td></tr>
+            <tr class="risk-medium"><td>Core Banking integration specs</td><td>Week 4</td><td>Core Banking Team</td><td class="complexity-medium">Medium</td></tr>
+        </table>
+
+        <h3>6.2 Domain Dependencies</h3>
+        <div class="dependency-tree">
+Payment Orchestration Domain
+    └──► Configuration Domain
+            ├── Limit Definitions (Limit Control Engine)
+            ├── Rules Repository (Validation Pipeline)
+            ├── Holiday Calendar (Validation Pipeline)
+            ├── Participant Directory (Routing Engine)
+            └── Cut-off Times (Validation Pipeline)
+        </div>
+        
+        <div class="note">
+            <strong>Recommendation:</strong> Develop Configuration Domain core modules first, with Payment Orchestration following 2-3 weeks behind.
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="team-timeline">
+        <h2>7. Team Structure &amp; Timeline</h2>
+
+        <h3>7.1 Recommended Team Composition (Copilot-Optimized)</h3>
+        <table>
+            <tr><th>Role</th><th>Count</th><th>Allocation</th><th>Responsibility</th></tr>
+            <tr><td>Tech Lead / Architect</td><td class="number">1</td><td class="number">100%</td><td>Architecture, code reviews, integration design, Copilot best practices</td></tr>
+            <tr><td>Senior Backend Engineer</td><td class="number">2</td><td class="number">100%</td><td>Core module development, complex algorithms, Copilot workflow optimization</td></tr>
+            <tr><td>Backend Engineer (Mid)</td><td class="number">2</td><td class="number">100%</td><td>Module development, API implementation</td></tr>
+            <tr><td>Backend Engineer (Junior)</td><td class="number">1</td><td class="number">100%</td><td>CRUD operations, documentation, testing (high Copilot leverage)</td></tr>
+            <tr><td>DevOps Engineer</td><td class="number">1</td><td class="number">75%</td><td>CI/CD, Kubernetes, monitoring</td></tr>
+            <tr><td>QA Engineer</td><td class="number">1</td><td class="number">100%</td><td>Test automation, performance testing</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>8</strong></td><td></td><td></td></tr>
+        </table>
+
+        <div class="note">
+            <strong>Note:</strong> Team size reduced from 12 to 8 engineers due to Copilot productivity gains. Junior engineers can leverage Copilot effectively for boilerplate tasks, allowing seniors to focus on complex algorithms and architecture.
+        </div>
+
+        <h3>7.2 Phase-wise Timeline (Copilot-Optimized)</h3>
+        <table>
+            <tr><th>Phase</th><th>Duration</th><th>Weeks</th><th>Focus Areas</th></tr>
+            <tr><td><strong>Phase 1: Foundation</strong></td><td>3 weeks</td><td>1-3</td><td>Service scaffolding, database schemas, TransactionContext, Time &amp; Calendar module, Reference Data module</td></tr>
+            <tr><td><strong>Phase 2: Business Logic</strong></td><td>3 weeks</td><td>4-6</td><td>Business Rules engine, Workflow engine, Validation Pipeline, Gateway Core</td></tr>
+            <tr><td><strong>Phase 3: Core Processing</strong></td><td>4 weeks</td><td>7-10</td><td>Limit Control Engine, Queue Management, Status &amp; Lifecycle, Financial Configuration</td></tr>
+            <tr><td><strong>Phase 4: Routing &amp; Execution</strong></td><td>4 weeks</td><td>11-14</td><td>Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, SWIFT)</td></tr>
+            <tr><td><strong>Phase 5: Production Readiness</strong></td><td>2 weeks</td><td>15-16</td><td>Performance optimization, security hardening, monitoring, documentation</td></tr>
+        </table>
+        
+        <p style="margin-top: 1rem;"><strong>Total Duration: 16 weeks</strong> (reduced from 18 weeks)</p>
+
+        <h3>7.3 Gantt Chart Summary</h3>
+        <div class="gantt-chart">
+Week:        1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
+             ─────────────────────────────────────────────────
+Phase 1      ████████████
+Phase 2                  ████████████
+Phase 3                              ████████████████
+Phase 4                                              ████████████████
+Phase 5                                                              ████████
+             ─────────────────────────────────────────────────
+Config Domain├───────████████████████████████──────────────────┤
+Orchestration├──────────────█████████████████████████████████████┤
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="cost-estimation">
+        <h2>8. Cost Estimation</h2>
+        
+        <div class="note">
+            <strong>Note:</strong> Actual costs depend on team location and seniority mix. Below is a reference calculation optimized for GitHub Copilot-assisted development.
+        </div>
+
+        <table>
+            <tr><th>Resource Type</th><th>Daily Rate (USD)</th><th>Days</th><th>Total (USD)</th></tr>
+            <tr><td>Tech Lead / Architect</td><td class="number">$800</td><td class="number">80</td><td class="number">$64,000</td></tr>
+            <tr><td>Senior Backend Engineer (2)</td><td class="number">$600</td><td class="number">160</td><td class="number">$96,000</td></tr>
+            <tr><td>Backend Engineer Mid (2)</td><td class="number">$450</td><td class="number">160</td><td class="number">$72,000</td></tr>
+            <tr><td>Backend Engineer Junior (1)</td><td class="number">$300</td><td class="number">80</td><td class="number">$24,000</td></tr>
+            <tr><td>DevOps Engineer (0.75 FTE)</td><td class="number">$550</td><td class="number">60</td><td class="number">$33,000</td></tr>
+            <tr><td>QA Engineer (1)</td><td class="number">$400</td><td class="number">80</td><td class="number">$32,000</td></tr>
+            <tr class="highlight-row"><td><strong>Subtotal</strong></td><td></td><td></td><td class="number"><strong>$321,000</strong></td></tr>
+            <tr><td>Contingency (15%)</td><td></td><td></td><td class="number">$48,150</td></tr>
+            <tr><td>GitHub Copilot Licenses (8 users × 4 months)</td><td class="number">$19/month</td><td class="number">32</td><td class="number">$608</td></tr>
+            <tr class="total-row"><td><strong>Total Estimated Cost</strong></td><td></td><td></td><td class="number"><strong>$369,758</strong></td></tr>
+        </table>
+
+        <h3>Cost Savings Summary</h3>
+        <table class="comparison-table">
+            <tr><th>Metric</th><th>Traditional</th><th>With Copilot</th><th>Savings</th></tr>
+            <tr><td>Team Size</td><td class="number traditional">12</td><td class="number copilot">8</td><td class="number savings">33%</td></tr>
+            <tr><td>Duration</td><td class="number traditional">18 weeks</td><td class="number copilot">16 weeks</td><td class="number savings">11%</td></tr>
+            <tr><td>Personnel Cost</td><td class="number traditional">$531,000</td><td class="number copilot">$321,000</td><td class="number savings">$210,000</td></tr>
+            <tr><td>Contingency</td><td class="number traditional">$106,200</td><td class="number copilot">$48,150</td><td class="number savings">$58,050</td></tr>
+            <tr class="total-row"><td><strong>Total Cost</strong></td><td class="number"><strong>$637,200</strong></td><td class="number"><strong>$369,758</strong></td><td class="number"><strong>$267,442 (42%)</strong></td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="assumptions">
+        <h2>9. Assumptions &amp; Exclusions</h2>
+
+        <h3>9.1 Key Assumptions</h3>
+        <table>
+            <tr><th>#</th><th>Assumption</th></tr>
+            <tr><td class="number">1</td><td>Development team has experience with .NET Core/ASP.NET, Kafka, Redis, SQL Server</td></tr>
+            <tr><td class="number">2</td><td>Infrastructure (Kubernetes, databases) is pre-provisioned</td></tr>
+            <tr><td class="number">3</td><td>External rail sandbox environments will be available on schedule</td></tr>
+            <tr><td class="number">4</td><td>Requirements are stable; major changes will require re-estimation</td></tr>
+            <tr><td class="number">5</td><td>Standard working hours (8h/day, 5 days/week) apply</td></tr>
+            <tr><td class="number">6</td><td>Code reviews and documentation are included in task estimates</td></tr>
+            <tr><td class="number">7</td><td>UAT support is included; production support is excluded</td></tr>
+            <tr><td class="number">8</td><td>Third-party library licensing is pre-approved</td></tr>
+        </table>
+
+        <h3>9.2 Exclusions</h3>
+        <table>
+            <tr><th>#</th><th>Exclusion</th></tr>
+            <tr><td class="number">1</td><td>Risk &amp; Compliance Domain development (separate estimate)</td></tr>
+            <tr><td class="number">2</td><td>UI/Frontend development (API-only scope)</td></tr>
+            <tr><td class="number">3</td><td>Production environment setup and migration</td></tr>
+            <tr><td class="number">4</td><td>Post-go-live production support</td></tr>
+            <tr><td class="number">5</td><td>Training program development and delivery</td></tr>
+            <tr><td class="number">6</td><td>Regulatory compliance certification</td></tr>
+            <tr><td class="number">7</td><td>Data migration from legacy systems</td></tr>
+            <tr><td class="number">8</td><td>Security penetration testing (assuming third-party service)</td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section id="final-summary">
+        <h2>10. Final Summary</h2>
+
+        <table class="comparison-table">
+            <tr><th>Metric</th><th>Traditional</th><th>With GitHub Copilot</th></tr>
+            <tr><td><strong>Configuration Domain</strong></td><td class="number traditional">398 Person-Days</td><td class="number copilot">280 Person-Days</td></tr>
+            <tr><td><strong>Payment Orchestration Domain</strong></td><td class="number traditional">562 Person-Days</td><td class="number copilot">418.5 Person-Days</td></tr>
+            <tr><td><strong>Base Effort Total</strong></td><td class="number traditional">960 Person-Days</td><td class="number copilot">698.5 Person-Days</td></tr>
+            <tr><td><strong>Contingency</strong></td><td class="number traditional">192 PD (20%)</td><td class="number copilot">105 PD (15%)</td></tr>
+            <tr class="total-row"><td><strong>Grand Total</strong></td><td class="number"><strong>1,152 Person-Days</strong></td><td class="number"><strong>803.5 Person-Days</strong></td></tr>
+            <tr><td><strong>Recommended Duration</strong></td><td class="number traditional"><strong>18 Weeks</strong></td><td class="number copilot"><strong>16 Weeks</strong></td></tr>
+            <tr><td><strong>Recommended Team Size</strong></td><td class="number traditional"><strong>12 Engineers</strong></td><td class="number copilot"><strong>8 Engineers</strong></td></tr>
+            <tr><td><strong>Parallel Tracks</strong></td><td class="number">2</td><td class="number">2</td></tr>
+            <tr><td><strong>Estimated Cost</strong></td><td class="number traditional"><strong>$637,200</strong></td><td class="number copilot"><strong>$369,758</strong></td></tr>
+        </table>
+
+        <h3>Productivity Gains Summary</h3>
+        <table style="max-width: 400px;">
+            <tr><th>Category</th><th>Productivity Gain</th></tr>
+            <tr><td>Overall Effort Reduction</td><td class="number savings">27%</td></tr>
+            <tr><td>Timeline Reduction</td><td class="number savings">11%</td></tr>
+            <tr><td>Team Size Reduction</td><td class="number savings">33%</td></tr>
+            <tr><td>Cost Reduction</td><td class="number savings">42%</td></tr>
+        </table>
+
+        <h3>Confidence Level</h3>
+        <table style="max-width: 400px;">
+            <tr><th>Aspect</th><th>Confidence</th></tr>
+            <tr><td>Scope Definition</td><td class="number">85%</td></tr>
+            <tr><td>Technical Complexity Assessment</td><td class="number">82%</td></tr>
+            <tr><td>Copilot Productivity Estimates</td><td class="number">80%</td></tr>
+            <tr><td>Integration Points</td><td class="number">78%</td></tr>
+            <tr><td>External Dependencies</td><td class="number">70%</td></tr>
+            <tr class="highlight-row"><td><strong>Overall Estimate Confidence</strong></td><td class="number"><strong>80%</strong></td></tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="approval-section">
+        <h2>Approval &amp; Sign-off</h2>
+        <table class="approval-table">
+            <tr><th>Role</th><th>Name</th><th>Signature</th><th>Date</th></tr>
+            <tr><td>Project Manager</td><td></td><td></td><td></td></tr>
+            <tr><td>Technical Lead</td><td></td><td></td><td></td></tr>
+            <tr><td>Client Representative</td><td></td><td></td><td></td></tr>
+        </table>
+    </section>
+
+    <footer class="footer">
+        <p><strong>Document End</strong></p>
+        <p>This estimation document is provided for planning purposes. Actual effort may vary based on detailed technical discovery, team capability assessment, and requirement refinement.</p>
+    </footer>
+
+</body>
+</html>
