@@ -409,8 +409,26 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Rail Executor | Adapter factory, execution orchestration | 5 | 30% | 3.5 | Medium |
 | IPP Rail Adapter | Instant Payment Platform integration | 8 | 20% | 6 | High |
 | IPI Rail Adapter | Interbank Payment Interface integration | 8 | 20% | 6 | High |
-| FTS-NG Rail Adapter | Funds Transfer System NG integration (batch/SFTP) | 8 | 20% | 6 | High |
-| SWIFT Rail Adapter | SWIFT MX message format, international payments | 10 | 10% | 9 | High |
+| **FTS-NG Integration — Financial Messages (Inward & Outward, file-based SFTP, 48hr TAT)** | | | | | |
+| FTS MT103 Adapter | Single customer-to-customer payment transfers (inward & outward) | 8 | 20% | 6 | High |
+| FTS MT102 Adapter | Bulk customer transfers — salary/bonus payouts, 1-to-many (inward & outward) | 8 | 20% | 6 | High |
+| FTS MT202 Adapter | Single institution-to-institution transfer (inward & outward) | 8 | 20% | 6 | High |
+| FTS MT203 Adapter | Bulk institution-to-many transfers (inward & outward) | 8 | 20% | 6 | High |
+| FTS MT2C2 Cover Adapter | Cross-border cover transfer messages (inward & outward) | 8 | 20% | 6 | High |
+| **FTS-NG Integration — Non-Financial Messages (Inward & Outward, file-based SFTP, 48hr TAT)** | | | | | |
+| FTS CB182 Refund Adapter | Refund messages to/from Central Bank (inward & outward) | 5 | 25% | 4 | Medium |
+| FTS Message Query/Answer | Payment enquiry messages and corresponding answer responses (inward & outward) | 6 | 20% | 5 | High |
+| FTS Free Format Message | Unstructured free-text inter-institution messages (inward & outward) | 4 | 30% | 3 | Medium |
+| FTS Charge Claim | Transaction charge claim messages (inward & outward) | 4 | 25% | 3 | Medium |
+| FTS CB002/CB003 Adapter | Exchange house gateway — CB002 received from exchange house, CB003 sent to CB (inward & outward) | 6 | 20% | 5 | High |
+| FTS Statement Request | Account statement request messages (inward & outward) | 3 | 30% | 2 | Medium |
+| FTS CAD Daily Report | Customer Activity Details — daily report to CB of all customer changes; sent even when empty | 5 | 20% | 4 | High |
+| FTS CB101/CB103 Adapter | CB101 sent from bank to CB; CB103 received as acceptance confirmation | 5 | 20% | 4 | High |
+| FTS Return 202 | Return of institution transfer messages (inward & outward) | 4 | 20% | 3 | High |
+| **FTS-NG Shared Infrastructure** | | | | | |
+| FTS SFTP Integration Layer | File-based SFTP upload/download to/from CB server, retry handling, 48hr TAT tracking, async response correlation | 8 | 15% | 7 | High |
+| FTS Message Parser/Generator | File format parsing and generation for all FTS message types (inward & outward) | 6 | 15% | 5 | High |
+| WPS Rail Adapter | Wages Protection System integration (SIF/SFTP) | 8 | 20% | 6 | High |
 | Health Checker | Health monitor, availability check, performance stats, degradation alerts | 5 | 35% | 3 | Medium |
 | Fallback Manager | Fallback strategy, retry coordinator, circuit breaker, recovery | 6 | 15% | 5 | High |
 | Load Balancer | Round robin, weighted distribution, capacity management | 4 | 30% | 3 | Medium |
@@ -423,7 +441,9 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Unit Tests | Routing algorithm, scoring logic, adapter logic | 8 | 35% | 5 | High |
 | Integration Tests | End-to-end routing, rail execution | 6 | 15% | 5 | High |
 | Rail Simulation Tests | Mock rail responses, failure scenarios | 5 | 20% | 4 | High |
-| **Subtotal** | | **113** | **~24%** | **89.5** | |
+| **Subtotal** | | **199** | **~22%** | **155.5** | |
+
+> **FTS Technical Architecture Note:** All FTS messages are file-based, uploaded to and downloaded from the Central Bank SFTP server. Responses are also file-based via the same SFTP mechanism. A 48-hour Turnaround Time (TAT) applies for responses. Both outward (sending) and inward (receiving) flows are required for all 14 FTS message types.
 
 ### 3.9 Payment Orchestration Domain - Cross-Cutting Concerns
 
@@ -456,9 +476,9 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Limit Control Engine | 65 | 52 | 20% | High |
 | Queue Management | 59 | 43 | 27% | High |
 | Status & Lifecycle Management | 54 | 40 | 26% | High |
-| Embedded Routing Engine | 113 | 89.5 | 21% | High |
+| Embedded Routing Engine | 199 | 155.5 | 22% | High |
 | Cross-Cutting Concerns | 58 | 44.5 | 23% | Medium-High |
-| **Total Payment Orchestration Domain** | **562** | **418.5** | **26%** | |
+| **Total Payment Orchestration Domain** | **648** | **484.5** | **25%** | |
 
 ---
 
@@ -469,30 +489,30 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Domain | Base PD | With Copilot | Savings | % of Total |
 |--------|--------:|-------------:|--------:|------------|
 | Configuration Domain | 398 | 280 | 30% | 40% |
-| Payment Orchestration Domain | 562 | 418.5 | 26% | 60% |
-| **Subtotal** | **960** | **698.5** | **27%** | 100% |
+| Payment Orchestration Domain | 648 | 484.5 | 25% | 60% |
+| **Subtotal** | **1,046** | **764.5** | **27%** | 100% |
 
 ### 4.2 Effort Distribution by Work Type (Copilot-Optimized)
 
 | Work Type | Configuration Domain | Payment Orchestration | Total PD | Copilot Gain | % |
 |-----------|---------------------:|----------------------:|--------:|-------------:|--:|
-| Backend Development | 189 | 292 | 481 | 27% | 69% |
+| Backend Development | 189 | 358 | 547 | 27% | 72% |
 | Database | 23 | 8 | 31 | 30% | 4% |
-| APIs | 22 | 10 | 32 | 29% | 5% |
-| Integration | 31 | 44 | 75 | 27% | 11% |
-| Testing | 37 | 49 | 86 | 31% | 12% |
-| Documentation | 10 | 8 | 18 | 33% | 3% |
+| APIs | 22 | 10 | 32 | 29% | 4% |
+| Integration | 31 | 44 | 75 | 27% | 10% |
+| Testing | 37 | 49 | 86 | 31% | 11% |
+| Documentation | 10 | 8 | 18 | 33% | 2% |
 | DevOps/Infra | - | 15 | 15 | 25% | 2% |
-| **Total** | **280** | **418.5** | **698.5** | **27%** | 100% |
+| **Total** | **280** | **484.5** | **764.5** | **27%** | 100% |
 
 ### 4.3 Complexity Distribution (Copilot-Optimized)
 
 | Complexity | Modules | Base PD | With Copilot | Savings |
 |------------|--------:|--------:|-------------:|--------:|
 | Low | 2 | 46 | 28 | 39% |
-| Medium | 4 | 239 | 162 | 32% |
-| High | 8 | 675 | 508.5 | 25% |
-| **Total** | **14** | **960** | **698.5** | **27%** |
+| Medium | 4 | 255 | 174 | 32% |
+| High | 8 | 745 | 562.5 | 25% |
+| **Total** | **14** | **1,046** | **764.5** | **27%** |
 
 *Note: Copilot provides greater productivity gains for lower-complexity work (boilerplate, CRUD, documentation) while complex algorithms and integrations retain most of their original estimates.*
 
@@ -510,7 +530,7 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | R4 | Workflow engine complexity underestimated | Medium | Medium | Iterative development, scope management |
 | R5 | Cross-domain integration complexity | Medium | High | Early integration testing, well-defined contracts |
 | R6 | Performance requirements (7,500 TPS) challenging | Medium | High | Performance-first design, continuous benchmarking |
-| R7 | SWIFT integration complexity | Medium | Medium | Expert consultation, extended timeline buffer |
+| R7 | FTS integration complexity — 14 message types, SFTP file-based, 48hr TAT, inward & outward flows | High | High | Phased delivery (financial messages first), mock-file test suite for all message types |
 | R8 | Copilot-generated code quality variance | Low | Low | Mandatory code reviews, test coverage thresholds |
 
 *Note: With GitHub Copilot agent-assisted development, some risks are reduced (R4 reduced from High to Medium probability) due to faster prototyping and iteration capabilities.*
@@ -519,11 +539,11 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 
 | Category | Base PD | With Copilot | Risk Factor | Contingency PD |
 |----------|--------:|-------------:|------------:|---------------:|
-| High Complexity Modules | 675 | 508.5 | 18% | 91.5 |
-| Medium Complexity Modules | 239 | 162 | 12% | 19.5 |
+| High Complexity Modules | 745 | 562.5 | 18% | 101.5 |
+| Medium Complexity Modules | 255 | 174 | 12% | 21 |
 | Low Complexity Modules | 46 | 28 | 8% | 2 |
-| **Total Contingency** | | **698.5** | | **113** |
-| **Applied Contingency (15%)** | | | | **105** |
+| **Total Contingency** | | **764.5** | | **124.5** |
+| **Applied Contingency (15%)** | | | | **115** |
 
 ### 5.3 Buffer Justification
 
@@ -550,7 +570,9 @@ A **15% contingency buffer** (reduced from 20%) is applied based on:
 | Kubernetes namespace & RBAC | Week 1 | Platform | Low |
 | IPP Rail sandbox access | Week 8 | External - IPP Provider | Medium |
 | IPI Rail sandbox access | Week 8 | External - IPI Provider | Medium |
-| SWIFT test environment | Week 10 | External - SWIFT | High |
+| WPS sandbox access | Week 9 | External - WPS/Ministry of Labour | Medium |
+| CB SFTP sandbox access | Week 10 | External - Central Bank | High |
+| FTS message format specifications | Week 8 | External - Central Bank | Medium |
 | Core Banking integration specs | Week 4 | Core Banking Team | Medium |
 
 ### 6.2 Domain Dependencies
@@ -592,24 +614,24 @@ Payment Orchestration Domain
 | **Phase 1: Foundation** | 3 weeks | 1-3 | Service scaffolding, database schemas, TransactionContext, Time & Calendar module, Reference Data module |
 | **Phase 2: Business Logic** | 3 weeks | 4-6 | Business Rules engine, Workflow engine, Validation Pipeline, Gateway Core |
 | **Phase 3: Core Processing** | 4 weeks | 7-10 | Limit Control Engine, Queue Management, Status & Lifecycle, Financial Configuration |
-| **Phase 4: Routing & Execution** | 4 weeks | 11-14 | Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, SWIFT) |
-| **Phase 5: Production Readiness** | 2 weeks | 15-16 | Performance optimization, security hardening, monitoring, documentation |
+| **Phase 4: Routing & Execution** | 6 weeks | 11-16 | Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, WPS) |
+| **Phase 5: Production Readiness** | 2 weeks | 17-18 | Performance optimization, security hardening, monitoring, documentation |
 
-**Total Duration: 16 weeks** (reduced from 18 weeks)
+**Total Duration: 18 weeks** (reduced from 20 weeks)
 
 ### 7.3 Gantt Chart Summary
 
 ```
-Week:        1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
-             ─────────────────────────────────────────────────
+Week:        1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
+             ───────────────────────────────────────────────────────
 Phase 1      ████████████
 Phase 2                  ████████████
 Phase 3                              ████████████████
-Phase 4                                              ████████████████
-Phase 5                                                              ████████
-             ─────────────────────────────────────────────────
-Config Domain├───────████████████████████████──────────────────┤
-Orchestration├──────────────█████████████████████████████████████┤
+Phase 4                                              ████████████████████████
+Phase 5                                                                      ████████
+             ───────────────────────────────────────────────────────
+Config Domain├───────████████████████████████────────────────────────────────┤
+Orchestration├──────────────███████████████████████████████████████████████████┤
 ```
 
 ---
@@ -620,26 +642,26 @@ Orchestration├──────────────███████�
 
 | Resource Type | Daily Rate (USD) | Days | Total (USD) |
 |---------------|----------------:|-----:|------------:|
-| Tech Lead / Architect | $800 | 80 | $64,000 |
-| Senior Backend Engineer (2) | $600 | 160 | $96,000 |
-| Backend Engineer Mid (2) | $450 | 160 | $72,000 |
+| Tech Lead / Architect | $800 | 90 | $72,000 |
+| Senior Backend Engineer (2) | $600 | 180 | $108,000 |
+| Backend Engineer Mid (2) | $450 | 180 | $81,000 |
 | Backend Engineer Junior (1) | $300 | 80 | $24,000 |
 | DevOps Engineer (0.75 FTE) | $550 | 60 | $33,000 |
-| QA Engineer (1) | $400 | 80 | $32,000 |
-| **Subtotal** | | | **$321,000** |
-| Contingency (15%) | | | $48,150 |
+| QA Engineer (1) | $400 | 90 | $36,000 |
+| **Subtotal** | | | **$354,000** |
+| Contingency (15%) | | | $53,100 |
 | GitHub Copilot Licenses (8 users × 4 months) | $19/month | 32 | $608 |
-| **Total Estimated Cost** | | | **$369,758** |
+| **Total Estimated Cost** | | | **$407,708** |
 
 ### Cost Savings Summary
 
 | Metric | Traditional | With Copilot | Savings |
 |--------|------------:|-------------:|--------:|
 | Team Size | 12 | 8 | 33% |
-| Duration | 18 weeks | 16 weeks | 11% |
-| Personnel Cost | $531,000 | $321,000 | $210,000 |
-| Contingency | $106,200 | $48,150 | $58,050 |
-| **Total Cost** | **$637,200** | **$369,758** | **$267,442 (42%)** |
+| Duration | 20 weeks | 18 weeks | 10% |
+| Personnel Cost | $590,000 | $354,000 | $236,000 |
+| Contingency | $118,000 | $53,100 | $64,900 |
+| **Total Cost** | **$708,000** | **$407,708** | **$300,292 (42%)** |
 
 ---
 
@@ -678,21 +700,21 @@ Orchestration├──────────────███████�
 | Metric | Traditional | With GitHub Copilot |
 |--------|------------:|--------------------:|
 | **Configuration Domain** | 398 Person-Days | 280 Person-Days |
-| **Payment Orchestration Domain** | 562 Person-Days | 418.5 Person-Days |
-| **Base Effort Total** | 960 Person-Days | 698.5 Person-Days |
-| **Contingency** | 192 PD (20%) | 105 PD (15%) |
-| **Grand Total** | **1,152 Person-Days** | **803.5 Person-Days** |
-| **Recommended Duration** | **18 Weeks** | **16 Weeks** |
+| **Payment Orchestration Domain** | 648 Person-Days | 484.5 Person-Days |
+| **Base Effort Total** | 1,046 Person-Days | 764.5 Person-Days |
+| **Contingency** | 209 PD (20%) | 115 PD (15%) |
+| **Grand Total** | **1,255 Person-Days** | **879.5 Person-Days** |
+| **Recommended Duration** | **20 Weeks** | **18 Weeks** |
 | **Recommended Team Size** | **12 Engineers** | **8 Engineers** |
 | **Parallel Tracks** | 2 | 2 |
-| **Estimated Cost** | **$637,200** | **$369,758** |
+| **Estimated Cost** | **$708,000** | **$407,708** |
 
 ### Productivity Gains Summary
 
 | Category | Productivity Gain |
 |----------|------------------:|
 | Overall Effort Reduction | 27% |
-| Timeline Reduction | 11% |
+| Timeline Reduction | 10% |
 | Team Size Reduction | 33% |
 | Cost Reduction | 42% |
 

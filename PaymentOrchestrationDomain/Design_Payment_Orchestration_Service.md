@@ -798,10 +798,15 @@ The **Embedded Routing Engine** determines the optimal payment rail and executes
 |-----------|-----------|------|-------|-----------|---------|
 | **IPP** | Instant Payment Platform | Real-time | Seconds | P2P, Urgent, Instant | 24/7 |
 | **IPI** | Interbank Payment Interface | Near real-time | Minutes | Interbank, Domestic | 23:59 |
-| **FTS-NG** | Funds Transfer System NG | Batch | Same/Next day | Bulk, Payroll | 18:30 |
+| **FTS-NG** | Funds Transfer System NG | Batch/SFTP | 48hr TAT | Financial (MT103/102/202/203/2C2), Non-Financial (CB182, Query/Answer, Free Format, Charge Claim, CB002/CB003, Statement Request, CAD, CB101/CB103, Return 202), SFTP Infrastructure | 18:30 |
 | **SWIFT** | SWIFT Network | International | 1-5 days | Cross-border | Varies |
 | **RTGS** | Real-Time Gross Settlement | Real-time | Seconds | High-value | 17:00 |
 | **ACH** | Automated Clearing House | Batch | 1-2 days | Payroll, Government | 15:00 |
+
+> **FTS-NG Technical Architecture:** All FTS messages are file-based and uploaded to / downloaded from the Central Bank (CB) SFTP server. A 48-hour Turnaround Time (TAT) applies for responses. Both outward (sending) and inward (receiving) flows are required for all 14 FTS message types:
+> - **Financial Messages (5 types):** MT103 Single Customer Transfer, MT102 Bulk Customer Transfer, MT202 Single Institution Transfer, MT203 Bulk Institution Transfer, MT2C2 Cover Transfer
+> - **Non-Financial Messages (9 types):** CB182 Refund, Message Query/Answer, Free Format, Charge Claim, CB002/CB003 Exchange House, Statement Request, CAD Daily Report, CB101/CB103, Return 202
+> - **Shared Infrastructure:** SFTP Integration Layer (file upload/download, retry logic, async response correlation) and Message Parser/Generator (file format processing for all message types)
 
 #### 3.7.3 Multi-Criteria Scoring Algorithm
 
