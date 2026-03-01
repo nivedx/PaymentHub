@@ -24,9 +24,9 @@ This document provides a comprehensive effort estimation for the development of 
 
 | Summary Metric | Value |
 |----------------|-------|
-| **Total Estimated Effort (with Copilot)** | **621 Person-Days** |
-| **Contingency Buffer (15%)** | 93 Person-Days |
-| **Grand Total with Buffer** | **714 Person-Days** |
+| **Total Estimated Effort (with Copilot)** | **801 Person-Days** |
+| **Contingency Buffer (15%)** | 120 Person-Days |
+| **Grand Total with Buffer** | **921 Person-Days** |
 | **Recommended Team Size** | 6-8 Engineers |
 | **Estimated Duration** | 14-16 Weeks |
 | **Productivity Gain (vs Traditional)** | ~35% |
@@ -408,7 +408,19 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Decision Maker | Primary selector, fallback handler, cost-benefit calculation, decision auditor | 6 | 15% | 5 | High |
 | Rail Executor | Adapter factory, execution orchestration | 5 | 30% | 3.5 | Medium |
 | IPP Rail Adapter | Instant Payment Platform integration | 8 | 20% | 6 | High |
-| IPI Rail Adapter | Interbank Payment Interface integration | 8 | 20% | 6 | High |
+| **IPI Outward Messages** | | | | | |
+| IPI Outward - FFTS001 Message Builder | Build and send FFTS001 outward payment initiation via RFC WebSocket | 7 | 15% | 6 | High |
+| IPI Outward - FFT002 Ack/Nack Handler | Process FFT002 acknowledgment/rejection for outward payments | 5 | 20% | 4 | High |
+| IPI Outward - FFT006 Posting Confirmation | Handle FFT006 beneficiary bank posting confirmation | 6 | 20% | 4 | High |
+| **IPI Inward Messages** | | | | | |
+| IPI Inward - FFT003 Message Receiver | Receive and process FFT003 inward payment messages via WebSocket | 7 | 15% | 6 | High |
+| IPI Inward - FFT004 Ack/Nack Response | Generate FFT004 acknowledgment/rejection within 10-minute TAT SLA | 6 | 15% | 5 | High |
+| IPI Inward - FFT005 CB Confirmation | Send FFT005 core banking posting confirmation after settlement | 5 | 20% | 3 | High |
+| **IPI Enquiry** | | | | | |
+| IPI Enquiry - REST API Integration | REST-based enquiry for missing FFT002/FFT006/FFT005 responses | 5 | 25% | 3.5 | Medium |
+| **IPI Shared Infrastructure** | | | | | |
+| IPI WebSocket Integration Layer | RFC WebSocket connection management, heartbeat, reconnection, TLS | 8 | 10% | 7 | High |
+| IPI Message Parser/Serializer | IPI-specific message format parsing, validation, and serialization | 5 | 20% | 4 | High |
 | **FTS-NG Integration — Financial Messages (Inward & Outward, file-based SFTP, 48hr TAT)** | | | | | |
 | FTS MT103 Adapter | Single customer-to-customer payment transfers (inward & outward) | 8 | 20% | 6 | High |
 | FTS MT102 Adapter | Bulk customer transfers — salary/bonus payouts, 1-to-many (inward & outward) | 8 | 20% | 6 | High |
@@ -441,7 +453,9 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Unit Tests | Routing algorithm, scoring logic, adapter logic | 8 | 35% | 5 | High |
 | Integration Tests | End-to-end routing, rail execution | 6 | 15% | 5 | High |
 | Rail Simulation Tests | Mock rail responses, failure scenarios | 5 | 20% | 4 | High |
-| **Subtotal** | | **199** | **~22%** | **155.5** | |
+| **Subtotal** | | **245** | **~22%** | **192** | |
+
+> **IPI Technical Architecture Note:** IPI is a real-time payment rail using RFC WebSocket connections (no batch/SFTP). Outward payment flow: FFTS001 (initiation) → FFT002 (acknowledgment/rejection) → FFT006 (beneficiary bank posting confirmation). Inward payment flow: FFT003 (receive) → FFT004 (acknowledgment/rejection, 10-minute TAT SLA) → FFT005 (core banking posting confirmation). REST API enquiry is used as a fallback when FFT002/FFT006/FFT005 responses are not received. IPI refunds are handled via the FTS rail.
 
 > **FTS Technical Architecture Note:** All FTS messages are file-based, uploaded to and downloaded from the Central Bank SFTP server. Responses are also file-based via the same SFTP mechanism. A 48-hour Turnaround Time (TAT) applies for responses. Both outward (sending) and inward (receiving) flows are required for all 14 FTS message types.
 
@@ -476,9 +490,9 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Limit Control Engine | 65 | 52 | 20% | High |
 | Queue Management | 59 | 43 | 27% | High |
 | Status & Lifecycle Management | 54 | 40 | 26% | High |
-| Embedded Routing Engine | 199 | 155.5 | 22% | High |
+| Embedded Routing Engine | 245 | 192 | 22% | High |
 | Cross-Cutting Concerns | 58 | 44.5 | 23% | Medium-High |
-| **Total Payment Orchestration Domain** | **648** | **484.5** | **25%** | |
+| **Total Payment Orchestration Domain** | **694** | **521** | **25%** | |
 
 ---
 
@@ -488,31 +502,31 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 
 | Domain | Base PD | With Copilot | Savings | % of Total |
 |--------|--------:|-------------:|--------:|------------|
-| Configuration Domain | 398 | 280 | 30% | 40% |
-| Payment Orchestration Domain | 648 | 484.5 | 25% | 60% |
-| **Subtotal** | **1,046** | **764.5** | **27%** | 100% |
+| Configuration Domain | 398 | 280 | 30% | 35% |
+| Payment Orchestration Domain | 694 | 521 | 25% | 65% |
+| **Subtotal** | **1,092** | **801** | **27%** | 100% |
 
 ### 4.2 Effort Distribution by Work Type (Copilot-Optimized)
 
 | Work Type | Configuration Domain | Payment Orchestration | Total PD | Copilot Gain | % |
 |-----------|---------------------:|----------------------:|--------:|-------------:|--:|
-| Backend Development | 189 | 358 | 547 | 27% | 72% |
+| Backend Development | 189 | 394.5 | 583.5 | 27% | 73% |
 | Database | 23 | 8 | 31 | 30% | 4% |
 | APIs | 22 | 10 | 32 | 29% | 4% |
 | Integration | 31 | 44 | 75 | 27% | 10% |
 | Testing | 37 | 49 | 86 | 31% | 11% |
 | Documentation | 10 | 8 | 18 | 33% | 2% |
 | DevOps/Infra | - | 15 | 15 | 25% | 2% |
-| **Total** | **280** | **484.5** | **764.5** | **27%** | 100% |
+| **Total** | **280** | **521** | **801** | **27%** | 100% |
 
 ### 4.3 Complexity Distribution (Copilot-Optimized)
 
 | Complexity | Modules | Base PD | With Copilot | Savings |
 |------------|--------:|--------:|-------------:|--------:|
 | Low | 2 | 46 | 28 | 39% |
-| Medium | 4 | 255 | 174 | 32% |
-| High | 8 | 745 | 562.5 | 25% |
-| **Total** | **14** | **1,046** | **764.5** | **27%** |
+| Medium | 4 | 260 | 177.5 | 32% |
+| High | 8 | 786 | 595.5 | 24% |
+| **Total** | **14** | **1,092** | **801** | **27%** |
 
 *Note: Copilot provides greater productivity gains for lower-complexity work (boilerplate, CRUD, documentation) while complex algorithms and integrations retain most of their original estimates.*
 
@@ -532,6 +546,7 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | R6 | Performance requirements (7,500 TPS) challenging | Medium | High | Performance-first design, continuous benchmarking |
 | R7 | FTS integration complexity — 14 message types, SFTP file-based, 48hr TAT, inward & outward flows | High | High | Phased delivery (financial messages first), mock-file test suite for all message types |
 | R8 | Copilot-generated code quality variance | Low | Low | Mandatory code reviews, test coverage thresholds |
+| R9 | IPI WebSocket connectivity/reliability — real-time RFC WebSocket reconnection and session management | Medium | High | Robust reconnection logic, heartbeat monitoring, TLS mutual authentication |
 
 *Note: With GitHub Copilot agent-assisted development, some risks are reduced (R4 reduced from High to Medium probability) due to faster prototyping and iteration capabilities.*
 
@@ -539,11 +554,11 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 
 | Category | Base PD | With Copilot | Risk Factor | Contingency PD |
 |----------|--------:|-------------:|------------:|---------------:|
-| High Complexity Modules | 745 | 562.5 | 18% | 101.5 |
-| Medium Complexity Modules | 255 | 174 | 12% | 21 |
+| High Complexity Modules | 786 | 595.5 | 18% | 107 |
+| Medium Complexity Modules | 260 | 177.5 | 12% | 21 |
 | Low Complexity Modules | 46 | 28 | 8% | 2 |
-| **Total Contingency** | | **764.5** | | **124.5** |
-| **Applied Contingency (15%)** | | | | **115** |
+| **Total Contingency** | | **801** | | **130** |
+| **Applied Contingency (15%)** | | | | **120** |
 
 ### 5.3 Buffer Justification
 
@@ -700,10 +715,10 @@ Orchestration├──────────────███████�
 | Metric | Traditional | With GitHub Copilot |
 |--------|------------:|--------------------:|
 | **Configuration Domain** | 398 Person-Days | 280 Person-Days |
-| **Payment Orchestration Domain** | 648 Person-Days | 484.5 Person-Days |
-| **Base Effort Total** | 1,046 Person-Days | 764.5 Person-Days |
-| **Contingency** | 209 PD (20%) | 115 PD (15%) |
-| **Grand Total** | **1,255 Person-Days** | **879.5 Person-Days** |
+| **Payment Orchestration Domain** | 694 Person-Days | 521 Person-Days |
+| **Base Effort Total** | 1,092 Person-Days | 801 Person-Days |
+| **Contingency** | 219 PD (20%) | 120 PD (15%) |
+| **Grand Total** | **1,311 Person-Days** | **921 Person-Days** |
 | **Recommended Duration** | **20 Weeks** | **18 Weeks** |
 | **Recommended Team Size** | **12 Engineers** | **8 Engineers** |
 | **Parallel Tracks** | 2 | 2 |
