@@ -738,7 +738,25 @@
             <tr><td>Rail Executor</td><td>Adapter factory, execution orchestration</td><td class="number">5</td><td class="number">30%</td><td class="number">3.5</td><td class="complexity-medium">Medium</td></tr>
             <tr><td>IPP Rail Adapter</td><td>Instant Payment Platform integration</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
             <tr><td>IPI Rail Adapter</td><td>Interbank Payment Interface integration</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
-            <tr><td>FTS-NG Rail Adapter</td><td>Funds Transfer System NG integration (batch/SFTP)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: #dbeafe; color: #1a365d; font-style: italic; padding-left: 1rem;"><strong>FTS-NG Integration — Financial Messages (Inward &amp; Outward, file-based SFTP, 48hr TAT)</strong></td></tr>
+            <tr><td>FTS MT103 Adapter</td><td>Single customer-to-customer payment transfers (inward &amp; outward)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS MT102 Adapter</td><td>Bulk customer transfers — salary/bonus payouts, 1-to-many (inward &amp; outward)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS MT202 Adapter</td><td>Single institution-to-institution transfer (inward &amp; outward)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS MT203 Adapter</td><td>Bulk institution-to-many transfers (inward &amp; outward)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS MT2C2 Cover Adapter</td><td>Cross-border cover transfer messages (inward &amp; outward)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: #dbeafe; color: #1a365d; font-style: italic; padding-left: 1rem;"><strong>FTS-NG Integration — Non-Financial Messages (Inward &amp; Outward, file-based SFTP, 48hr TAT)</strong></td></tr>
+            <tr><td>FTS CB182 Refund Adapter</td><td>Refund messages to/from Central Bank (inward &amp; outward)</td><td class="number">5</td><td class="number">25%</td><td class="number">4</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>FTS Message Query/Answer</td><td>Payment enquiry messages and corresponding answer responses (inward &amp; outward)</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS Free Format Message</td><td>Unstructured free-text inter-institution messages (inward &amp; outward)</td><td class="number">4</td><td class="number">30%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>FTS Charge Claim</td><td>Transaction charge claim messages (inward &amp; outward)</td><td class="number">4</td><td class="number">25%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>FTS CB002/CB003 Adapter</td><td>Exchange house gateway — CB002 received from exchange house, CB003 sent to CB (inward &amp; outward)</td><td class="number">6</td><td class="number">20%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS Statement Request</td><td>Account statement request messages (inward &amp; outward)</td><td class="number">3</td><td class="number">30%</td><td class="number">2</td><td class="complexity-medium">Medium</td></tr>
+            <tr><td>FTS CAD Daily Report</td><td>Customer Activity Details — daily report to CB of all customer changes; sent even when empty</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS CB101/CB103 Adapter</td><td>CB101 sent from bank to CB; CB103 received as acceptance confirmation</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS Return 202</td><td>Return of institution transfer messages (inward &amp; outward)</td><td class="number">4</td><td class="number">20%</td><td class="number">3</td><td class="complexity-high">High</td></tr>
+            <tr><td colspan="6" style="background: #dbeafe; color: #1a365d; font-style: italic; padding-left: 1rem;"><strong>FTS-NG Shared Infrastructure</strong></td></tr>
+            <tr><td>FTS SFTP Integration Layer</td><td>File-based SFTP upload/download to/from CB server, retry handling, 48hr TAT tracking, async response correlation</td><td class="number">8</td><td class="number">15%</td><td class="number">7</td><td class="complexity-high">High</td></tr>
+            <tr><td>FTS Message Parser/Generator</td><td>File format parsing and generation for all FTS message types (inward &amp; outward)</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
             <tr><td>WPS Rail Adapter</td><td>Wages Protection System integration (SIF/SFTP)</td><td class="number">8</td><td class="number">20%</td><td class="number">6</td><td class="complexity-high">High</td></tr>
             <tr><td>Health Checker</td><td>Health monitor, availability check, performance stats, degradation alerts</td><td class="number">5</td><td class="number">35%</td><td class="number">3</td><td class="complexity-medium">Medium</td></tr>
             <tr><td>Fallback Manager</td><td>Fallback strategy, retry coordinator, circuit breaker, recovery</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
@@ -752,8 +770,12 @@
             <tr><td>Unit Tests</td><td>Routing algorithm, scoring logic, adapter logic</td><td class="number">8</td><td class="number">35%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
             <tr><td>Integration Tests</td><td>End-to-end routing, rail execution</td><td class="number">6</td><td class="number">15%</td><td class="number">5</td><td class="complexity-high">High</td></tr>
             <tr><td>Rail Simulation Tests</td><td>Mock rail responses, failure scenarios</td><td class="number">5</td><td class="number">20%</td><td class="number">4</td><td class="complexity-high">High</td></tr>
-            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>111</strong></td><td class="number"><strong>~22%</strong></td><td class="number"><strong>86.5</strong></td><td></td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td></td><td class="number"><strong>199</strong></td><td class="number"><strong>~22%</strong></td><td class="number"><strong>155.5</strong></td><td></td></tr>
         </table>
+
+        <div class="note">
+            <strong>FTS-NG Technical Architecture:</strong> All FTS messages are <strong>file-based</strong> — uploaded to and downloaded from a dedicated <strong>SFTP server hosted by the Central Bank (CB)</strong>. Both outward (sending) and inward (receiving) flows are supported for every message type. Responses are returned via the same SFTP mechanism with a standard <strong>48-hour Turnaround Time (TAT)</strong>. The shared SFTP Integration Layer handles file upload/download, polling, retry logic, async response correlation, and TAT tracking across all 14 message types. The Message Parser/Generator handles file format parsing and generation for all message types.
+        </div>
 
         <h3>3.9 Payment Orchestration Domain - Cross-Cutting Concerns</h3>
         <table>
@@ -785,9 +807,9 @@
             <tr><td>Limit Control Engine</td><td class="number">65</td><td class="number">52</td><td class="number savings">20%</td><td class="complexity-high">High</td></tr>
             <tr><td>Queue Management</td><td class="number">59</td><td class="number">43</td><td class="number savings">27%</td><td class="complexity-high">High</td></tr>
             <tr><td>Status &amp; Lifecycle Management</td><td class="number">54</td><td class="number">40</td><td class="number savings">26%</td><td class="complexity-high">High</td></tr>
-            <tr><td>Embedded Routing Engine</td><td class="number">111</td><td class="number">86.5</td><td class="number savings">22%</td><td class="complexity-high">High</td></tr>
+            <tr><td>Embedded Routing Engine</td><td class="number">199</td><td class="number">155.5</td><td class="number savings">22%</td><td class="complexity-high">High</td></tr>
             <tr><td>Cross-Cutting Concerns</td><td class="number">58</td><td class="number">44.5</td><td class="number savings">23%</td><td class="complexity-medium">Medium-High</td></tr>
-            <tr class="total-row"><td><strong>Total Payment Orchestration Domain</strong></td><td class="number"><strong>560</strong></td><td class="number"><strong>415.5</strong></td><td class="number"><strong>26%</strong></td><td></td></tr>
+            <tr class="total-row"><td><strong>Total Payment Orchestration Domain</strong></td><td class="number"><strong>648</strong></td><td class="number"><strong>484.5</strong></td><td class="number"><strong>25%</strong></td><td></td></tr>
         </table>
     </section>
 
@@ -799,31 +821,31 @@
         <h3>4.1 Domain Summary (With GitHub Copilot Optimization)</h3>
         <table class="summary-table">
             <tr><th>Domain</th><th>Base PD</th><th>With Copilot</th><th>Savings</th><th>% of Total</th></tr>
-            <tr><td>Configuration Domain</td><td class="number">398</td><td class="number">280</td><td class="number savings">30%</td><td class="number">40%</td></tr>
-            <tr><td>Payment Orchestration Domain</td><td class="number">560</td><td class="number">415.5</td><td class="number savings">26%</td><td class="number">60%</td></tr>
-            <tr class="total-row"><td><strong>Subtotal</strong></td><td class="number"><strong>958</strong></td><td class="number"><strong>695.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
+            <tr><td>Configuration Domain</td><td class="number">398</td><td class="number">280</td><td class="number savings">30%</td><td class="number">37%</td></tr>
+            <tr><td>Payment Orchestration Domain</td><td class="number">648</td><td class="number">484.5</td><td class="number savings">25%</td><td class="number">63%</td></tr>
+            <tr class="total-row"><td><strong>Subtotal</strong></td><td class="number"><strong>1046</strong></td><td class="number"><strong>764.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
         </table>
 
         <h3>4.2 Effort Distribution by Work Type (Copilot-Optimized)</h3>
         <table>
             <tr><th>Work Type</th><th>Configuration Domain</th><th>Payment Orchestration</th><th>Total PD</th><th>Copilot Gain</th><th>%</th></tr>
-            <tr><td>Backend Development</td><td class="number">189</td><td class="number">289</td><td class="number">478</td><td class="number savings">27%</td><td class="number">69%</td></tr>
+            <tr><td>Backend Development</td><td class="number">189</td><td class="number">358</td><td class="number">547</td><td class="number savings">27%</td><td class="number">72%</td></tr>
             <tr><td>Database</td><td class="number">23</td><td class="number">8</td><td class="number">31</td><td class="number savings">30%</td><td class="number">4%</td></tr>
             <tr><td>APIs</td><td class="number">22</td><td class="number">10</td><td class="number">32</td><td class="number savings">29%</td><td class="number">5%</td></tr>
             <tr><td>Integration</td><td class="number">31</td><td class="number">44</td><td class="number">75</td><td class="number savings">27%</td><td class="number">11%</td></tr>
             <tr><td>Testing</td><td class="number">37</td><td class="number">49</td><td class="number">86</td><td class="number savings">31%</td><td class="number">12%</td></tr>
             <tr><td>Documentation</td><td class="number">10</td><td class="number">8</td><td class="number">18</td><td class="number savings">33%</td><td class="number">3%</td></tr>
             <tr><td>DevOps/Infra</td><td class="number">-</td><td class="number">15</td><td class="number">15</td><td class="number savings">25%</td><td class="number">2%</td></tr>
-            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>280</strong></td><td class="number"><strong>415.5</strong></td><td class="number"><strong>695.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>280</strong></td><td class="number"><strong>484.5</strong></td><td class="number"><strong>764.5</strong></td><td class="number"><strong>27%</strong></td><td class="number">100%</td></tr>
         </table>
 
         <h3>4.3 Complexity Distribution (Copilot-Optimized)</h3>
         <table>
             <tr><th>Complexity</th><th>Modules</th><th>Base PD</th><th>With Copilot</th><th>Savings</th></tr>
             <tr><td class="complexity-low">Low</td><td class="number">2</td><td class="number">46</td><td class="number">28</td><td class="number savings">39%</td></tr>
-            <tr><td class="complexity-medium">Medium</td><td class="number">4</td><td class="number">239</td><td class="number">162</td><td class="number savings">32%</td></tr>
-            <tr><td class="complexity-high">High</td><td class="number">8</td><td class="number">673</td><td class="number">505.5</td><td class="number savings">25%</td></tr>
-            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>14</strong></td><td class="number"><strong>958</strong></td><td class="number"><strong>695.5</strong></td><td class="number"><strong>27%</strong></td></tr>
+            <tr><td class="complexity-medium">Medium</td><td class="number">4</td><td class="number">255</td><td class="number">174</td><td class="number savings">32%</td></tr>
+            <tr><td class="complexity-high">High</td><td class="number">8</td><td class="number">745</td><td class="number">562.5</td><td class="number savings">25%</td></tr>
+            <tr class="total-row"><td><strong>Total</strong></td><td class="number"><strong>14</strong></td><td class="number"><strong>1046</strong></td><td class="number"><strong>764.5</strong></td><td class="number"><strong>27%</strong></td></tr>
         </table>
         
         <div class="note">
@@ -845,6 +867,7 @@
             <tr class="risk-medium"><td>R4</td><td>Workflow engine complexity underestimated</td><td>Medium</td><td class="complexity-medium">Medium</td><td>Iterative development, scope management</td></tr>
             <tr class="risk-medium"><td>R5</td><td>Cross-domain integration complexity</td><td>Medium</td><td class="complexity-high">High</td><td>Early integration testing, well-defined contracts</td></tr>
             <tr class="risk-medium"><td>R6</td><td>Performance requirements (7,500 TPS) challenging</td><td>Medium</td><td class="complexity-high">High</td><td>Performance-first design, continuous benchmarking</td></tr>
+            <tr class="risk-high"><td>R7</td><td>FTS integration complexity — 14 message types (financial &amp; non-financial), file-based SFTP, 48hr async TAT, both inward and outward flows</td><td>High</td><td class="complexity-high">High</td><td>Early SFTP sandbox access from CB, shared integration layer reuse, phased delivery of message types, comprehensive mock-file test suite</td></tr>
             <tr class="risk-low"><td>R8</td><td>Copilot-generated code quality variance</td><td>Low</td><td class="complexity-low">Low</td><td>Mandatory code reviews, test coverage thresholds</td></tr>
         </table>
 
@@ -855,11 +878,11 @@
         <h3>5.2 Contingency Calculation (Copilot-Optimized)</h3>
         <table>
             <tr><th>Category</th><th>Base PD</th><th>With Copilot</th><th>Risk Factor</th><th>Contingency PD</th></tr>
-            <tr><td>High Complexity Modules</td><td class="number">673</td><td class="number">505.5</td><td class="number">18%</td><td class="number">91</td></tr>
-            <tr><td>Medium Complexity Modules</td><td class="number">239</td><td class="number">162</td><td class="number">12%</td><td class="number">19.5</td></tr>
+            <tr><td>High Complexity Modules</td><td class="number">745</td><td class="number">562.5</td><td class="number">18%</td><td class="number">101</td></tr>
+            <tr><td>Medium Complexity Modules</td><td class="number">255</td><td class="number">174</td><td class="number">12%</td><td class="number">21</td></tr>
             <tr><td>Low Complexity Modules</td><td class="number">46</td><td class="number">28</td><td class="number">8%</td><td class="number">2</td></tr>
-            <tr><td><strong>Total Contingency</strong></td><td></td><td class="number"><strong>695.5</strong></td><td></td><td class="number"><strong>112.5</strong></td></tr>
-            <tr class="total-row"><td><strong>Applied Contingency (15%)</strong></td><td></td><td></td><td></td><td class="number"><strong>104</strong></td></tr>
+            <tr><td><strong>Total Contingency</strong></td><td></td><td class="number"><strong>764.5</strong></td><td></td><td class="number"><strong>124</strong></td></tr>
+            <tr class="total-row"><td><strong>Applied Contingency (15%)</strong></td><td></td><td></td><td></td><td class="number"><strong>115</strong></td></tr>
         </table>
 
         <h3>5.3 Buffer Justification</h3>
@@ -871,7 +894,7 @@
             <li>However, maintaining buffer for:
                 <ul style="margin: 0.5rem 0 0.5rem 2rem;">
                     <li>Real-time performance requirements (7,500+ TPS)</li>
-                    <li>Multiple external system integrations (4 payment rails)</li>
+                    <li>Multiple external system integrations (FTS financial &amp; non-financial message types, CB SFTP, IPP, IPI, WPS)</li>
                     <li>First-time implementation of unified orchestration pattern</li>
                 </ul>
             </li>
@@ -893,6 +916,8 @@
             <tr class="risk-medium"><td>IPP Rail sandbox access</td><td>Week 8</td><td>External - IPP Provider</td><td class="complexity-medium">Medium</td></tr>
             <tr class="risk-medium"><td>IPI Rail sandbox access</td><td>Week 8</td><td>External - IPI Provider</td><td class="complexity-medium">Medium</td></tr>
             <tr class="risk-medium"><td>WPS sandbox access</td><td>Week 9</td><td>External - WPS/Ministry of Labour</td><td class="complexity-medium">Medium</td></tr>
+            <tr class="risk-high"><td>FTS-NG SFTP sandbox access (Central Bank)</td><td>Week 10</td><td>External - Central Bank</td><td class="complexity-high">High</td></tr>
+            <tr class="risk-medium"><td>FTS-NG message format specifications (all 14 types)</td><td>Week 8</td><td>External - Central Bank</td><td class="complexity-medium">Medium</td></tr>
             <tr class="risk-medium"><td>Core Banking integration specs</td><td>Week 4</td><td>Core Banking Team</td><td class="complexity-medium">Medium</td></tr>
         </table>
 
@@ -939,7 +964,7 @@ Payment Orchestration Domain
             <tr><td><strong>Phase 1: Foundation</strong></td><td>3 weeks</td><td>1-3</td><td>Service scaffolding, database schemas, TransactionContext, Time &amp; Calendar module, Reference Data module</td></tr>
             <tr><td><strong>Phase 2: Business Logic</strong></td><td>3 weeks</td><td>4-6</td><td>Business Rules engine, Workflow engine, Validation Pipeline, Gateway Core</td></tr>
             <tr><td><strong>Phase 3: Core Processing</strong></td><td>4 weeks</td><td>7-10</td><td>Limit Control Engine, Queue Management, Status &amp; Lifecycle, Financial Configuration</td></tr>
-            <tr><td><strong>Phase 4: Routing &amp; Execution</strong></td><td>4 weeks</td><td>11-14</td><td>Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG, WPS)</td></tr>
+            <tr><td><strong>Phase 4: Routing &amp; Execution</strong></td><td>4 weeks</td><td>11-14</td><td>Embedded Routing Engine, Rail adapters (IPP, IPI, FTS-NG financial &amp; non-financial message adapters, WPS)</td></tr>
             <tr><td><strong>Phase 5: Production Readiness</strong></td><td>2 weeks</td><td>15-16</td><td>Performance optimization, security hardening, monitoring, documentation</td></tr>
         </table>
         
@@ -972,25 +997,25 @@ Orchestration├──────────────███████�
         <table>
             <tr><th>Resource Type</th><th>Daily Rate (USD)</th><th>Days</th><th>Total (USD)</th></tr>
             <tr><td>Tech Lead / Architect</td><td class="number">$800</td><td class="number">80</td><td class="number">$64,000</td></tr>
-            <tr><td>Senior Backend Engineer (2)</td><td class="number">$600</td><td class="number">160</td><td class="number">$96,000</td></tr>
-            <tr><td>Backend Engineer Mid (2)</td><td class="number">$450</td><td class="number">160</td><td class="number">$72,000</td></tr>
+            <tr><td>Senior Backend Engineer (2)</td><td class="number">$600</td><td class="number">200</td><td class="number">$120,000</td></tr>
+            <tr><td>Backend Engineer Mid (2)</td><td class="number">$450</td><td class="number">180</td><td class="number">$81,000</td></tr>
             <tr><td>Backend Engineer Junior (1)</td><td class="number">$300</td><td class="number">80</td><td class="number">$24,000</td></tr>
             <tr><td>DevOps Engineer (0.75 FTE)</td><td class="number">$550</td><td class="number">60</td><td class="number">$33,000</td></tr>
             <tr><td>QA Engineer (1)</td><td class="number">$400</td><td class="number">80</td><td class="number">$32,000</td></tr>
-            <tr class="highlight-row"><td><strong>Subtotal</strong></td><td></td><td></td><td class="number"><strong>$321,000</strong></td></tr>
-            <tr><td>Contingency (15%)</td><td></td><td></td><td class="number">$48,150</td></tr>
+            <tr class="highlight-row"><td><strong>Subtotal</strong></td><td></td><td></td><td class="number"><strong>$354,000</strong></td></tr>
+            <tr><td>Contingency (15%)</td><td></td><td></td><td class="number">$53,100</td></tr>
             <tr><td>GitHub Copilot Licenses (8 users × 4 months)</td><td class="number">$19/month</td><td class="number">32</td><td class="number">$608</td></tr>
-            <tr class="total-row"><td><strong>Total Estimated Cost</strong></td><td></td><td></td><td class="number"><strong>$369,758</strong></td></tr>
+            <tr class="total-row"><td><strong>Total Estimated Cost</strong></td><td></td><td></td><td class="number"><strong>$407,708</strong></td></tr>
         </table>
 
         <h3>Cost Savings Summary</h3>
         <table class="comparison-table">
             <tr><th>Metric</th><th>Traditional</th><th>With Copilot</th><th>Savings</th></tr>
             <tr><td>Team Size</td><td class="number traditional">12</td><td class="number copilot">8</td><td class="number savings">33%</td></tr>
-            <tr><td>Duration</td><td class="number traditional">18 weeks</td><td class="number copilot">16 weeks</td><td class="number savings">11%</td></tr>
-            <tr><td>Personnel Cost</td><td class="number traditional">$531,000</td><td class="number copilot">$321,000</td><td class="number savings">$210,000</td></tr>
-            <tr><td>Contingency</td><td class="number traditional">$106,200</td><td class="number copilot">$48,150</td><td class="number savings">$58,050</td></tr>
-            <tr class="total-row"><td><strong>Total Cost</strong></td><td class="number"><strong>$637,200</strong></td><td class="number"><strong>$369,758</strong></td><td class="number"><strong>$267,442 (42%)</strong></td></tr>
+            <tr><td>Duration</td><td class="number traditional">20 weeks</td><td class="number copilot">18 weeks</td><td class="number savings">10%</td></tr>
+            <tr><td>Personnel Cost</td><td class="number traditional">$590,000</td><td class="number copilot">$354,000</td><td class="number savings">$236,000</td></tr>
+            <tr><td>Contingency</td><td class="number traditional">$118,000</td><td class="number copilot">$53,100</td><td class="number savings">$64,900</td></tr>
+            <tr class="total-row"><td><strong>Total Cost</strong></td><td class="number"><strong>$708,000</strong></td><td class="number"><strong>$407,708</strong></td><td class="number"><strong>$300,292 (42%)</strong></td></tr>
         </table>
     </section>
 
@@ -1034,21 +1059,21 @@ Orchestration├──────────────███████�
         <table class="comparison-table">
             <tr><th>Metric</th><th>Traditional</th><th>With GitHub Copilot</th></tr>
             <tr><td><strong>Configuration Domain</strong></td><td class="number traditional">398 Person-Days</td><td class="number copilot">280 Person-Days</td></tr>
-            <tr><td><strong>Payment Orchestration Domain</strong></td><td class="number traditional">560 Person-Days</td><td class="number copilot">415.5 Person-Days</td></tr>
-            <tr><td><strong>Base Effort Total</strong></td><td class="number traditional">958 Person-Days</td><td class="number copilot">695.5 Person-Days</td></tr>
-            <tr><td><strong>Contingency</strong></td><td class="number traditional">192 PD (20%)</td><td class="number copilot">104 PD (15%)</td></tr>
-            <tr class="total-row"><td><strong>Grand Total</strong></td><td class="number"><strong>1,150 Person-Days</strong></td><td class="number"><strong>799.5 Person-Days</strong></td></tr>
-            <tr><td><strong>Recommended Duration</strong></td><td class="number traditional"><strong>18 Weeks</strong></td><td class="number copilot"><strong>16 Weeks</strong></td></tr>
+            <tr><td><strong>Payment Orchestration Domain</strong></td><td class="number traditional">648 Person-Days</td><td class="number copilot">484.5 Person-Days</td></tr>
+            <tr><td><strong>Base Effort Total</strong></td><td class="number traditional">1,046 Person-Days</td><td class="number copilot">764.5 Person-Days</td></tr>
+            <tr><td><strong>Contingency</strong></td><td class="number traditional">209 PD (20%)</td><td class="number copilot">115 PD (15%)</td></tr>
+            <tr class="total-row"><td><strong>Grand Total</strong></td><td class="number"><strong>1,255 Person-Days</strong></td><td class="number"><strong>879.5 Person-Days</strong></td></tr>
+            <tr><td><strong>Recommended Duration</strong></td><td class="number traditional"><strong>20 Weeks</strong></td><td class="number copilot"><strong>18 Weeks</strong></td></tr>
             <tr><td><strong>Recommended Team Size</strong></td><td class="number traditional"><strong>12 Engineers</strong></td><td class="number copilot"><strong>8 Engineers</strong></td></tr>
             <tr><td><strong>Parallel Tracks</strong></td><td class="number">2</td><td class="number">2</td></tr>
-            <tr><td><strong>Estimated Cost</strong></td><td class="number traditional"><strong>$637,200</strong></td><td class="number copilot"><strong>$369,758</strong></td></tr>
+            <tr><td><strong>Estimated Cost</strong></td><td class="number traditional"><strong>$708,000</strong></td><td class="number copilot"><strong>$407,708</strong></td></tr>
         </table>
 
         <h3>Productivity Gains Summary</h3>
         <table style="max-width: 400px;">
             <tr><th>Category</th><th>Productivity Gain</th></tr>
             <tr><td>Overall Effort Reduction</td><td class="number savings">27%</td></tr>
-            <tr><td>Timeline Reduction</td><td class="number savings">11%</td></tr>
+            <tr><td>Timeline Reduction</td><td class="number savings">10%</td></tr>
             <tr><td>Team Size Reduction</td><td class="number savings">33%</td></tr>
             <tr><td>Cost Reduction</td><td class="number savings">42%</td></tr>
         </table>
