@@ -24,9 +24,9 @@ This document provides a comprehensive effort estimation for the development of 
 
 | Summary Metric | Value |
 |----------------|-------|
-| **Total Estimated Effort (with Copilot)** | **801 Person-Days** |
-| **Contingency Buffer (15%)** | 120 Person-Days |
-| **Grand Total with Buffer** | **921 Person-Days** |
+| **Total Estimated Effort (with Copilot)** | **880.5 Person-Days** |
+| **Contingency Buffer (15%)** | 132 Person-Days |
+| **Grand Total with Buffer** | **1,013 Person-Days** |
 | **Recommended Team Size** | 6-8 Engineers |
 | **Estimated Duration** | 14-16 Weeks |
 | **Productivity Gain (vs Traditional)** | ~35% |
@@ -440,7 +440,30 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | **FTS-NG Shared Infrastructure** | | | | | |
 | FTS SFTP Integration Layer | File-based SFTP upload/download to/from CB server, retry handling, 48hr TAT tracking, async response correlation | 8 | 15% | 7 | High |
 | FTS Message Parser/Generator | File format parsing and generation for all FTS message types (inward & outward) | 6 | 15% | 5 | High |
-| WPS Rail Adapter | Wages Protection System integration (SIF/SFTP) | 8 | 20% | 6 | High |
+| **WPS Corporate Registration** | | | | | |
+| WPS Corporate Registration | Corporate entity registration, validation, and onboarding for WPS salary processing | 5 | 35% | 3 | Medium |
+| **WPS Outward Salary Processing** | | | | | |
+| WPS Outward - SIF File Builder & Upload | Build SIF salary file, Excel-to-SIF conversion, channel integration for batch upload via SFTP | 8 | 20% | 6 | High |
+| WPS Outward - Acknowledgment Handler | Process CB acknowledgment/rejection for outward salary file submissions | 4 | 25% | 3 | Medium |
+| **WPS Inward PIF Processing** | | | | | |
+| WPS Inward - PIF/PAF File Receiver | Receive and parse inward PIF (.PAF) files from CB via SFTP | 7 | 15% | 6 | High |
+| WPS Inward - PRC & Posting Flow | Send PRC to CB, perform beneficiary posting, generate DIF on success or RFA on failure | 8 | 15% | 7 | High |
+| WPS Inward - RFA/RTC Handler | Handle RFA acknowledgment flow and RTC (Return to Corporate) from CB for outward bank | 5 | 20% | 4 | High |
+| **WPS Refund Flow** | | | | | |
+| WPS Refund - RFR Initiation & RRI Processing | RFR initiation, CB ack/nack handling, RRI processing with maker/checker approval flow | 8 | 15% | 7 | High |
+| WPS Refund - DCR & RRR Flow | DCR (DIF cancellation) processing, RRR submission to CB, RSU status update handling | 7 | 15% | 6 | High |
+| WPS Manual DCR Screen | Manual DIF cancellation screen with RFA generation after cancellation | 5 | 25% | 4 | High |
+| **WPS File Processing & Inquiry** | | | | | |
+| WPS RDF & CDF Processing | Return Data File (RDF) and Corporate Data File (CDF) parsing, validation, and processing | 6 | 20% | 5 | High |
+| WPS PSI (Payment Status Inquiry) | Payment status inquiry for WPS transactions, file-based and API-based | 4 | 30% | 3 | Medium |
+| **WPS MoHRE Integration** | | | | | |
+| WPS MoHRE API Integration | 17 REST API endpoints for Ministry of Human Resources notifications and regulatory compliance | 10 | 20% | 8 | High |
+| **WPS Portal & Employee Management** | | | | | |
+| WPS Corporate & Bank Portal | Corporate portal (small banks) and bank portal for WPS management and monitoring | 10 | 25% | 7.5 | High |
+| WPS Employee Registration | Employee registration flow, validation, and management for WPS processing | 5 | 35% | 3 | Medium |
+| **WPS Shared Infrastructure** | | | | | |
+| WPS SFTP Integration Layer | SFTP connection management, file transfer, retry logic, encryption, scheduling | 7 | 15% | 6 | High |
+| WPS File Parser/Generator | SIF/PIF/DIF/RDF/CDF/PAF file format parsing, validation, generation, and error handling | 8 | 15% | 7 | High |
 | Health Checker | Health monitor, availability check, performance stats, degradation alerts | 5 | 35% | 3 | Medium |
 | Fallback Manager | Fallback strategy, retry coordinator, circuit breaker, recovery | 6 | 15% | 5 | High |
 | Load Balancer | Round robin, weighted distribution, capacity management | 4 | 30% | 3 | Medium |
@@ -453,7 +476,7 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Unit Tests | Routing algorithm, scoring logic, adapter logic | 8 | 35% | 5 | High |
 | Integration Tests | End-to-end routing, rail execution | 6 | 15% | 5 | High |
 | Rail Simulation Tests | Mock rail responses, failure scenarios | 5 | 20% | 4 | High |
-| **Subtotal** | | **245** | **~22%** | **192** | |
+| **Subtotal** | | **344** | **~21%** | **271.5** | |
 
 > **IPI Technical Architecture Note:** IPI is a real-time payment rail using RFC WebSocket connections (no batch/SFTP). Outward payment flow: FFTS001 (initiation) → FFT002 (acknowledgment/rejection) → FFT006 (beneficiary bank posting confirmation). Inward payment flow: FFT003 (receive) → FFT004 (acknowledgment/rejection, 10-minute TAT SLA) → FFT005 (core banking posting confirmation). REST API enquiry is used as a fallback when FFT002/FFT006/FFT005 responses are not received. IPI refunds are handled via the FTS rail.
 
@@ -490,9 +513,9 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | Limit Control Engine | 65 | 52 | 20% | High |
 | Queue Management | 59 | 43 | 27% | High |
 | Status & Lifecycle Management | 54 | 40 | 26% | High |
-| Embedded Routing Engine | 245 | 192 | 22% | High |
+| Embedded Routing Engine | 344 | 271.5 | 21% | High |
 | Cross-Cutting Concerns | 58 | 44.5 | 23% | Medium-High |
-| **Total Payment Orchestration Domain** | **694** | **521** | **25%** | |
+| **Total Payment Orchestration Domain** | **793** | **600.5** | **24%** | |
 
 ---
 
@@ -502,31 +525,31 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 
 | Domain | Base PD | With Copilot | Savings | % of Total |
 |--------|--------:|-------------:|--------:|------------|
-| Configuration Domain | 398 | 280 | 30% | 35% |
-| Payment Orchestration Domain | 694 | 521 | 25% | 65% |
-| **Subtotal** | **1,092** | **801** | **27%** | 100% |
+| Configuration Domain | 398 | 280 | 30% | 32% |
+| Payment Orchestration Domain | 793 | 600.5 | 24% | 68% |
+| **Subtotal** | **1,191** | **880.5** | **26%** | 100% |
 
 ### 4.2 Effort Distribution by Work Type (Copilot-Optimized)
 
 | Work Type | Configuration Domain | Payment Orchestration | Total PD | Copilot Gain | % |
 |-----------|---------------------:|----------------------:|--------:|-------------:|--:|
-| Backend Development | 189 | 394.5 | 583.5 | 27% | 73% |
+| Backend Development | 189 | 474 | 663 | 26% | 75% |
 | Database | 23 | 8 | 31 | 30% | 4% |
 | APIs | 22 | 10 | 32 | 29% | 4% |
-| Integration | 31 | 44 | 75 | 27% | 10% |
-| Testing | 37 | 49 | 86 | 31% | 11% |
+| Integration | 31 | 44 | 75 | 27% | 9% |
+| Testing | 37 | 49 | 86 | 31% | 10% |
 | Documentation | 10 | 8 | 18 | 33% | 2% |
 | DevOps/Infra | - | 15 | 15 | 25% | 2% |
-| **Total** | **280** | **521** | **801** | **27%** | 100% |
+| **Total** | **280** | **600.5** | **880.5** | **26%** | 100% |
 
 ### 4.3 Complexity Distribution (Copilot-Optimized)
 
 | Complexity | Modules | Base PD | With Copilot | Savings |
 |------------|--------:|--------:|-------------:|--------:|
 | Low | 2 | 46 | 28 | 39% |
-| Medium | 4 | 260 | 177.5 | 32% |
-| High | 8 | 786 | 595.5 | 24% |
-| **Total** | **14** | **1,092** | **801** | **27%** |
+| Medium | 4 | 278 | 189.5 | 32% |
+| High | 8 | 867 | 663 | 24% |
+| **Total** | **14** | **1,191** | **880.5** | **26%** |
 
 *Note: Copilot provides greater productivity gains for lower-complexity work (boilerplate, CRUD, documentation) while complex algorithms and integrations retain most of their original estimates.*
 
@@ -547,6 +570,7 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 | R7 | FTS integration complexity — 14 message types, SFTP file-based, 48hr TAT, inward & outward flows | High | High | Phased delivery (financial messages first), mock-file test suite for all message types |
 | R8 | Copilot-generated code quality variance | Low | Low | Mandatory code reviews, test coverage thresholds |
 | R9 | IPI WebSocket connectivity/reliability — real-time RFC WebSocket reconnection and session management | Medium | High | Robust reconnection logic, heartbeat monitoring, TLS mutual authentication |
+| R10 | WPS SFTP integration and file format complexity | Medium | Medium | Early file format validation, mock SFTP testing |
 
 *Note: With GitHub Copilot agent-assisted development, some risks are reduced (R4 reduced from High to Medium probability) due to faster prototyping and iteration capabilities.*
 
@@ -554,11 +578,11 @@ This estimation incorporates productivity gains from **GitHub Copilot Agent** as
 
 | Category | Base PD | With Copilot | Risk Factor | Contingency PD |
 |----------|--------:|-------------:|------------:|---------------:|
-| High Complexity Modules | 786 | 595.5 | 18% | 107 |
-| Medium Complexity Modules | 260 | 177.5 | 12% | 21 |
+| High Complexity Modules | 867 | 663 | 18% | 119 |
+| Medium Complexity Modules | 278 | 189.5 | 12% | 23 |
 | Low Complexity Modules | 46 | 28 | 8% | 2 |
-| **Total Contingency** | | **801** | | **130** |
-| **Applied Contingency (15%)** | | | | **120** |
+| **Total Contingency** | | **880.5** | | **144** |
+| **Applied Contingency (15%)** | | | | **132** |
 
 ### 5.3 Buffer Justification
 
@@ -588,6 +612,8 @@ A **15% contingency buffer** (reduced from 20%) is applied based on:
 | WPS sandbox access | Week 9 | External - WPS/Ministry of Labour | Medium |
 | CB SFTP sandbox access | Week 10 | External - Central Bank | High |
 | FTS message format specifications | Week 8 | External - Central Bank | Medium |
+| WPS SFTP sandbox access & file format specifications | Week 8 | External - WPS/CB Provider | Medium |
+| MoHRE API specifications & sandbox access | Week 10 | External - MoHRE | Medium |
 | Core Banking integration specs | Week 4 | Core Banking Team | Medium |
 
 ### 6.2 Domain Dependencies
@@ -657,16 +683,16 @@ Orchestration├──────────────███████�
 
 | Resource Type | Daily Rate (USD) | Days | Total (USD) |
 |---------------|----------------:|-----:|------------:|
-| Tech Lead / Architect | $800 | 90 | $72,000 |
-| Senior Backend Engineer (2) | $600 | 180 | $108,000 |
-| Backend Engineer Mid (2) | $450 | 180 | $81,000 |
-| Backend Engineer Junior (1) | $300 | 80 | $24,000 |
-| DevOps Engineer (0.75 FTE) | $550 | 60 | $33,000 |
-| QA Engineer (1) | $400 | 90 | $36,000 |
-| **Subtotal** | | | **$354,000** |
-| Contingency (15%) | | | $53,100 |
-| GitHub Copilot Licenses (8 users × 4 months) | $19/month | 32 | $608 |
-| **Total Estimated Cost** | | | **$407,708** |
+| Tech Lead / Architect | $800 | 99 | $79,200 |
+| Senior Backend Engineer (2) | $600 | 198 | $118,800 |
+| Backend Engineer Mid (2) | $450 | 198 | $89,100 |
+| Backend Engineer Junior (1) | $300 | 88 | $26,400 |
+| DevOps Engineer (0.75 FTE) | $550 | 66 | $36,300 |
+| QA Engineer (1) | $400 | 99 | $39,600 |
+| **Subtotal** | | | **$389,400** |
+| Contingency (15%) | | | $58,410 |
+| GitHub Copilot Licenses (8 users × 4.5 months) | $19/month | 36 | $684 |
+| **Total Estimated Cost** | | | **$448,494** |
 
 ### Cost Savings Summary
 
@@ -674,9 +700,9 @@ Orchestration├──────────────███████�
 |--------|------------:|-------------:|--------:|
 | Team Size | 12 | 8 | 33% |
 | Duration | 20 weeks | 18 weeks | 10% |
-| Personnel Cost | $590,000 | $354,000 | $236,000 |
-| Contingency | $118,000 | $53,100 | $64,900 |
-| **Total Cost** | **$708,000** | **$407,708** | **$300,292 (42%)** |
+| Personnel Cost | $649,000 | $389,400 | $259,600 |
+| Contingency | $129,800 | $58,410 | $71,390 |
+| **Total Cost** | **$778,800** | **$448,494** | **$330,306 (42%)** |
 
 ---
 
@@ -715,20 +741,20 @@ Orchestration├──────────────███████�
 | Metric | Traditional | With GitHub Copilot |
 |--------|------------:|--------------------:|
 | **Configuration Domain** | 398 Person-Days | 280 Person-Days |
-| **Payment Orchestration Domain** | 694 Person-Days | 521 Person-Days |
-| **Base Effort Total** | 1,092 Person-Days | 801 Person-Days |
-| **Contingency** | 219 PD (20%) | 120 PD (15%) |
-| **Grand Total** | **1,311 Person-Days** | **921 Person-Days** |
+| **Payment Orchestration Domain** | 793 Person-Days | 600.5 Person-Days |
+| **Base Effort Total** | 1,191 Person-Days | 880.5 Person-Days |
+| **Contingency** | 238 PD (20%) | 132 PD (15%) |
+| **Grand Total** | **1,429 Person-Days** | **1,013 Person-Days** |
 | **Recommended Duration** | **20 Weeks** | **18 Weeks** |
 | **Recommended Team Size** | **12 Engineers** | **8 Engineers** |
 | **Parallel Tracks** | 2 | 2 |
-| **Estimated Cost** | **$708,000** | **$407,708** |
+| **Estimated Cost** | **$778,800** | **$448,494** |
 
 ### Productivity Gains Summary
 
 | Category | Productivity Gain |
 |----------|------------------:|
-| Overall Effort Reduction | 27% |
+| Overall Effort Reduction | 26% |
 | Timeline Reduction | 10% |
 | Team Size Reduction | 33% |
 | Cost Reduction | 42% |
