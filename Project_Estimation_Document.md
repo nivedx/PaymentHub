@@ -677,38 +677,9 @@ Orchestration├──────────────███████�
 
 ---
 
-## 8. Cost Estimation
+## 8. Assumptions & Exclusions
 
-*Note: Actual costs depend on team location and seniority mix. Below is a reference calculation optimized for GitHub Copilot-assisted development.*
-
-| Resource Type | Daily Rate (USD) | Days | Total (USD) |
-|---------------|----------------:|-----:|------------:|
-| Tech Lead / Architect | $800 | 99 | $79,200 |
-| Senior Backend Engineer (2) | $600 | 198 | $118,800 |
-| Backend Engineer Mid (2) | $450 | 198 | $89,100 |
-| Backend Engineer Junior (1) | $300 | 88 | $26,400 |
-| DevOps Engineer (0.75 FTE) | $550 | 66 | $36,300 |
-| QA Engineer (1) | $400 | 99 | $39,600 |
-| **Subtotal** | | | **$389,400** |
-| Contingency (15%) | | | $58,410 |
-| GitHub Copilot Licenses (8 users × 4.5 months) | $19/month | 36 | $684 |
-| **Total Estimated Cost** | | | **$448,494** |
-
-### Cost Savings Summary
-
-| Metric | Traditional | With Copilot | Savings |
-|--------|------------:|-------------:|--------:|
-| Team Size | 12 | 8 | 33% |
-| Duration | 20 weeks | 18 weeks | 10% |
-| Personnel Cost | $649,000 | $389,400 | $259,600 |
-| Contingency | $129,800 | $58,410 | $71,390 |
-| **Total Cost** | **$778,800** | **$448,494** | **$330,306 (42%)** |
-
----
-
-## 9. Assumptions & Exclusions
-
-### 9.1 Key Assumptions
+### 8.1 Key Assumptions
 
 | # | Assumption |
 |---|------------|
@@ -721,7 +692,7 @@ Orchestration├──────────────███████�
 | 7 | UAT support is included; production support is excluded |
 | 8 | Third-party library licensing is pre-approved |
 
-### 9.2 Exclusions
+### 8.2 Exclusions
 
 | # | Exclusion |
 |---|-----------|
@@ -736,7 +707,7 @@ Orchestration├──────────────███████�
 
 ---
 
-## 10. Final Summary
+## 9. Final Summary
 
 | Metric | Traditional | With GitHub Copilot |
 |--------|------------:|--------------------:|
@@ -748,7 +719,6 @@ Orchestration├──────────────███████�
 | **Recommended Duration** | **20 Weeks** | **18 Weeks** |
 | **Recommended Team Size** | **12 Engineers** | **8 Engineers** |
 | **Parallel Tracks** | 2 | 2 |
-| **Estimated Cost** | **$778,800** | **$448,494** |
 
 ### Productivity Gains Summary
 
@@ -757,7 +727,6 @@ Orchestration├──────────────███████�
 | Overall Effort Reduction | 26% |
 | Timeline Reduction | 10% |
 | Team Size Reduction | 33% |
-| Cost Reduction | 42% |
 
 ### Confidence Level
 
