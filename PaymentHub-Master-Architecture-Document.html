@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PaymentHub — Master Architecture Document</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#f4f7fb; --panel:#ffffff; --ink:#1f2937; --muted:#5b6676; --line:#e2e8f0;
+    --accent:#2563eb; --accent2:#0891b2; --violet:#7c3aed; --amber:#b45309; --green:#047857; --slate:#475569;
+    --ok:#047857; --warn:#b45309; --plan:#6b7280;
+    --code-bg:#f1f5f9;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+  /* ---- sticky sidebar layout ---- */
+  .layout{display:flex;align-items:flex-start;gap:26px;max-width:1340px;margin:0 auto;padding:24px 22px 64px}
+  .sidebar{flex:0 0 256px;width:256px}
+  .sidebar-inner{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;overscroll-behavior:contain;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .sidebar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}
+  .sidebar-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0;padding:0 4px}
+  .nav-btn{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:#64748b;border-radius:6px;width:26px;height:24px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .nav-btn:hover{background:#f1f5f9;color:#0f172a}
+  .nav-show{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;display:none;
+    background:#2563eb;color:#fff;border:none;border-radius:0 9px 9px 0;padding:14px 8px;cursor:pointer;
+    font:700 11px 'Segoe UI',sans-serif;letter-spacing:.14em;writing-mode:vertical-rl;box-shadow:0 2px 8px rgba(15,23,42,.22)}
+  .nav-show:hover{background:#1d4ed8}
+  body.nav-collapsed .sidebar{display:none}
+  body.nav-collapsed .nav-show{display:block}
+  .sidebar nav{display:flex;flex-direction:column;gap:1px}
+  .sidebar nav a{display:block;padding:6px 10px;font-size:13px;line-height:1.35;color:#475569;border-radius:7px;border-left:3px solid transparent;text-decoration:none}
+  .sidebar nav a:hover{background:#f1f5f9;color:#0f172a;text-decoration:none}
+  .sidebar nav a.active{background:#eff6ff;color:#1d4ed8;border-left-color:#2563eb;font-weight:650}
+  .content{flex:1 1 auto;min-width:0}
+  .content section:first-child{margin-top:0}
+  section[id]{scroll-margin-top:14px}
+  /* thin scrollbar for the nav */
+  .sidebar-inner::-webkit-scrollbar{width:7px}
+  .sidebar-inner::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:6px}
+  @media(max-width:900px){
+    .layout{display:block;padding:18px 18px 50px}
+    .sidebar{width:auto;flex:none;margin-bottom:18px}
+    .sidebar-inner{position:static;max-height:none}
+    .sidebar nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px}
+  }
+  header.cover{
+    background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#0891b2 100%);
+    color:#fff;padding:22px 0 20px;
+  }
+  header.cover .wrap{max-width:var(--maxw)}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:11px;opacity:.85;margin:0 0 5px}
+  header.cover h1{font-size:25px;margin:0 0 3px;font-weight:700;letter-spacing:-.4px}
+  header.cover p.sub{font-size:14px;margin:0 0 13px;opacity:.92}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .meta div{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:5px 12px}
+  .meta b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.8;font-weight:600}
+  .meta span{font-size:13px}
+
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px 30px;margin:0 0 22px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  h2{font-size:23px;margin:4px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--line);color:#0f172a}
+  h3{font-size:18px;margin:24px 0 10px;color:#1e293b}
+  h4{font-size:15px;margin:18px 0 6px;color:#334155}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0;padding-left:22px}
+  li{margin:5px 0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:var(--code-bg);padding:1px 6px;border-radius:5px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:13px;color:#0f172a}
+  pre{background:#0f172a;color:#e2e8f0;padding:16px 18px;border-radius:10px;overflow:auto;font-size:13px;line-height:1.55}
+  pre code{background:none;color:inherit;padding:0}
+  blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--accent);background:#eff6ff;border-radius:0 8px 8px 0;color:#1e3a5f}
+
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f1f5f9;font-weight:650;color:#0f172a}
+  tr:nth-child(even) td{background:#fafcff}
+
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:20px;white-space:nowrap}
+  .t-ok{background:#dcfce7;color:#166534}
+  .t-warn{background:#fef3c7;color:#92400e}
+  .t-plan{background:#e5e7eb;color:#374151}
+
+  .toc{columns:2;column-gap:36px}
+  .toc a{display:block;padding:3px 0;font-size:14px}
+  @media(max-width:680px){.toc{columns:1}}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin:10px 0 0;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+  figure{margin:18px 0;text-align:center}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;font-style:italic}
+  .diagram-card{background:#fbfdff;border:1px solid var(--line);border-radius:12px;padding:16px;overflow-x:auto}
+  .mermaid{background:#fbfdff}
+
+  .note{font-size:13px;color:var(--muted)}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:24px 0}
+  svg.hero{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="wrap">
+    <p class="eyebrow">iPayHub · PaymentHub</p>
+    <h1>Master Architecture Document</h1>
+    <p class="sub">One engine. Every payment scheme. Every UAE bank.</p>
+    <div class="meta">
+      <div><b>Status</b><span>Baseline (consolidated &amp; source-verified)</span></div>
+      <div><b>Version</b><span>1.0</span></div>
+    </div>
+  </div>
+</header>
+
+<button id="navShow" class="nav-show" title="Show contents" aria-label="Show contents">☰ CONTENTS</button>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-head">
+        <p class="sidebar-title">Contents</p>
+        <button id="navCollapse" class="nav-btn" title="Hide contents" aria-label="Hide contents">«</button>
+      </div>
+      <nav id="sidebar-nav">
+        <a href="#exec">1 · Executive summary</a>
+        <a href="#principles">2 · Principles &amp; tenets</a>
+        <a href="#context">3 · Business context &amp; scope</a>
+        <a href="#hla">4 · High-level architecture</a>
+        <a href="#adr">5 · ADR register</a>
+        <a href="#components">6 · Component architecture</a>
+        <a href="#patterns">7 · Key patterns</a>
+        <a href="#workflow">8 · Workflow &amp; orchestration</a>
+        <a href="#data">9 · Data architecture</a>
+        <a href="#integration">10 · Integration (Nexus)</a>
+        <a href="#security">11 · Security architecture</a>
+        <a href="#observability">12 · Observability</a>
+        <a href="#deployment">13 · Deployment &amp; infrastructure</a>
+        <a href="#nfr">14 · Non-functional requirements</a>
+        <a href="#quality">15 · Quality &amp; reliability</a>
+        <a href="#gaps">16 · Known gaps &amp; roadmap</a>
+        <a href="#appendix">17 · Appendices</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="content">
+
+  <section id="exec">
+    <h2>1 · Executive summary</h2>
+    <p><strong>iPayHub (PaymentHub)</strong> is a multi-tenant, workflow-driven payment hub built for UAE commercial banks. Its defining idea is that <strong>a payment is described as data, not code</strong>: each payment flow is a JSON <strong>DSL workflow</strong> that a single generic Temporal workflow interprets at runtime, dispatching each step as a Temporal <strong>activity</strong> to a platform- or bank-specific worker.</p>
+    <p>This DSL-driven model means new payment products and new tenant banks are onboarded primarily through <strong>configuration, workflow definitions and pluggable adaptors</strong> rather than core code changes. The platform serves UAE schemes — <strong>IPI</strong> (Aani), <strong>FTS</strong>, <strong>WPS</strong>, <strong>NPSS</strong>, <strong>eDDA</strong>, <strong>CBFT/XBDR</strong> — across tenant banks <strong>ADIB, DIB, ENBD and FAB</strong>.</p>
+    <h3>Architecturally significant characteristics</h3>
+    <ul>
+      <li>One generic workflow interpreter (<code>PaymentDslWorkflow</code>) executes every scheme — no per-scheme engine. <span class="tag t-ok">verified</span></li>
+      <li>Clean Architecture layering (API → Application → Domain → Infrastructure) across all services. <span class="tag t-ok">verified</span></li>
+      <li>Adaptor Interface Pattern isolates the core from bank CBS/AML/FX/RTGS/SFTP systems (ADR-003). <span class="tag t-ok">verified</span></li>
+      <li>Append-only / CQRS projection data model — state changes are new rows; no DB foreign keys. <span class="tag t-ok">verified</span></li>
+      <li>Saga compensation for rollback, driven by the DSL and a Temporal compensation stack. <span class="tag t-ok">verified</span></li>
+      <li>Multi-tenant schema isolation in a single SQL Server database (ADR-004). <span class="tag t-ok">verified</span></li>
+      <li>Fail-closed, hash-chained, tamper-evident audit (SQL Server 2022 Ledger + external witnesses). <span class="tag t-ok">verified</span> <span class="tag t-warn">hardening partial</span></li>
+      <li>Defence-in-depth security: YARP gateway, RS256 JWT, RBAC, rate limiting, PII redaction, Vault secrets. <span class="tag t-ok">verified</span></li>
+      <li>Two-collector OpenTelemetry topology into SigNoz/ClickHouse, decoupling services from the backend. <span class="tag t-ok">verified</span></li>
+    </ul>
+    <p>The stack is <strong>.NET 10 (C# 14)</strong> · <strong>Temporal</strong> · <strong>SQL Server 2022</strong> · <strong>PostgreSQL</strong> (Temporal) · <strong>YARP</strong> · <strong>React</strong> · <strong>Redis</strong> · <strong>MQTT/Mosquitto</strong> · <strong>HashiCorp Vault</strong> · <strong>OpenTelemetry + SigNoz/Jaeger</strong>, orchestrated via layered <strong>Docker Compose</strong> and targeting <strong>Kubernetes</strong> for higher tiers.</p>
+  </section>
+
+  <section id="principles">
+    <h2>2 · Architecture principles &amp; tenets</h2>
+    <p>These principles are load-bearing and enforced in code review, CI and the data model (from <code>.github/copilot-instructions.md</code>, the ADRs and the design corpus).</p>
+    <h3>2.1 Data-integrity principles (hard constraints)</h3>
+    <table>
+      <tr><th>#</th><th>Principle</th><th>Rationale</th></tr>
+      <tr><td>P1</td><td><strong>Append-only operational data.</strong> State/status/balance changes are new timeline/event rows — never in-place <code>UPDATE</code> on transaction tables.</td><td>Eliminates lock contention at scale; complete reconstructable history.</td></tr>
+      <tr><td>P2</td><td><strong>Separate immutable facts from mutable state.</strong> Status fields never share a table with immutable transaction data.</td><td>Enables CQRS projection and tamper-evidence.</td></tr>
+      <tr><td>P3</td><td><strong>No database-level foreign keys.</strong> Referential integrity is enforced at the service layer via soft references.</td><td>Avoids cascading deadlocks and cross-rail coupling.</td></tr>
+      <tr><td>P4</td><td><strong>Designed for millions of rows.</strong> <code>BIGINT IDENTITY</code> PKs, bounded <code>NVARCHAR</code>, <code>DECIMAL(18,4)</code> money, <code>nvarchar(max)</code> only for JSON/binary.</td><td>Throughput &amp; predictable indexing.</td></tr>
+      <tr><td>P5</td><td><strong>Phase-gate refactors.</strong> Complete phase N and its deliverable before phase N+1.</td><td>Controlled, reviewable change.</td></tr>
+    </table>
+    <h3>2.2 Design tenets</h3>
+    <ul>
+      <li><strong>Configuration over code</strong> — products/tenants added via DSL, the 4-level config hierarchy and adaptor packages.</li>
+      <li><strong>One engine, many workflows</strong> — a single Temporal workflow interprets all DSL definitions.</li>
+      <li><strong>Pluggability at the edges</strong> — every external system is reached through a typed adaptor resolved at runtime.</li>
+      <li><strong>Determinism &amp; immutability</strong> — workflow changes use <code>Patched()</code>/<code>GetVersion()</code>; published versions are immutable.</li>
+      <li><strong>Fail-closed</strong> for audit and money-movement; AI autonomy is deny-by-default.</li>
+      <li><strong>Defence-in-depth &amp; least privilege</strong> — client-side checks are never the security boundary.</li>
+      <li><strong>Observability first-class but decoupled</strong> — no hard runtime dependency on the monitoring backend.</li>
+      <li><strong>Portability</strong> — Docker/Kubernetes, no hard cloud lock-in; one image across tiers.</li>
+    </ul>
+  </section>
+
+  <section id="context">
+    <h2>3 · Business context &amp; scope</h2>
+    <p>PaymentHub clears and settles payments on behalf of multiple UAE banks across national and cross-border schemes, providing a common orchestration, integration, settlement, audit and operations layer while isolating each tenant's data and bank-specific integrations.</p>
+    <h3>3.1 Payment schemes</h3>
+    <table>
+      <tr><th>Scheme</th><th>Description</th><th>Notes</th></tr>
+      <tr><td><strong>IPI</strong> (Aani)</td><td>Real-time UAE credit transfer via CBUAE Aani / FFTS</td><td>Inward &amp; outward + reversal; high-value approval routing; CB-response timeout with status-enquiry fallback. Pilot: DIB.</td></tr>
+      <tr><td><strong>FTS</strong> (UAEFTS)</td><td>Domestic fund transfer via CBUAE</td><td>Velocity-limit checks; timer-driven inward posting.</td></tr>
+      <tr><td><strong>WPS</strong></td><td>UAE MoHRE bulk salary disbursement</td><td>SIF batches; SFTP exchange; per-record fan-out; partial-file acceptance.</td></tr>
+      <tr><td><strong>NPSS</strong></td><td>National Payment Systems Strategy rail</td><td>DSL workflow present.</td></tr>
+      <tr><td><strong>eDDA</strong></td><td>Electronic Direct Debit Authority</td><td>Mandate lifecycle &amp; collections.</td></tr>
+      <tr><td><strong>CBFT / XBDR</strong></td><td>Cross-border funds transfer / digital remittance</td><td>SWIFT / ISO 20022; FX fetch; correspondent routing; multi-currency nostro settlement.</td></tr>
+      <tr><td><strong>IPO</strong></td><td>IPO subscription processing</td><td>DSL workflow present.</td></tr>
+    </table>
+    <blockquote><strong>Verified:</strong> 20 DSL workflow/sub-workflow definitions exist under <code>dsl/workflows/</code> — generic per-scheme workflows plus bank-specific variants (<code>adib-ipi-outward.v3</code>, <code>dib-ipi-outward-initiate.v2</code>) and sub-workflows for reversal, enquiry, posting-retry and RTC handling.</blockquote>
+    <h3>3.2 Tenant banks</h3>
+    <p>Four tenant banks, each able to run a <strong>conventional (CONV)</strong> and an <strong>Islamic (ISB)</strong> entity with distinct core-banking instances, nostro accounts and adaptors: <strong>ADIB</strong> (most complete worker &amp; sub-workflows), <strong>DIB</strong> (IPI/WPS pilot), <strong>ENBD</strong>, <strong>FAB</strong>.</p>
+    <h3>3.3 Regulatory &amp; compliance context</h3>
+    <p>CBUAE clearing rules (IPI/FTS/WPS/eDDA); UAE MoHRE (WPS); UAE Data Protection Law (Federal Decree-Law No. 45/2021) &amp; GDPR-aligned principles; PCI-DSS 4.0; OWASP Top 10 (2021) assessed; audit retention 7–10 years (tiered).</p>
+  </section>
+
+  <section id="hla">
+    <h2>4 · High-level system architecture</h2>
+    <p>PaymentHub is a layered, tiered system. Clients reach a single YARP gateway; the gateway fronts Clean-Architecture microservices; payment execution is delegated to Temporal workers that interpret the DSL; everything persists to a multi-schema SQL Server (with PostgreSQL backing Temporal) and emits telemetry through a two-collector OpenTelemetry pipeline.</p>
+
+    <figure>
+      <div class="diagram-card">
+        <!-- ===================== LIGHT-THEME HERO SVG ===================== -->
+        <svg class="hero" viewBox="0 0 1360 920" role="img" aria-label="PaymentHub high-level architecture">
+          <defs>
+            <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/>
+            </marker>
+            <style>
+              .band{fill:#ffffff;stroke:#e2e8f0;stroke-width:1.2;rx:14}
+              .lab{font:700 12px 'Segoe UI',sans-serif;letter-spacing:.12em;text-transform:uppercase}
+              .box{rx:9;stroke-width:1.3}
+              .bt{font:600 12.5px 'Segoe UI',sans-serif;fill:#0f172a;text-anchor:middle}
+              .bs{font:400 10.5px 'Segoe UI',sans-serif;fill:#64748b;text-anchor:middle}
+              .flow{stroke:#94a3b8;stroke-width:1.6;fill:none;marker-end:url(#arr)}
+              .flowd{stroke:#cbd5e1;stroke-width:1.5;fill:none;stroke-dasharray:5 4;marker-end:url(#arr)}
+              .title{font:700 20px 'Segoe UI',sans-serif;fill:#0f172a}
+              .sub{font:400 12px 'Segoe UI',sans-serif;fill:#64748b}
+            </style>
+          </defs>
+
+          <rect x="0" y="0" width="1360" height="920" fill="#f8fafc"/>
+          <text x="32" y="34" class="title">PaymentHub — High-Level System Architecture</text>
+          <text x="32" y="54" class="sub">DSL-driven · multi-tenant · Temporal-orchestrated · append-only · observable</text>
+
+          <!-- ============ CLIENT TIER ============ -->
+          <rect x="32" y="76" width="1000" height="84" class="band" rx="14"/>
+          <text x="48" y="100" class="lab" fill="#2563eb">Client tier</text>
+          <rect x="160" y="92" width="380" height="56" class="box" fill="#eff6ff" stroke="#3b82f6"/>
+          <text x="350" y="116" class="bt">Admin Portal — React</text>
+          <text x="350" y="134" class="bs">BankingOps · ServiceOps · ITPS (persona apps)</text>
+          <rect x="560" y="92" width="450" height="56" class="box" fill="#eff6ff" stroke="#3b82f6"/>
+          <text x="785" y="116" class="bt">External / channel APIs</text>
+          <text x="785" y="134" class="bs">Internet &amp; Mobile banking · Corporate · Open Banking</text>
+
+          <!-- ============ PERIMETER ============ -->
+          <rect x="32" y="176" width="1000" height="82" class="band" rx="14"/>
+          <text x="48" y="200" class="lab" fill="#6366f1">Perimeter</text>
+          <rect x="160" y="190" width="850" height="56" class="box" fill="#eef2ff" stroke="#6366f1"/>
+          <text x="585" y="213" class="bt">API Gateway — YARP reverse proxy &nbsp;:8080 (single external ingress)</text>
+          <text x="585" y="231" class="bs">RS256 JWT validation · RBAC · rate limiting · CORS · security headers · SSE dashboard · 360° aggregation</text>
+
+          <!-- ============ SERVICE TIER ============ -->
+          <rect x="32" y="274" width="1000" height="174" class="band" rx="14"/>
+          <text x="48" y="298" class="lab" fill="#0891b2">Service tier</text>
+          <text x="48" y="314" class="bs" style="text-anchor:start">.NET 10</text>
+          <text x="48" y="328" class="bs" style="text-anchor:start">Clean Arch</text>
+          <text x="48" y="342" class="bs" style="text-anchor:start">internal :8080</text>
+
+          <!-- row 1 -->
+          <g>
+            <rect x="160" y="290" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="243" y="312" class="bt">IAM</text><text x="243" y="328" class="bs">authn · RS256+JWKS</text>
+            <rect x="334" y="290" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="417" y="312" class="bt">Routing</text><text x="417" y="328" class="bs">+ Exception Handler</text>
+            <rect x="508" y="290" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="591" y="312" class="bt">Workflow Engine</text><text x="591" y="328" class="bs">DSL lifecycle · TAT</text>
+            <rect x="682" y="290" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="765" y="312" class="bt">Message Processing</text><text x="765" y="328" class="bs">FFTS · ISO 20022</text>
+            <rect x="856" y="290" width="154" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="933" y="312" class="bt">Configuration</text><text x="933" y="328" class="bs">4-level hierarchy</text>
+          </g>
+          <!-- row 2 -->
+          <g>
+            <rect x="160" y="350" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="243" y="372" class="bt">Operations</text><text x="243" y="388" class="bs">settle·audit·notify·report</text>
+            <rect x="334" y="350" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="417" y="372" class="bt">Participant Dir.</text><text x="417" y="388" class="bs">BIC/IBAN registry</text>
+            <rect x="508" y="350" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="591" y="372" class="bt">Smart Integration</text><text x="591" y="388" class="bs">adaptor gateway</text>
+            <rect x="682" y="350" width="166" height="50" class="box" fill="#ecfeff" stroke="#0891b2"/><text x="765" y="372" class="bt">AI Workflow Builder</text><text x="765" y="388" class="bs">NL → DSL (bounded)</text>
+            <rect x="856" y="350" width="154" height="50" class="box" fill="#f8fafc" stroke="#94a3b8"/><text x="933" y="372" class="bt">Bank Simulator</text><text x="933" y="388" class="bs">dev / test :5100</text>
+          </g>
+
+          <!-- ============ WORKERS ============ -->
+          <rect x="32" y="464" width="1000" height="156" class="band" rx="14"/>
+          <text x="48" y="488" class="lab" fill="#7c3aed">Workers</text>
+          <text x="48" y="504" class="bs" style="text-anchor:start">Temporal</text>
+          <text x="48" y="518" class="bs" style="text-anchor:start">scheme×bank</text>
+          <text x="48" y="532" class="bs" style="text-anchor:start">task queues</text>
+
+          <rect x="160" y="480" width="850" height="46" class="box" fill="#f5f3ff" stroke="#7c3aed"/>
+          <text x="585" y="500" class="bt">Worker.Orchestrator — hosts generic PaymentDslWorkflow (interprets DSL for all schemes)</text>
+          <text x="585" y="516" class="bs">walks steps · evaluates conditions · ExecuteActivityAsync per step · saga compensation · pause/resume/cancel signals</text>
+
+          <rect x="160" y="536" width="250" height="70" class="box" fill="#f5f3ff" stroke="#7c3aed"/>
+          <text x="285" y="566" class="bt">Worker.Platform</text>
+          <text x="285" y="584" class="bs">{scheme}-platform · bank-agnostic</text>
+          <rect x="424" y="536" width="586" height="70" class="box" fill="#f5f3ff" stroke="#7c3aed"/>
+          <text x="717" y="560" class="bt">Worker.Bank.{Adib · Dib · Enbd · Fab}</text>
+          <text x="717" y="578" class="bs">{scheme}-{bank} · bank-integration — CBS posting · AML · FX · SFTP · FFTS dispatch</text>
+          <text x="717" y="594" class="bs">one-activity-per-class (ADR-007 two-tier model)</text>
+
+          <!-- ============ DATA & INFRA ============ -->
+          <rect x="32" y="636" width="1000" height="104" class="band" rx="14"/>
+          <text x="48" y="660" class="lab" fill="#b45309">Data &amp; infra</text>
+          <g>
+            <rect x="160" y="654" width="160" height="66" class="box" fill="#fffbeb" stroke="#d97706"/><text x="240" y="682" class="bt">SQL Server 2022</text><text x="240" y="700" class="bs">multi-schema · append-only</text>
+            <rect x="328" y="654" width="150" height="66" class="box" fill="#fffbeb" stroke="#d97706"/><text x="403" y="682" class="bt">PostgreSQL</text><text x="403" y="700" class="bs">Temporal persistence</text>
+            <rect x="486" y="654" width="150" height="66" class="box" fill="#fffbeb" stroke="#d97706"/><text x="561" y="682" class="bt">Temporal Server</text><text x="561" y="700" class="bs">:7233 · UI :8088</text>
+            <rect x="644" y="654" width="118" height="66" class="box" fill="#fffbeb" stroke="#d97706"/><text x="703" y="682" class="bt">Redis</text><text x="703" y="700" class="bs">revoke·idem·cache</text>
+            <rect x="770" y="654" width="118" height="66" class="box" fill="#fffbeb" stroke="#d97706"/><text x="829" y="682" class="bt">Mosquitto</text><text x="829" y="700" class="bs">MQTT events</text>
+            <rect x="896" y="654" width="114" height="66" class="box" fill="#fffbeb" stroke="#d97706"/><text x="953" y="682" class="bt">Vault</text><text x="953" y="700" class="bs">secrets · PKI</text>
+          </g>
+
+          <!-- ============ EXTERNAL SYSTEMS (right column) ============ -->
+          <rect x="1052" y="274" width="276" height="346" class="band" rx="14"/>
+          <text x="1068" y="298" class="lab" fill="#475569">External systems</text>
+          <text x="1068" y="314" class="bs" style="text-anchor:start">via typed adaptors</text>
+          <g>
+            <rect x="1072" y="324" width="236" height="40" class="box" fill="#f1f5f9" stroke="#475569"/><text x="1190" y="349" class="bt">Core Banking — T24 · Finacle · FLEXCUBE</text>
+            <rect x="1072" y="372" width="236" height="40" class="box" fill="#f1f5f9" stroke="#475569"/><text x="1190" y="397" class="bt">AML / Sanctions screening</text>
+            <rect x="1072" y="420" width="236" height="40" class="box" fill="#f1f5f9" stroke="#475569"/><text x="1190" y="445" class="bt">FX rates — Bloomberg · Refinitiv</text>
+            <rect x="1072" y="468" width="236" height="40" class="box" fill="#f1f5f9" stroke="#475569"/><text x="1190" y="493" class="bt">RTGS / SWIFT / UAEFTS · BUNA</text>
+            <rect x="1072" y="516" width="236" height="40" class="box" fill="#f1f5f9" stroke="#475569"/><text x="1190" y="541" class="bt">SFTP / MFT</text>
+            <rect x="1072" y="564" width="236" height="40" class="box" fill="#f1f5f9" stroke="#475569"/><text x="1190" y="589" class="bt">Notifications — SMS · email · push</text>
+          </g>
+
+          <!-- ============ OBSERVABILITY (bottom band) ============ -->
+          <rect x="32" y="756" width="1296" height="120" class="band" rx="14"/>
+          <text x="48" y="780" class="lab" fill="#047857">Observability — two-collector OTel topology (ADR-008)</text>
+          <rect x="160" y="792" width="250" height="64" class="box" fill="#ecfdf5" stroke="#047857"/>
+          <text x="285" y="818" class="bt">Product OTel Collector</text>
+          <text x="285" y="836" class="bs">locked: memory_limiter → resource → batch</text>
+          <rect x="470" y="792" width="220" height="64" class="box" fill="#ecfdf5" stroke="#047857"/>
+          <text x="580" y="818" class="bt">SigNoz Collector</text>
+          <text x="580" y="836" class="bs">enrichment / ingest</text>
+          <rect x="750" y="792" width="260" height="64" class="box" fill="#ecfdf5" stroke="#047857"/>
+          <text x="880" y="818" class="bt">SigNoz UI :3301 · ClickHouse</text>
+          <text x="880" y="836" class="bs">traces · metrics · logs (~90-day)</text>
+          <rect x="1072" y="792" width="236" height="64" class="box" fill="#ecfdf5" stroke="#047857"/>
+          <text x="1190" y="818" class="bt">Jaeger :16686</text>
+          <text x="1190" y="836" class="bs">legacy tracing</text>
+
+          <!-- ============ FLOW ARROWS ============ -->
+          <path class="flow" d="M585,148 L585,188"/>
+          <path class="flow" d="M585,246 L585,288"/>
+          <path class="flow" d="M591,400 L591,478"/>
+          <path class="flow" d="M591,526 L591,534"/>
+          <path class="flow" d="M285,606 L285,652"/>
+          <path class="flow" d="M717,606 L717,652"/>
+          <!-- workers/services to external -->
+          <path class="flow" d="M1010,505 L1068,470"/>
+          <path class="flow" d="M1010,575 L1068,520"/>
+          <path class="flow" d="M1010,375 L1068,392"/>
+          <!-- temporal link -->
+          <path class="flowd" d="M561,720 L561,535" />
+          <!-- to observability (dashed) -->
+          <path class="flowd" d="M285,400 C120,560 120,700 240,790"/>
+          <path class="flow" d="M410,824 L466,824"/>
+          <path class="flow" d="M690,824 L746,824"/>
+
+          <text x="372" y="475" class="bs" style="text-anchor:start">dispatch activities</text>
+          <text x="120" y="600" class="bs" style="text-anchor:start" transform="rotate(-90 120 600)">telemetry (decoupled)</text>
+        </svg>
+        <!-- =================== END HERO SVG =================== -->
+      </div>
+      <figcaption>Figure 1 — High-level system architecture (light theme). Solid arrows: request/execution flow. Dashed arrows: decoupled telemetry &amp; Temporal persistence.</figcaption>
+    </figure>
+
+    <h3>4.1 Communication styles</h3>
+    <table>
+      <tr><th>Style</th><th>Mechanism</th><th>Used for</th></tr>
+      <tr><td>Synchronous request/response</td><td>HTTP/JSON via YARP; inter-service HTTP with <code>X-Service-Api-Key</code> (mTLS-ready)</td><td>Client→service, service→service</td></tr>
+      <tr><td>Durable orchestration</td><td>Temporal (gRPC, <code>:7233</code>)</td><td>Payment workflow execution &amp; activity dispatch</td></tr>
+      <tr><td>Asynchronous events</td><td>MQTT (Mosquitto)</td><td>Config hot-reload broadcast, dashboard/audit events</td></tr>
+      <tr><td>Real-time UI</td><td>Server-Sent Events from the gateway</td><td>Live dashboard updates</td></tr>
+      <tr><td>Bulk file exchange</td><td>SFTP (via adaptors)</td><td>WPS SIF, FTS, RTC files</td></tr>
+      <tr><td>Telemetry</td><td>OTLP/gRPC (<code>:4317</code>)</td><td>Traces, metrics, logs to the product collector</td></tr>
+    </table>
+    <blockquote><strong>Note on ports:</strong> the current implementation runs <strong>every backend service on internal port :8080</strong>, with the API Gateway exposed externally on :8080 and Temporal UI on :8088 (verified in <code>infra/docker/*.yml</code>). Older notes referencing a 5300 / 5002–5017 per-service scheme are <strong>superseded</strong>.</blockquote>
+  </section>
+
+  <section id="adr">
+    <h2>5 · Architectural decisions (ADR register)</h2>
+    <p>Recorded as a <strong>single register</strong> under <code>docs/architecture/adrs/</code> (ADR-001…015), administered by the Architecture / EDA Council. ADRs are being aligned to the <strong>Technical Design Record (TDR)</strong> framework (Concept → Design → Evaluation); decisions live in the platform but not yet formally ratified are marked <strong>Implemented - Pending EDA Approval</strong> — being implemented does not by itself confer <em>Approved</em> status. <em>Foundation</em> (platform-wide): 001–007, 012–013; <em>Domain / UI</em> (bounded-context): 008–011, 014–015. ADRs 012–015 are backfill records of decisions already implemented.</p>
+    <table>
+      <tr><th>ADR</th><th>Title</th><th>Status</th><th>Decision</th></tr>
+      <tr><td>ADR-001</td><td>Temporal.io over Elsa</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>Durable, replay-safe, saga-capable orchestration; reject Elsa 3.x, Zeebe/Camunda, custom state machines.</td></tr>
+      <tr><td>ADR-002</td><td>YARP gateway</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>YARP on the .NET/Kestrel stack; reject Ocelot, Kong, Envoy (extra infra).</td></tr>
+      <tr><td>ADR-003</td><td>Adaptor interface pattern</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>Typed C# interfaces for all external systems, resolved at runtime; banks ship adaptor packages.</td></tr>
+      <tr><td>ADR-004</td><td>Multi-tenant schema isolation</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>Schema-per-tenant in one SQL Server DB; reject DB-per-tenant and shared-table+TenantId.</td></tr>
+      <tr><td>ADR-005</td><td>MQTT tiered messaging</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>MQTT (Mosquitto→EMQX by tier) for peripheral events only — never the core payment path.</td></tr>
+      <tr><td>ADR-006</td><td>Framework-driven product architecture</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>5-layer model (Core→Product→Bank config→Bank extension→Environment) with strict override hierarchy.</td></tr>
+      <tr><td>ADR-007</td><td>Activity architecture (scheme/bank isolation)</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>Two-tier activities (Platform scheme-scoped, Bank bank-scoped), one-class-per-activity; deprecate "Custom" tier.</td></tr>
+      <tr><td>ADR-008</td><td>Two-collector OTel topology</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td>Services → product collector (locked processors) → SigNoz collector → ClickHouse.</td></tr>
+      <tr><td>ADR-009</td><td>Integration profile schema</td><td><span class="tag t-warn">Implemented · pending EDA</span></td><td><code>IntegrationProfile</code> as a first-class domain entity in Smart Integration.</td></tr>
+      <tr><td>ADR-010</td><td>Three-apps separation (BankingOps / ServiceOps / ITPS)</td><td><span class="tag t-warn">Impl · pending EDA · partial</span></td><td>Split portal by auth scope; single app with role-guard scopes today, separate React builds phased in.</td></tr>
+      <tr><td>ADR-011</td><td>UI component library</td><td><span class="tag t-warn">Impl · pending EDA · partial</span></td><td>In-repo token-based, headless design system on React (headless primitives + the existing token system); heavyweight UI kits forbidden.</td></tr>
+      <tr><td>ADR-012</td><td>DSL interpreter pattern</td><td><span class="tag t-warn">Impl · pending EDA · backfill</span></td><td>One generic <code>PaymentDslWorkflow</code> interprets versioned JSON DSL; pure <code>DslInterpreter</code> for testability.</td></tr>
+      <tr><td>ADR-013</td><td>Temporal signals &amp; queries</td><td><span class="tag t-warn">Impl · pending EDA · backfill</span></td><td>Signals for pause/resume/cancel + AML / maker-checker / CB decision injection; <code>GetState</code> query; pause/resume/cancel/state exposed at the gateway.</td></tr>
+      <tr><td>ADR-014</td><td>AI Workflow Builder (NL → DSL)</td><td><span class="tag t-warn">Impl · pending EDA · backfill</span></td><td>Deterministic rule-based NL→DSL compiler + agentic multi-LLM layer; bounded autonomy; output uses the engine's DSL schema.</td></tr>
+      <tr><td>ADR-015</td><td>Bank Simulator-as-Code (FDIR)</td><td><span class="tag t-warn">Impl · pending EDA · backfill</span></td><td>Knowledge extraction (formats, mappings, rules, endpoints) → bank profile → simulator generation with failure injection.</td></tr>
+    </table>
+  </section>
+
+  <section id="components">
+    <h2>6 · Component architecture</h2>
+    <h3>6.1 Service catalogue</h3>
+    <p>All API services are .NET 10, Clean Architecture (<code>.API → .Application → .Domain + .Infrastructure</code>), internal <code>:8080</code>.</p>
+    <table>
+      <tr><th>Service</th><th>Group</th><th>Core responsibility</th><th>Key data / notes</th></tr>
+      <tr><td>API Gateway</td><td>Core</td><td>YARP proxy; RS256 JWT; RBAC; rate limiting; SSE; 360° aggregation; health aggregation</td><td>In-memory workflow registry; no own DB</td></tr>
+      <tr><td>IAM</td><td>Ecosystem</td><td>Authn &amp; RBAC; JWT issuance; users/roles/permissions; tenant assignments; API keys; revocation</td><td>PBKDF2-SHA512 (100k); lockout after 5; <code>platform</code> schema</td></tr>
+      <tr><td>Routing</td><td>Core</td><td>Rule matching → workflow + queue; ISB/CONV routing; virtual-account resolution; + Exception Handler</td><td><code>RoutingRule</code>, <code>EntitySegregation</code>, <code>VirtualAccountMapping</code>, <code>PaymentException</code>, <code>PaymentDispute</code></td></tr>
+      <tr><td>Workflow Engine</td><td>Core</td><td>DSL lifecycle + 4-eyes governance; instance cache; TAT/SLA monitoring; Temporal bridge</td><td><code>WorkflowDefinitions</code>; In-Memory OLTP cache; IPI 60 s TAT</td></tr>
+      <tr><td>Message Processing</td><td>Core</td><td>CBUAE FFTS build/parse (HMAC-SHA256); ISO 20022 MX↔MT via XSLT; batch (WPS SIF) fan-out</td><td><code>FftsMessages</code>, <code>ConversionTemplates</code>, <code>BatchJobs</code>, <code>SifRecords</code></td></tr>
+      <tr><td>Configuration</td><td>Platform</td><td>4-level config hierarchy + maker-checker; tenant lifecycle &amp; schema provisioning; MQTT reload</td><td><code>ConfigurationEntries</code>, <code>TenantProfiles</code>, <code>TenantEntities</code></td></tr>
+      <tr><td>Operations</td><td>Platform</td><td>Consolidated: Settlement · Audit · Notification · Reporting</td><td><code>NostroPositions</code>, ledger tables, <code>NotificationRecords</code>, <code>TatViolations</code>, <code>ReportSnapshots</code></td></tr>
+      <tr><td>Participant Directory</td><td>Ecosystem</td><td>BIC/IBAN registry; per-scheme registration, dates, caps, settlement accounts</td><td><code>SchemeParticipants</code>, <code>SchemeRegistrations</code></td></tr>
+      <tr><td>Smart Integration</td><td>Ecosystem</td><td>Adaptor gateway; connection mgmt; FX/funds/protocol ops; circuit-breaker &amp; idempotency</td><td><code>IntegrationProfile</code>; Polly resilience</td></tr>
+      <tr><td>AI Workflow Builder</td><td>Intelligence</td><td>NL → DSL; ReAct agent (bounded autonomy); multi-provider LLM; activity catalogue</td><td>In-memory store; OpenAI/Azure/Ollama/Claude/Gemini</td></tr>
+      <tr><td>Bank Simulator</td><td>Tools (dev)</td><td>Stateless mock of CBS/AML/FX/MoHRE/FTS/CB/SFTP with fault injection</td><td>No persistence; <code>:5100</code></td></tr>
+    </table>
+
+    <h3>6.2 Worker topology</h3>
+    <figure><div class="diagram-card"><pre class="mermaid">
+flowchart LR
+    TMP["Temporal Server"]
+    subgraph Workers
+        ORC["Worker.Orchestrator&#10;hosts PaymentDslWorkflow"]
+        PLAT["Worker.Platform&#10;platform · {scheme}-platform"]
+        ADIB["Worker.Bank.Adib&#10;{scheme}-adib"]
+        DIB["Worker.Bank.Dib"]
+        ENBD["Worker.Bank.Enbd"]
+        FAB["Worker.Bank.Fab"]
+    end
+    TMP --> ORC
+    ORC -->|input_mapping to activity| PLAT
+    ORC --> ADIB
+    ORC --> DIB
+    ORC --> ENBD
+    ORC --> FAB
+    </pre></div><figcaption>Figure 2 — Temporal worker topology.</figcaption></figure>
+
+    <ul>
+      <li><strong>Worker.Orchestrator</strong> — hosts the single generic <code>PaymentDslWorkflow</code>; no business activities of its own.</li>
+      <li><strong>Worker.Platform</strong> — bank-agnostic, scheme-scoped activities + scheme hooks; queues <code>platform</code>, <code>{scheme}-platform</code>, legacy <code>payment-hub-platform</code>.</li>
+      <li><strong>Worker.Bank.{Adib,Dib,Enbd,Fab}</strong> — bank-specific activities &amp; integrations; queues <code>{scheme}-{bank}</code>, <code>bank-integration</code>.</li>
+    </ul>
+    <blockquote>"Worker.Shell" in some older tables is not a real project — it denotes the shared <code>Temporal.Extensions.Hosting</code> infrastructure. The legacy <code>Worker.Custom</code> tier is deprecated per ADR-007 and being folded into the per-bank workers.</blockquote>
+
+    <h3>6.3 Task-queue routing</h3>
+    <p><code>DslInterpreter.ResolveTaskQueue</code>: explicit <code>step.TaskQueue</code> wins → else <code>step.QueueScope</code> (Platform / SchemePlatform / Integration / Bank) maps to scheme-aware queues (<code>ipi-platform</code>, <code>ipi-adib</code>) → else legacy <code>step.ActivityTier</code>.</p>
+
+    <h3>6.4 Shared libraries</h3>
+    <ul>
+      <li><code>PaymentHub.Shared</code> — activity/DSL contracts, enums, Temporal/Vault/MQTT/Redis/batching infra, adaptor registry. <strong>Editing it rebuilds all backend services.</strong></li>
+      <li><code>PaymentHub.Contracts</code> — bank hook interfaces &amp; shared DTOs.</li>
+      <li>Domain libraries (Settlement, ExceptionHandler, BatchProcessing, Audit, Notification, Reporting, MessageConverter) are consumed by Operations/Message services and workers — not standalone services.</li>
+    </ul>
+  </section>
+
+  <section id="patterns">
+    <h2>7 · Key architectural patterns</h2>
+    <h3>7.1 DSL-driven workflow orchestration</h3>
+    <p>A workflow is JSON in <code>dsl/workflows/*.json</code> (schema <code>payment-dsl-v2.schema.json</code>): <code>workflow_name</code>, <code>payment_scheme</code>, <code>metadata.bank_id</code>, <code>variables</code>, and an ordered <code>steps[]</code> array supporting sequential, conditional, parallel and fan-out steps with <code>input_mapping</code>, <code>output_mapping</code>, <code>retry_policy</code>, <code>compensation_activity</code> and condition gates. A single generic <code>PaymentDslWorkflow</code> interprets it for all schemes; the pure interpreter logic is factored into <code>DslInterpreter.cs</code> for testability.</p>
+    <h3>7.2 Clean Architecture</h3>
+    <pre><code>.API            Minimal API endpoints, DTOs — thin, no business logic
+.Application    Use cases, services, interfaces, workflow/interpreter logic, CQRS
+.Domain         Entities, value objects — zero external dependencies
+.Infrastructure EF Core DbContext, repositories, adaptors, external clients</code></pre>
+    <h3>7.3 Adaptor Interface Pattern (ADR-003)</h3>
+    <p>Each external category is a typed interface — <code>ICoreBankingAdaptor</code>, <code>IAmlScreeningAdaptor</code>, <code>IFxRateAdaptor</code>, <code>IRtgsAdaptor</code>, <code>ISftpAdaptor</code>, <code>INotificationAdaptor</code>, <code>ISwiftAdaptor</code>. The core depends only on interfaces; banks deliver a versioned package (extension DLL, adaptor DLL, config bundle, manifest) supporting multiple entities (ISB/CONV). Each call is wrapped with Polly (retry, timeout, circuit-breaker) and OTel tracing.</p>
+    <h3>7.4 CQRS &amp; append-only projection</h3>
+    <p>Workflows emit <code>ProjectTransaction</code> / <code>ProjectTransactionDetail</code> to the Operations API, which UPSERTs a <code>platform.Transactions</code> header and appends to <code>platform.TransactionTimeline</code> (one row per state change), plus insert-once per-scheme rail tables. High-throughput inserts are batched via <code>Channel&lt;T&gt;</code> TVP flushers.</p>
+    <h3>7.5 Saga compensation</h3>
+    <p>Each step may declare a <code>compensation_activity</code>. On failure at step N, the orchestrator unwinds completed steps LIFO. Complex reversals use dedicated sub-workflows (<code>adib-ipi-auto-reverse</code>, <code>adib-ipi-nak-reversal</code>, <code>wps-posting-retry</code>).</p>
+    <h3>7.6 Multi-tenancy &amp; the 5-layer framework (ADR-006)</h3>
+    <pre><code>Layer 5  Environment configuration   (conn strings, flags, secrets) — highest priority
+Layer 4  Bank extension package      (custom adaptors, workflow overrides, plugins)
+Layer 3  Bank configuration          (cut-off times, limits, nostro, XSLT maps)
+Layer 2  Product definitions         (DSL, validation, message schemas per scheme)
+Layer 1  Core engine (locked)        (services, Temporal, YARP, adaptor runtime)</code></pre>
+    <p>Resolution is <code>Environment &gt; Bank &gt; Product &gt; Platform</code>, implemented by the Configuration service with maker-checker approval and MQTT hot reload. New banks onboard by configuration + schema provisioning + worker deployment — no core code changes.</p>
+    <h3>7.7 Fail-closed, tamper-evident audit</h3>
+    <p>Audit is on-critical-path: a failed critical write blocks the operation. State is append-only, hash-chained (SHA-256) and anchored to external witnesses (see §9.4).</p>
+    <h3>7.8 Bounded-autonomy AI</h3>
+    <p>The AI Workflow Builder runs a ReAct agent with deny-by-default boundaries: bounded iterations/session, max steps/workflow, scheme allowlist, minimum guardrail pass score (~0.7), and escalate (fail-closed) on uncertainty. AI decisions are recorded to a dedicated <code>AiDecisionAudit</code> ledger.</p>
+  </section>
+
+  <section id="workflow">
+    <h2>8 · Workflow &amp; orchestration architecture</h2>
+    <h3>8.1 Execution flow — IPI outward (representative)</h3>
+    <figure><div class="diagram-card"><pre class="mermaid">
+sequenceDiagram
+    participant C as Client
+    participant GW as API Gateway
+    participant R as Routing
+    participant T as Temporal
+    participant O as Orchestrator
+    participant P as Worker Platform
+    participant B as Worker Bank
+    participant X as External Systems
+    participant OPS as Operations
+    C->>GW: POST /api/payment/submit with JWT
+    GW->>GW: Validate RS256 JWT, RBAC, rate limit
+    GW->>R: Resolve route - dedup and rule match
+    R-->>GW: workflow, version, task queue
+    GW->>T: StartWorkflow PaymentDslWorkflow
+    T->>O: Execute steps from DSL
+    O->>P: ValidateChannel and ValidateFields
+    O->>B: ScreenPayment AML, BlockFunds
+    B->>X: AML screen and fund block via adaptor
+    O->>B: Dispatch FFTS0001, await FFTS0002 or 0006
+    O->>B: Post to CBS
+    O->>P: Project transaction, settle, notify
+    P->>OPS: UPSERT header, append timeline
+    O-->>T: Complete or compensate on failure
+    GW-->>C: Status plus SSE updates
+    </pre></div><figcaption>Figure 3 — Representative IPI outward execution sequence.</figcaption></figure>
+    <h3>8.2 Deterministic versioning</h3>
+    <p>Behavioural changes to <code>PaymentDslWorkflow</code> use <code>Workflow.Patched()</code> / <code>Workflow.GetVersion(changeId, min, max)</code>, guarded by <code>if (_effectiveVersion &gt;= N)</code>. Existing markers are never modified or removed. CI enforces invariants (<code>TemporalVersioningInvariantTests</code>): unique change-IDs, shipped change-IDs present, <code>CurrentCodeVersion</code> matches the highest <code>maxSupported</code>, no <code>DEFAULT_VERSION (-1)</code> as <code>minSupported</code>.</p>
+    <h3>8.3 Workflow governance (4-eyes)</h3>
+    <p>Draft → Review → Approved → Production → Deprecated with separation of duty (reviewer ≠ submitter; promoter ≠ reviewer). Production workflows are immutable; updates throw <code>WorkflowImmutabilityException</code> and require a new version.</p>
+    <h3>8.4 Signals &amp; queries</h3>
+    <p>Signals: <code>Pause</code>, <code>Resume</code>, <code>Stop</code>, <code>CancelWorkflow</code> (triggers compensation), <code>RestartFromStep</code> (idempotency pre-check), <code>InjectState</code>. Query: <code>GetState</code> returns a snapshot.</p>
+  </section>
+
+  <section id="data">
+    <h2>9 · Data architecture</h2>
+    <h3>9.1 Persistence stores</h3>
+    <table>
+      <tr><th>Store</th><th>Technology</th><th>Role</th></tr>
+      <tr><td>Application DB</td><td>SQL Server 2022</td><td>Event-sourced transactions, projections, audit ledger, IAM, config, reporting — multi-schema</td></tr>
+      <tr><td>Temporal persistence</td><td>PostgreSQL (Cassandra at largest tier)</td><td>Workflow history, task queues, visibility</td></tr>
+      <tr><td>Cache / ephemeral</td><td>Redis</td><td>JWT revocation, idempotency keys, routing/config caches, circuit-breaker state</td></tr>
+      <tr><td>Telemetry store</td><td>ClickHouse (via SigNoz)</td><td>Traces/metrics/logs (~90-day retention)</td></tr>
+    </table>
+    <blockquote><strong>Verified:</strong> <code>db-script/</code> files are dated <code>ddMMyyyy</code>; the newest dated full schema (e.g. <code>iPayHub-db-script-26052026.sql</code>) is the current baseline, with <code>migration-cqrs-projection-phase1.sql</code> defining projection tables and <code>perf-deploy-*.sql</code> carrying performance objects.</blockquote>
+    <h3>9.2 Multi-schema design (ADR-004)</h3>
+    <ul>
+      <li><strong>Tenant schemas:</strong> <code>adib</code>, <code>dib</code>, <code>enbd</code>, <code>fab</code> — per-bank transaction/posting data, fully isolated.</li>
+      <li><strong>Shared platform schema:</strong> <code>platform</code> — IAM, config, workflow definitions, audit, participants, reporting, projection headers/timeline (tenant-filtered).</li>
+      <li><strong>Concern schemas:</strong> <code>exception</code> and per-scheme rail schemas (<code>ipi</code>, <code>fts</code>, <code>wps</code>, …) for insert-once rail tables.</li>
+    </ul>
+    <blockquote>The <code>database-architecture.md</code> design describes a broader target (~22 schemas / 200+ tables with monthly partitioning, RCSI, computed-column indexing). That is the <strong>design intent / scaling blueprint</strong>; the authoritative live schema is whatever the latest <code>db-script/</code> baseline provisions. This document presents the principles and verified core schemas and cites the broader counts as targets, not asserted fact.</blockquote>
+    <h3>9.3 Append-only / CQRS projection model</h3>
+    <figure><div class="diagram-card"><pre class="mermaid">
+flowchart LR
+    WF["PaymentDslWorkflow"] -->|ProjectTransaction| HDR["platform.Transactions&#10;(UPSERT header)"]
+    WF -->|ProjectTransactionDetail| TL["platform.TransactionTimeline&#10;(append per state change)"]
+    WF -->|per-scheme| RAIL["ipi/fts/wps.Transactions&#10;(insert-once)"]
+    HDR --> READ["Read models · 360° view · dashboards"]
+    TL --> READ
+    </pre></div><figcaption>Figure 4 — Append-only CQRS projection.</figcaption></figure>
+    <p>No DB foreign keys; integrity enforced in the service layer via business-ID soft references; idempotent writes use <code>NOT EXISTS</code> dedup keyed on <code>(TransactionId, StepId, NewStatus)</code> so Temporal retries are safe.</p>
+    <h3>9.4 Tamper-evident audit ledger</h3>
+    <p>A <strong>dual-channel</strong> model separates legal audit from operational telemetry, linked only by <code>CorrelationId</code> (= <code>Activity.Current.TraceId</code>):</p>
+    <figure><div class="diagram-card"><pre class="mermaid">
+flowchart TB
+    ACT["Payment / AI action&#10;CorrelationId = TraceId"]
+    ACT --> LEGAL["LEGAL AUDIT CHANNEL&#10;SQL Server 2022 Ledger tables&#10;SHA-256 hash chain + Merkle&#10;external witness anchors&#10;long-term · tamper-evident"]
+    ACT --> TELE["OTEL TELEMETRY CHANNEL&#10;traces · logs · metrics to SigNoz&#10;~90-day · operational"]
+    </pre></div><figcaption>Figure 5 — Dual-channel audit &amp; telemetry.</figcaption></figure>
+    <ul>
+      <li><strong>Fail-closed ingestion</strong> — critical writes retry 3× then raise <code>AuditWriteException</code> and block the operation.</li>
+      <li><strong>Hash chain + witnesses</strong> — SHA-256 + Merkle batching; adapters: NoOp (dev), <strong>OpenTimestamps (default prod)</strong>, RFC 3161 TSA, WORM Blob, external webhook, Azure Confidential Ledger.</li>
+      <li><strong>SQL Server 2022 Ledger tables</strong> — <code>AuditLog_Ledger</code>, <code>AiDecisionAudit_Ledger</code>, <code>TransactionJournal_Ledger</code>, <code>TokenVaultAccess_Ledger</code> with <code>sp_verify_database_ledger</code>.</li>
+      <li><strong>PII tokenisation</strong> — <code>TokenVault</code> (AES-256) supports GDPR Art.17 erasure without breaking the chain.</li>
+      <li><strong>Transport security</strong> — monotonic <code>SequenceId</code> + HMAC-SHA256 envelope with constant-time verification.</li>
+      <li><strong>Tiered retention</strong> — audit/AI/journal long-term (7 yr in requirements, 10 yr/CBUAE in audit design), raw payloads ~1 yr, OTel spans ~90 d.</li>
+    </ul>
+  </section>
+
+  <section id="integration">
+    <h2>10 · Integration architecture (Smart Integration / Nexus)</h2>
+    <blockquote>Core platform code must never change when a bank adds, removes or replaces an external-system integration.</blockquote>
+    <p><code>IntegrationProfile</code> (ADR-009) is the first-class entity representing a connection: type (CBS/FTS/UAEFTS/Aani/WPS/Participant), connection config (endpoint, protocol, auth-credential reference), transformation rules, schema version, health status and tenant — a single canonical inventory enabling drift detection and ops-console health views.</p>
+    <h3>10.1 Layered transformation pipeline (target design)</h3>
+    <pre><code>Inbound channels → Channel listeners → Raw message store (immutable, encrypted)
+   → Message converter → CINJ (Canonical Internal JSON)
+   → Temporal workflow → Smart Integration (sole outbound gateway)
+   → Message formatter → Adaptor registry → Third-party systems</code></pre>
+    <p>Smart Integration is the <strong>sole outbound gateway</strong>, applying idempotency (Redis), PII masking (Vault Transit tokenise / HMAC pseudonymise), per-tenant bulkheads, circuit-breaking, a DLQ, and audit for every operation.</p>
+    <h3>10.2 Async activity-completion pattern</h3>
+    <p>An activity grabs the Temporal task token, persists it to <code>async_pending_calls</code>, publishes the outbound request and suspends via <code>CompleteAsyncException</code>. When the external system replies, a reply-channel listener looks up the token and calls <code>CompleteActivityAsync</code> — keeping workers free during multi-minute waits while preserving exactly-once completion.</p>
+    <h3>10.3 Resilience patterns</h3>
+    <table>
+      <tr><th>Pattern</th><th>Implementation</th></tr>
+      <tr><td>Circuit breaker</td><td>Per-profile (CLOSED→OPEN→HALF_OPEN), Redis-backed state</td></tr>
+      <tr><td>Retry</td><td>Per DSL step <code>retry_policy</code></td></tr>
+      <tr><td>Idempotency</td><td>Redis key <code>{tenantId}:{workflowInstanceId}:{stepId}</code></td></tr>
+      <tr><td>Timeout</td><td>Per-activity in the DSL</td></tr>
+      <tr><td>Compensation</td><td>DSL <code>compensation_activity</code></td></tr>
+      <tr><td>Dead-letter</td><td>Failed messages parked for manual retry</td></tr>
+    </table>
+    <h3>10.4 External categories &amp; adaptors</h3>
+    <p>Core Banking (T24, Finacle, FLEXCUBE, generic REST), AML/Sanctions (FircoSoft, Actimize), FX (Bloomberg, Refinitiv), RTGS/SWIFT (SWIFT Alliance, UAEFTS, BUNA), SFTP/MFT (standard SFTP, Axway), Notifications (SendGrid, Twilio, Meta WhatsApp). Message security: HMAC-SHA256 (FFTS/CBUAE), AES/RSA for CB, JWT inter-service.</p>
+    <p><strong>Per-integration transport security:</strong> Core Banking — TLS 1.3 / OAuth2; AML/Sanctions — TLS 1.2 / WS-Security (RSA); FX — TLS 1.3 / API-key header; RTGS/SWIFT (UAEFTS / BUNA) — TLS 1.3 / OAuth2 / CB credentials; SFTP/MFT — SSH key + PGP + host verification; Notifications — TLS 1.3 / bearer token.</p>
+  </section>
+
+  <section id="security">
+    <h2>11 · Security architecture</h2>
+    <p>Defence-in-depth from perimeter → IAM → input validation → workflow encryption → data security → secrets, with infrastructure hardening across all layers. The threat model uses STRIDE across four trust boundaries (external → gateway DMZ → service mesh → data layer) and maps to OWASP Top 10 (2021).</p>
+    <h3>11.1 Layered controls</h3>
+    <table>
+      <tr><th>Layer</th><th>Controls</th></tr>
+      <tr><td>L1 Perimeter (Gateway)</td><td>RS256 JWT validation; Redis revocation; rate limiting (per-tenant 100/min, payment-submit 20/min); CORS; HSTS/CSP/X-Frame-Options/Referrer/Permissions-Policy; generic errors; RBAC claims; API versioning. <span class="tag t-warn">mTLS env-gated, dev-off</span></td></tr>
+      <tr><td>L2 Identity &amp; Access (IAM)</td><td>RS256 JWT issuance + JWKS (<code>/.well-known/jwks.json</code>); HS256 for dev; PBKDF2-SHA512 (100k) constant-time; lockout after 5; Redis revocation by <code>jti</code> + DB cleanup. <span class="tag t-plan">MFA/TOTP deferred</span></td></tr>
+      <tr><td>L3 Input validation</td><td>FluentValidation DTOs; DSL schema validation at entry points; parameterised EF Core; path-traversal-safe; XXE prevention (DTD prohibited); typed System.Text.Json; anti-mass-assignment DTOs. <span class="tag t-warn">query-param allowlist partial</span></td></tr>
+      <tr><td>L4 Workflow encryption</td><td>AES-256-GCM payload codec (12-byte nonce, 16-byte tag) wired into Gateway &amp; WorkflowEngine clients; 30-day namespace retention. <span class="tag t-warn">Temporal gRPC TLS plaintext in dev</span></td></tr>
+      <tr><td>L5 Data security</td><td>TLS to SQL (<code>Encrypt=True</code>); parameterised queries; Redis TTL-bounded revocation; PGP SFTP outbound; data-retention service. <span class="tag t-plan">TDE runbook ready; Always Encrypted for IBAN ready; Redis at-rest off in dev</span></td></tr>
+      <tr><td>L6 Secrets</td><td>HashiCorp Vault (PKI + Transit); <code>VaultSecretProvider</code> + <code>VaultConfigurationSource</code>; key-gen scripts; no hardcoded secrets. <span class="tag t-plan">Vault dev mode; remove IConfiguration fallback before prod</span></td></tr>
+    </table>
+    <h3>11.2 STRIDE summary</h3>
+    <table>
+      <tr><th>Category</th><th>Representative threats</th><th>Primary mitigations</th></tr>
+      <tr><td>Spoofing</td><td>JWT forgery, token replay, tenant-ID injection</td><td>Signed JWT (RS256 prod), short expiry, refresh rotation, Redis revocation; <code>X-Tenant-ID</code> from JWT claims only</td></tr>
+      <tr><td>Tampering</td><td>Audit/message/config/DLL tampering</td><td>Ledger + hash chain, HMAC-SHA256 messages, maker-checker, manifest verification</td></tr>
+      <tr><td>Repudiation</td><td>User/service/external denial</td><td>Full audit trail, Temporal history, SWIFT UETR</td></tr>
+      <tr><td>Information disclosure</td><td>PII in logs, cross-tenant leakage, error/credential exposure</td><td>PII classification &amp; masking, schema isolation, generic errors, Vault. <span class="tag t-warn">log scrubbing incomplete</span></td></tr>
+      <tr><td>Denial of service</td><td>API/queue flooding, large uploads, Redis exhaustion</td><td>Rate limiting, autoscaling, upload limits, Redis TTL/eviction</td></tr>
+      <tr><td>Elevation of privilege</td><td>Role escalation, SQLi, path traversal, claim manipulation</td><td>Maker-checker on roles, parameterised queries, sandboxed plugins, server-side JWT validation</td></tr>
+    </table>
+    <h3>11.3 PII handling</h3>
+    <p>Three classes — A (non-sensitive, encrypted at rest), B (sensitive: tokenised via Vault Transit, masked to last 4), C (highly sensitive: irreversibly pseudonymised). Masking at the API response layer (IBAN, account, name, Emirates ID, mobile, email). Unmasking requires permission + re-auth + an audit entry, time-boxed.</p>
+    <h3>11.4 Security posture &amp; compliance</h3>
+    <p>Security is tracked as a findings register — <strong>34 findings across four remediation phases, zero open critical</strong> at baseline. Compliance and assurance mappings:</p>
+    <table>
+      <tr><th>Framework / activity</th><th>Coverage</th></tr>
+      <tr><td>PCI-DSS v4.0</td><td>Req. 8 (authentication), 10 (logging / audit), 11 (testing) — addressed by IAM, append-only audit, and the CI test / scan gates</td></tr>
+      <tr><td>GDPR / UAE DPDP</td><td>Data minimisation, PII tokenisation &amp; Article 17 erasure, masking at the API layer</td></tr>
+      <tr><td>OWASP Top 10 (2021)</td><td>Assessed; controls mapped across L1–L6 (§11.1) and the STRIDE model (§11.2)</td></tr>
+      <tr><td>OWASP ASVS</td><td>Level 2 target enforced via the Done-Done security gate (§15.1)</td></tr>
+      <tr><td>STRIDE threat model</td><td>Complete across four trust boundaries</td></tr>
+      <tr><td>Penetration test</td><td>Plan SEC-PEN-001 defined <span class="tag t-plan">execution pending</span></td></tr>
+      <tr><td>Dependency hygiene</td><td>0 NuGet CVEs; npm advisories tracked; Gitleaks secret scan in CI</td></tr>
+    </table>
+    <p><strong>Posture snapshot:</strong> RS256 JWT authentication; AES-256-GCM workflow / transport encryption; FluentValidation + XXE-safe input handling; PII-redacted observability; 0 NuGet CVEs. <span class="tag t-warn">RBAC partial</span> <span class="tag t-warn">data-at-rest TDE pending</span> <span class="tag t-plan">MFA deferred</span> <span class="tag t-plan">Vault dev mode</span></p>
+  </section>
+
+  <section id="observability">
+    <h2>12 · Observability architecture</h2>
+    <h3>12.1 Two-collector OTel topology (ADR-008)</h3>
+    <figure><div class="diagram-card"><pre class="mermaid">
+flowchart LR
+    SVC["Services & workers&#10;OTel SDK"] -->|OTLP gRPC :4317| PC["Product collector&#10;memory_limiter → resource → batch&#10;(locked)"]
+    PC --> SC["SigNoz collector"]
+    SC --> CH[("ClickHouse")]
+    CH --> UI["SigNoz UI :3301"]
+    SVC -. legacy .-> JA["Jaeger :16686"]
+    </pre></div><figcaption>Figure 6 — Two-collector OpenTelemetry topology.</figcaption></figure>
+    <p>The product-side collector has a <strong>locked</strong> processor list (<code>memory_limiter → resource → batch</code>) performing only resource-attribute stamping — no data transformation; changes beyond batch tuning require an ADR amendment. Services therefore have <strong>no hard runtime dependency on SigNoz</strong>, and the topology satisfies the CBUAE requirement to isolate payment-system telemetry from infrastructure monitoring.</p>
+    <h3>12.2 Instrumentation standards</h3>
+    <ul>
+      <li>One <code>ActivitySource</code> and one <code>Meter</code> per service, named <code>PaymentHub.&lt;Service&gt;</code>.</li>
+      <li>Span attributes dot-separated lowercase (<code>payment.scheme</code>); <strong>no raw PII</strong>.</li>
+      <li>Metrics <code>paymenthub.&lt;domain&gt;.&lt;name&gt;</code>, always dimensioned.</li>
+      <li>Structured logging via <code>ILogger&lt;T&gt;</code>, named parameters only, PII-redaction processors, standard tags + <code>StepId</code>/<code>TxId</code>/<code>Scheme</code>.</li>
+    </ul>
+    <h3>12.3 Monitoring &amp; alerting</h3>
+    <p>Gateway <code>/health</code> aggregation; thresholds for API latency (P95 &gt; 500 ms), Temporal queue depth (&gt; 1000), DB pool (&gt; 80%), disk (&gt; 85%), 5xx rate (&gt; 1%), circuit-breaker OPEN (P1).</p>
+  </section>
+
+  <section id="deployment">
+    <h2>13 · Deployment &amp; infrastructure architecture</h2>
+    <h3>13.1 Local / containerised topology (verified)</h3>
+    <p>Layered Docker Compose under <code>infra/docker/</code>, started sequentially with health gates via <code>start.ps1</code> (<code>-Only infra|signoz|platform|financial|ecosystem|core|tools</code>):</p>
+    <table>
+      <tr><th>Compose layer</th><th>Contents</th></tr>
+      <tr><td><code>infra</code></td><td>SQL Server, PostgreSQL, Temporal, Redis, Mosquitto, Vault, OTel collector</td></tr>
+      <tr><td><code>signoz</code></td><td>SigNoz + ClickHouse</td></tr>
+      <tr><td><code>platform</code></td><td>Configuration, Operations</td></tr>
+      <tr><td><code>financial</code></td><td>Settlement / exception / batch</td></tr>
+      <tr><td><code>ecosystem</code></td><td>IAM, Smart Integration, Participant Directory, AI Workflow Builder</td></tr>
+      <tr><td><code>core</code></td><td>Routing, Workflow Engine, Message Processing, Orchestrator + Platform + Bank workers</td></tr>
+      <tr><td><code>tools</code></td><td>API Gateway (external :8080), Admin Portal, Temporal UI (:8088), Bank Simulator (:5100)</td></tr>
+    </table>
+    <p><strong>Local URLs:</strong> Admin Portal :4200 · API Gateway :8080 · Temporal UI :8088 · SigNoz :3301 · Jaeger :16686 · Vault :8200. <code>restart.ps1</code> rebuilds only services whose source changed (editing <code>services/shared/</code> rebuilds everything).</p>
+    <h3>13.2 Tiered production model (same images)</h3>
+    <table>
+      <tr><th>Attribute</th><th>Tier 1 (small)</th><th>Tier 2 (medium, HA)</th><th>Tier 3 (large, multi-region)</th></tr>
+      <tr><td>Orchestration</td><td>Single Compose host</td><td>Compose or Kubernetes</td><td>Kubernetes, multi-zone</td></tr>
+      <tr><td>Temporal backend</td><td>CLI dev server</td><td>3-node cluster (PostgreSQL)</td><td>3–5 nodes (Cassandra)</td></tr>
+      <tr><td>MQTT</td><td>Mosquitto</td><td>EMQX Community (3-node)</td><td>EMQX Enterprise (geo)</td></tr>
+      <tr><td>SQL Server</td><td>Single instance</td><td>Always On AG (2-node)</td><td>Enterprise AG (primary + 2 replicas)</td></tr>
+      <tr><td>Secrets</td><td>Env vars</td><td>Azure/AWS secret store</td><td>Vault (HSM, FIPS 140-2 L3)</td></tr>
+      <tr><td>Uptime SLA</td><td>99.5%</td><td>99.9%</td><td>99.99%</td></tr>
+      <tr><td>RTO / RPO</td><td>4 h / 1 h</td><td>1 h / 15 min</td><td>15 min / near-zero</td></tr>
+      <tr><td>Scaling</td><td>No replicas</td><td>2× critical</td><td>HPA (Gateway 3–10, workers 5–20)</td></tr>
+    </table>
+    <h3>13.3 Infrastructure hardening</h3>
+    <p>Alpine minimal base images; non-root <code>appuser</code>; multi-stage builds; resource limits on all containers; image version pinning (no <code>:latest</code> in prod); health checks; <code>.dockerignore</code> excluding <code>.git</code>, secrets and tests.</p>
+    <h3>13.4 Deployment &amp; tenancy models</h3>
+    <p>The same images support three tenancy models with no code change: <strong>single-tenant</strong> (one platform instance per bank), <strong>multi-tenant</strong> (shared instance — schema-per-bank + per-bank workers), and <strong>hybrid</strong> (shared platform with dedicated workers per bank). Onboarding a bank is configuration + schema provisioning + worker deployment.</p>
+    <ul>
+      <li><strong>Tenant isolation</strong> — schema-per-bank for data, worker-per-bank for compute; workers may be shared in cost-sensitive deployments.</li>
+      <li><strong>Data sovereignty</strong> — schema-per-bank enables per-bank backup, archival and geographic placement policies.</li>
+      <li><strong>Independent upgrades</strong> — DSL workflows are versioned, so a bank can run an older workflow version while the platform core is upgraded.</li>
+      <li><strong>Per-tenant observability</strong> — all traces / logs / metrics carry bank identifiers; per-bank dashboards and alerts without per-bank infrastructure.</li>
+    </ul>
+  </section>
+
+  <section id="nfr">
+    <h2>14 · Non-functional requirements</h2>
+    <h3>14.1 Performance</h3>
+    <table>
+      <tr><th>Metric</th><th>Target</th></tr>
+      <tr><td>IPI end-to-end latency</td><td>&lt; 10 s (P95); CBUAE/Aani ceiling 60 s (P99)</td></tr>
+      <tr><td>IPI outward initiation → FFTS0001 dispatch</td><td>≤ 30 s</td></tr>
+      <tr><td>IPI inward → beneficiary credit</td><td>≤ 60 s (RASP P99 ≤ 15 s)</td></tr>
+      <tr><td>State transition → projection lag</td><td>≤ 10 s</td></tr>
+      <tr><td>Gateway throughput</td><td>≥ 1,000 TPS sustained</td></tr>
+      <tr><td>WPS batch</td><td>10,000 records &lt; 5 min; file acceptance ≤ 5 min</td></tr>
+      <tr><td>Workflow step latency</td><td>&lt; 500 ms (P95)</td></tr>
+      <tr><td>DB query latency</td><td>&lt; 50 ms (P95)</td></tr>
+      <tr><td>API response (excl. workflow)</td><td>&lt; 200 ms (P95)</td></tr>
+    </table>
+    <h3>14.2 Availability, scalability, reliability</h3>
+    <ul>
+      <li>Availability tiers 99.5% / 99.9% / 99.99% with RTO/RPO per §13.2; IPI rail ≥ 99.9% per tenant (excl. scheduled CBUAE/Aani downtime).</li>
+      <li>Stateless services, HPA on Kubernetes; scheme×bank task-queue matrix partitions load.</li>
+      <li>Circuit-breakers, per-step retries, saga compensation, idempotency guards, Temporal durable replay.</li>
+    </ul>
+    <h3>14.3 Security, compliance, retention</h3>
+    <p>Encryption at rest (TDE runbook ready) and in transit (TLS 1.2+); HMAC-SHA256 message signing; RBAC (7 roles); schema-per-tenant isolation; Vault secrets; append-only hash-chained audit; 7–10-year tiered retention; CBUAE / MoHRE / UAE DPL / PCI-DSS 4.0 / OWASP alignment.</p>
+    <h3>14.4 Maintainability &amp; portability</h3>
+    <p>Zero-downtime deployment (rolling updates + Temporal worker versioning); on-prem and cloud portability; builds enforce <code>TreatWarningsAsErrors</code>, <code>Nullable</code>, <code>AnalysisLevel=latest-recommended</code>, <code>EnforceCodeStyleInBuild</code>.</p>
+    <h3>14.5 Cost &amp; licensing</h3>
+    <p>The stack is predominantly open-source — Temporal (MIT), PostgreSQL, Redis (BSD), Mosquitto (EPL), YARP (MIT), SigNoz / ClickHouse (Apache-2.0) — with <strong>SQL Server the only commercially-licensed component</strong> (chosen for regulatory familiarity and Ledger tables; Standard Edition suffices for most deployments). OpenTimestamps is the free default audit witness (premium witnesses optional). The multi-LLM abstraction lets clients run local models (Ollama) to avoid API cost or route to cloud providers per environment. Containerised deployment avoids PaaS lock-in (bare metal, VMs or any Kubernetes); schema-per-bank avoids per-bank database-instance cost while preserving isolation.</p>
+    <h3>14.6 Sizing &amp; optimisation</h3>
+    <table>
+      <tr><th>Concern</th><th>Approach</th></tr>
+      <tr><td>Database growth</td><td>Append-only ⇒ linear growth; tiered retention (hot audit vs multi-year cold) and date-partitioning of high-volume tables</td></tr>
+      <tr><td>Worker sizing</td><td>Configurable concurrent activity slots per container; sized by per-bank throughput × scheme complexity</td></tr>
+      <tr><td>Memory</td><td>Streaming Excel / PDF / CSV exports (50K–200K+ rows), bounded <code>NVARCHAR</code>, Redis caching — no unbounded in-memory collections</td></tr>
+      <tr><td>Query</td><td>Soft references + covering indexes on business-ID columns let query patterns evolve without FK overhead</td></tr>
+      <tr><td>Temporal history</td><td>Bounded by DSL step count (typically 20–80 events); long-running flows use <code>continue-as-new</code> to prevent history bloat</td></tr>
+      <tr><td>Connection pooling</td><td>HAProxy pools SQL and Temporal connections across services, cutting per-service overhead</td></tr>
+    </table>
+  </section>
+
+  <section id="quality">
+    <h2>15 · Quality, reliability &amp; operability</h2>
+    <h3>15.1 Quality gates</h3>
+    <p>Warnings-as-errors; .NET 10 SDK pinned (<code>global.json</code> 10.0.100). <strong>Done-Done checklist (6 dimensions):</strong> functional E2E, documentation-as-code, shift-left testing (≥80% line coverage on changed code; contract tests for new boundaries), security (OWASP ASVS L2, SAST clean, no secrets, threat model updated), code quality (lint clean, cyclomatic complexity ≤15, ≥2 approvals), operations (dashboard + alert tied to SLO + tested runbook). Waivers require Engineering + Architecture lead approval and 24-hour follow-up.</p>
+    <h3>15.2 Testing strategy</h3>
+    <ul>
+      <li><strong>Unit / integration:</strong> xUnit + FluentAssertions + Moq; tests under <code>tests/</code> (run by project path). Suite spans gateway, IAM, routing, workflow, business rules, message conversion, settlement, audit, config, E2E.</li>
+      <li><strong>Contract testing (CDC):</strong> Pact-compatible contracts for <code>ICoreBankingAdaptor</code>, <code>IRtgsAdaptor</code> (UAEFTS), Participant Directory HTTP API; broker wiring pending.</li>
+      <li><strong>Performance / chaos (RASP):</strong> k6 scripts (baseline / ramp-100tps / soak / spike) + <code>ChaosTests</code> project; 7 performance targets and 4 chaos scenarios defined. <span class="tag t-plan">measurements pending</span></li>
+    </ul>
+    <h3>15.3 Reliability engineering (FMEA)</h3>
+    <p>FMEA enumerates failure modes with residual RPN after mitigation: AML false-positive holds (manual-review queue, 4 h SLA), velocity-counter drift (daily reconciliation + hard DB limit), CBS adaptor timeout (breaker + fallback queue), saga-compensation failure (retry + exception queue + alert), audit-log gaps (synchronous critical audit + gap detection).</p>
+    <h3>15.4 Operability</h3>
+    <p><strong>Runbooks (TSGs):</strong> stuck Temporal workflow, OTel missing traces, approval-queue depth, CBS integration failure, security-CI failure; plus an error dictionary. <strong>Game day (2026-05-29):</strong> four fault-injection scenarios mapped to TSGs with TTD/TTR targets; pass ≥3/4. <span class="tag t-plan">execution pending</span></p>
+  </section>
+
+  <section id="gaps">
+    <h2>16 · Known gaps, deferred risks &amp; roadmap</h2>
+    <p>Accepted, documented risks with compensating controls — included for review transparency.</p>
+    <table>
+      <tr><th>Item</th><th>Status</th><th>Compensating control</th><th>Direction</th></tr>
+      <tr><td>Inter-service mTLS</td><td><span class="tag t-warn">env-gated, dev-off</span></td><td>Network segmentation; <code>X-Service-Api-Key</code></td><td>Enable for Tier 2+ (Gateway↔WorkflowEngine first)</td></tr>
+      <tr><td>MFA / TOTP</td><td><span class="tag t-plan">deferred</span></td><td>Strong hashing + lockout + short TTL</td><td>Production; client IDAM selection pending</td></tr>
+      <tr><td>PII log scrubbing</td><td><span class="tag t-warn">incomplete</span></td><td>Classification + API-layer masking</td><td>Serilog destructuring policy</td></tr>
+      <tr><td>SQL TDE / Always Encrypted</td><td><span class="tag t-plan">runbook ready</span></td><td>TLS in transit; schema isolation</td><td>Awaiting DBA execution</td></tr>
+      <tr><td>Temporal payload at-rest</td><td><span class="tag t-warn">partial</span></td><td>AES-256-GCM codec wired; UI restricted; 30-day retention</td><td>Extend coverage; gRPC TLS higher tiers</td></tr>
+      <tr><td>Bank DLL signing (Authenticode)</td><td><span class="tag t-plan">deferred</span></td><td>Manifest hash verification; sandboxed loading</td><td>Verify signing on load</td></tr>
+      <tr><td>Vault dev mode / config fallback</td><td><span class="tag t-plan">deferred</span></td><td>Dev-only; not exposed in prod</td><td>Harden Vault; remove fallback before go-live</td></tr>
+      <tr><td>Three persona-app React build-out</td><td><span class="tag t-warn">in progress</span></td><td>Single React app with role-guard scopes today; CSP/XSS mitigations planned</td><td>Deliver BankingOps / ServiceOps / ITPS as separate React builds</td></tr>
+      <tr><td>Activity two-tier migration (ADR-007)</td><td><span class="tag t-warn">in progress</span></td><td>Legacy queues still registered</td><td>Complete per-bank split; retire Worker.Custom</td></tr>
+      <tr><td>Three-apps portal split (ADR-010)</td><td><span class="tag t-warn">phased</span></td><td>Single app with role-guard scopes today</td><td>Separate React builds post-IAM migration</td></tr>
+      <tr><td>RASP / game-day measurements</td><td><span class="tag t-plan">plan complete</span></td><td>—</td><td>Execute &amp; record TTD/TTR + baselines</td></tr>
+    </table>
+  </section>
+
+  <section id="appendix">
+    <h2>17 · Appendices</h2>
+    <h3>17.1 Technology stack</h3>
+    <table>
+      <tr><th>Layer</th><th>Technology</th><th>Version / note</th></tr>
+      <tr><td>Backend</td><td>.NET</td><td>10.0.100 (net10.0, C# 14)</td></tr>
+      <tr><td>API gateway</td><td>YARP</td><td>reverse proxy on Kestrel</td></tr>
+      <tr><td>Workflow engine</td><td>Temporal</td><td>.NET SDK (<code>Temporalio</code>)</td></tr>
+      <tr><td>Application DB</td><td>SQL Server</td><td>2022, multi-schema</td></tr>
+      <tr><td>Temporal DB</td><td>PostgreSQL</td><td>(Cassandra at largest tier)</td></tr>
+      <tr><td>Cache</td><td>Redis</td><td>revocation, idempotency, cache</td></tr>
+      <tr><td>Messaging</td><td>Eclipse Mosquitto (MQTT)</td><td>EMQX at higher tiers</td></tr>
+      <tr><td>Secrets</td><td>HashiCorp Vault</td><td>PKI + Transit</td></tr>
+      <tr><td>Observability</td><td>OpenTelemetry → SigNoz / ClickHouse; Jaeger</td><td>two-collector topology</td></tr>
+      <tr><td>Frontend</td><td>React</td><td>SPA; three persona apps — BankingOps / ServiceOps / ITPS</td></tr>
+      <tr><td>AI / LLM</td><td>OpenAI · Azure OpenAI · Ollama · Claude · Gemini</td><td>provider-switchable</td></tr>
+      <tr><td>Containers</td><td>Docker Compose → Kubernetes/Helm</td><td>layered startup</td></tr>
+      <tr><td>Testing</td><td>xUnit · FluentAssertions · Moq · Pact · k6 · Polly</td><td></td></tr>
+    </table>
+    <h3>17.2 Glossary</h3>
+    <table>
+      <tr><th>Term</th><th>Meaning</th></tr>
+      <tr><td>DSL</td><td>JSON Domain-Specific Language describing a payment workflow</td></tr>
+      <tr><td>Activity</td><td>A single Temporal step dispatched to a worker via a task queue</td></tr>
+      <tr><td>Task queue</td><td>Temporal routing channel; <code>{scheme}-platform</code> or <code>{scheme}-{bank}</code></td></tr>
+      <tr><td>Adaptor</td><td>Typed interface abstracting an external system</td></tr>
+      <tr><td>Saga / compensation</td><td>Reverse-order rollback of completed steps on failure</td></tr>
+      <tr><td>CQRS projection</td><td>Append-only write model projected into read models</td></tr>
+      <tr><td>Ledger table</td><td>SQL Server 2022 append-only, hash-chained table</td></tr>
+      <tr><td>Witness</td><td>External anchor (e.g. OpenTimestamps) proving audit integrity outside the DB</td></tr>
+      <tr><td>FFTS</td><td>CBUAE funds-transfer message family (FFTS0001/0002/0003/0004/0006)</td></tr>
+      <tr><td>SIF</td><td>WPS Salary Information File</td></tr>
+      <tr><td>ISB / CONV</td><td>Islamic / Conventional banking entity within a tenant</td></tr>
+      <tr><td>TAT</td><td>Turnaround time (SLA monitoring)</td></tr>
+    </table>
+    <h3>17.3 Source corpus</h3>
+    <p class="note">Consolidated from <code>.github/adrs/*</code>, <code>docs/adrs/*</code>, <code>.github/architecture/*</code>, <code>.github/design/*</code>, <code>.github/requirements/*</code>, <code>docs/requirements/*</code>, <code>.github/security/*</code>, <code>.github/quality/*</code>, <code>docs/quality/*</code>, <code>.github/deployment/*</code>, <code>docs/architecture-doc/*</code>, <code>docs/integration-platform/*</code>, <code>.github/instructions/*</code>, <code>.github/copilot-instructions.md</code>; verified against <code>services/</code>, <code>dsl/workflows/</code>, <code>db-script/</code> and <code>infra/docker/</code>.</p>
+  </section>
+
+  <footer>PaymentHub — Master Architecture Document · v1.0 · Consolidated &amp; source-verified baseline</footer>
+
+  </main>
+</div>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose', flowchart:{useMaxWidth:true} });
+
+  // Scroll-spy: highlight the sidebar link for the section currently in view.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('#sidebar-nav a'));
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var sections = links
+      .map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+      .filter(Boolean);
+
+    var inner = document.querySelector('.sidebar-inner');
+    var current = null;
+    function setActive(id) {
+      if (id === current) return;
+      current = id;
+      links.forEach(function (a) { a.classList.remove('active'); });
+      var link = map[id];
+      if (!link) return;
+      link.classList.add('active');
+      // Keep the active item visible by scrolling ONLY the nav container —
+      // never the window (scrollIntoView would tug the whole page).
+      if (inner) {
+        var lr = link.getBoundingClientRect(), ir = inner.getBoundingClientRect();
+        if (lr.top < ir.top) inner.scrollTop -= (ir.top - lr.top) + 8;
+        else if (lr.bottom > ir.bottom) inner.scrollTop += (lr.bottom - ir.bottom) + 8;
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      var visible = {};
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) visible[e.target.id] = e.intersectionRatio;
+          else delete visible[e.target.id];
+        });
+        // pick the section nearest the top that is intersecting
+        var best = null, bestTop = Infinity;
+        Object.keys(visible).forEach(function (id) {
+          var top = document.getElementById(id).getBoundingClientRect().top;
+          if (top < 140 + 1 && top > -window.innerHeight) {
+            if (Math.abs(top) < Math.abs(bestTop)) { bestTop = top; best = id; }
+          }
+        });
+        if (!best && Object.keys(visible).length) {
+          // fallback: first visible in document order
+          best = sections.map(function (s){return s.id;}).filter(function(id){return visible[id];})[0];
+        }
+        if (best) setActive(best);
+      }, { rootMargin: '-12% 0px -70% 0px', threshold: [0, 0.1, 0.5, 1] });
+
+      sections.forEach(function (s) { observer.observe(s); });
+    }
+
+    // Reflect clicks immediately.
+    links.forEach(function (a) {
+      a.addEventListener('click', function () { setActive(a.getAttribute('href').slice(1)); });
+    });
+
+    // Collapse / show the sidebar so wide content (e.g. the architecture
+    // diagram) can use the full page width.
+    var collapseBtn = document.getElementById('navCollapse');
+    var showBtn = document.getElementById('navShow');
+    if (collapseBtn) collapseBtn.addEventListener('click', function () { document.body.classList.add('nav-collapsed'); });
+    if (showBtn) showBtn.addEventListener('click', function () { document.body.classList.remove('nav-collapsed'); });
+
+    // Initial state.
+    setActive((location.hash || '#exec').slice(1));
+  })();
+</script>
+</body>
+</html>
